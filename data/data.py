@@ -15,9 +15,8 @@ def load_data(url):
             API venant de ILOSTAT
     '''
     reponse = requests.get(url)
-    print(type(print(reponse)))
-#   if character(print(reponse)) != "<Response [200]>":
-#       raise ValueError("Il y a une erreur de connection avec le serveur")
+    print(type(print(reponse))) # Attention erreur si != 200
+
     data = pd.read_csv(StringIO(reponse.text))
     return data
 
