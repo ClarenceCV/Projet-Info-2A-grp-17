@@ -7,8 +7,16 @@ from io import StringIO
 url = "https://rplumber.ilo.org/data/indicator?id=EMP_5EMP_SEX_OC2_NB_Q&timefrom=2020&timeto=2026&type=label&format=.csv"
 
 def load_data(url):
+    '''
+    permet de récupérer des fichiers de données venant de ILOSTAT pour les mettre sous forme de dataframe
+
+    params:
+        url: chr
+            API venant de ILOSTAT
+    '''
     reponse = requests.get(url)
     if print(reponse) != 200:
         raise ValueError("Il y a une erreur de connection avec le serveur")
     data = pd.read_csv(StringIO(reponse.text))
     return data
+
