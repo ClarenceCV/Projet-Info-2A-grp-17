@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 from io import StringIO
+from parser import parse_observations
 
 # lien pour le code : https://rtavenar.github.io/poly_python/content/api.html
 
