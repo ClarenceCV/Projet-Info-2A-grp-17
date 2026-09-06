@@ -1,0 +1,2 @@
+# pour toutes les fonctions liées aux observations
+# je ne sais pas encore comment on va organiser ça notamment avec nos classes mais j'ai juste créer un fichier pour avoir la structure src.service.xxx
