@@ -1,6 +1,6 @@
 # Ce fichier sert à se connecter proprement à la base de donnée sql
 
-import os # pour accéder au .env entre autre
+import os # pour accéder aux variables d'environnement
 
 import psycopg2 # librairie essentielle pour faire le lien entre SQL et notre backend
 from psycopg2.extras import RealDictCursor # pour que le cursor puisse renvoyer un format dictionnaire propre
