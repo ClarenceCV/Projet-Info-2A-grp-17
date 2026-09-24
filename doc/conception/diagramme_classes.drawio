@@ -1,0 +1,392 @@
+<mxfile host="app.diagrams.net" pages="1">
+  <diagram name="Diagramme de classes" id="laborscope-classes">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ================= ETIQUETTES DE COUCHES ================= -->
+        <mxCell id="lbl-vue" value="COUCHE VUE" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=14;fontColor=#3366CC;" vertex="1" parent="1">
+          <mxGeometry x="-190" y="80" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-svc" value="COUCHE SERVICE" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=14;fontColor=#2E8B2E;" vertex="1" parent="1">
+          <mxGeometry x="-190" y="265" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-dao" value="COUCHE DAO" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=14;fontColor=#7A3FA0;" vertex="1" parent="1">
+          <mxGeometry x="-190" y="480" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-met" value="OBJETS METIER" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=14;fontColor=#CC7A00;" vertex="1" parent="1">
+          <mxGeometry x="-190" y="745" width="170" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ================= COUCHE VUE ================= -->
+        <mxCell id="vue-graph" value="VueGraphique" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#CDE4FF;strokeColor=#3366CC;" vertex="1" parent="1">
+          <mxGeometry x="380" y="40" width="320" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="vue-graph-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="vue-graph">
+          <mxGeometry y="26" width="320" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="vue-graph-m" value="+ afficher_evolution(filtre)&lt;br&gt;+ afficher_comparaison_pays(filtre)&lt;br&gt;+ afficher_comparaison_indicateurs(filtre)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="vue-graph">
+          <mxGeometry y="34" width="320" height="76" as="geometry" />
+        </mxCell>
+
+        <mxCell id="vue-user" value="VueUtilisateur" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#CDE4FF;strokeColor=#3366CC;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="40" width="240" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="vue-user-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="vue-user">
+          <mxGeometry y="26" width="240" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="vue-user-m" value="+ se_connecter(email, mdp)&lt;br&gt;+ creer_compte(utilisateur)&lt;br&gt;+ se_deconnecter()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="vue-user">
+          <mxGeometry y="34" width="240" height="76" as="geometry" />
+        </mxCell>
+
+        <!-- ================= COUCHE SERVICE ================= -->
+        <mxCell id="svc-obs" value="ServiceObservation" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="220" width="250" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-obs-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="svc-obs">
+          <mxGeometry y="26" width="250" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-obs-m" value="+ lister(filtre) : list&lt;br&gt;+ importer_indicateur(code) : int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="svc-obs">
+          <mxGeometry y="34" width="250" height="86" as="geometry" />
+        </mxCell>
+
+        <mxCell id="svc-temp" value="ServiceAnalyseTemporelle" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="320" y="220" width="250" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-temp-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="svc-temp">
+          <mxGeometry y="26" width="250" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-temp-m" value="+ evolution(filtre) : list&lt;br&gt;+ taux_croissance(filtre) : float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="svc-temp">
+          <mxGeometry y="34" width="250" height="86" as="geometry" />
+        </mxCell>
+
+        <mxCell id="svc-pays" value="ServiceComparaisonPays" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="600" y="220" width="250" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-pays-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="svc-pays">
+          <mxGeometry y="26" width="250" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-pays-m" value="+ comparer_pays(filtre) : dict&lt;br&gt;+ identifier_extremes(filtre) : list" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="svc-pays">
+          <mxGeometry y="34" width="250" height="86" as="geometry" />
+        </mxCell>
+
+        <mxCell id="svc-multi" value="ServiceComparaisonMultiIndicateurs" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="880" y="220" width="210" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-multi-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="svc-multi">
+          <mxGeometry y="40" width="210" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-multi-m" value="+ comparer_indicateurs(filtre) : dict" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="svc-multi">
+          <mxGeometry y="48" width="210" height="72" as="geometry" />
+        </mxCell>
+
+        <mxCell id="svc-user" value="ServiceUtilisateur" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="220" width="240" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-user-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="svc-user">
+          <mxGeometry y="26" width="240" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-user-m" value="+ authentifier(email, mdp)&lt;br&gt;+ hacher_mdp(mdp) : str&lt;br&gt;+ verifier_droits(utilisateur) : bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="svc-user">
+          <mxGeometry y="34" width="240" height="86" as="geometry" />
+        </mxCell>
+
+        <!-- ================= COUCHE DAO ================= -->
+        <mxCell id="dao-obs" value="ObservationDAO" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="40" y="430" width="250" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="dao-obs-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="dao-obs">
+          <mxGeometry y="26" width="250" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="dao-obs-m" value="+ creer_lot(observations) : int&lt;br&gt;+ trouver_par_filtres(filtre) : list&lt;br&gt;+ supprimer(id_observation) : bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="dao-obs">
+          <mxGeometry y="34" width="250" height="96" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dao-pays" value="PaysDAO" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="320" y="430" width="250" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="dao-pays-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="dao-pays">
+          <mxGeometry y="26" width="250" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="dao-pays-m" value="+ creer(pays) : bool&lt;br&gt;+ trouver_par_code(code_iso) : Pays&lt;br&gt;+ lister_tous() : list" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="dao-pays">
+          <mxGeometry y="34" width="250" height="96" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dao-ind" value="IndicateurDAO" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="600" y="430" width="250" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="dao-ind-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="dao-ind">
+          <mxGeometry y="26" width="250" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="dao-ind-m" value="+ creer(indicateur) : bool&lt;br&gt;+ trouver_par_code(code) : Indicateur&lt;br&gt;+ lister_tous() : list" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="dao-ind">
+          <mxGeometry y="34" width="250" height="96" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dao-prof" value="ProfessionDAO" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="880" y="430" width="210" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="dao-prof-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="dao-prof">
+          <mxGeometry y="26" width="210" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="dao-prof-m" value="+ creer(profession) : bool&lt;br&gt;+ trouver_par_libelle(lib)&lt;br&gt;+ lister_tous() : list" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="dao-prof">
+          <mxGeometry y="34" width="210" height="96" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dao-user" value="UtilisateurDAO" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="430" width="240" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="dao-user-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="dao-user">
+          <mxGeometry y="26" width="240" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="dao-user-m" value="+ creer(utilisateur) : bool&lt;br&gt;+ trouver_par_email(email)&lt;br&gt;+ supprimer(id) : bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="dao-user">
+          <mxGeometry y="34" width="240" height="96" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dbconn" value="&amp;laquo;Singleton&amp;raquo;&lt;br&gt;&lt;b&gt;DBConnection&lt;/b&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="600" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="dbconn-a" value="- __connection" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="dbconn">
+          <mxGeometry y="40" width="210" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="dbconn-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="dbconn">
+          <mxGeometry y="66" width="210" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="dbconn-m" value="+ connection" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="dbconn">
+          <mxGeometry y="74" width="210" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- ================= OBJETS METIER ================= -->
+        <mxCell id="obs" value="Observation" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;" vertex="1" parent="1">
+          <mxGeometry x="40" y="680" width="250" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="obs-a" value="+ id_observation : int&lt;br&gt;+ id_indicateur : int&lt;br&gt;+ code_iso : str&lt;br&gt;+ id_profession : int | None&lt;br&gt;+ sexe : str | None&lt;br&gt;+ periode : str&lt;br&gt;+ valeur : float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="obs">
+          <mxGeometry y="26" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="obs-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="obs">
+          <mxGeometry y="136" width="250" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="obs-m" value="+ __init__()&lt;br&gt;+ __str__()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="obs">
+          <mxGeometry y="144" width="250" height="36" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pays" value="Pays" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;" vertex="1" parent="1">
+          <mxGeometry x="360" y="680" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="pays-a" value="+ id_pays : int&lt;br&gt;+ code_iso : str&lt;br&gt;+ nom : str" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="pays">
+          <mxGeometry y="26" width="200" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="pays-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="pays">
+          <mxGeometry y="88" width="200" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="pays-m" value="+ __init__()&lt;br&gt;+ __str__()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="pays">
+          <mxGeometry y="96" width="200" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ind" value="Indicateur" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;" vertex="1" parent="1">
+          <mxGeometry x="620" y="680" width="220" height="156" as="geometry" />
+        </mxCell>
+        <mxCell id="ind-a" value="+ id_indicateur : int&lt;br&gt;+ code_ilostat : str&lt;br&gt;+ libelle : str&lt;br&gt;+ unite : str" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="ind">
+          <mxGeometry y="26" width="220" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="ind-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="ind">
+          <mxGeometry y="104" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="ind-m" value="+ __init__()&lt;br&gt;+ __str__()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="ind">
+          <mxGeometry y="112" width="220" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="prof" value="Profession" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;" vertex="1" parent="1">
+          <mxGeometry x="890" y="680" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="prof-a" value="+ id_profession : int&lt;br&gt;+ libelle : str&lt;br&gt;+ niveau : int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="prof">
+          <mxGeometry y="26" width="200" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="prof-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="prof">
+          <mxGeometry y="88" width="200" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="prof-m" value="+ __init__()&lt;br&gt;+ __str__()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="prof">
+          <mxGeometry y="96" width="200" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="user" value="Utilisateur" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="680" width="220" height="156" as="geometry" />
+        </mxCell>
+        <mxCell id="user-a" value="+ id_utilisateur : int&lt;br&gt;+ nom : str&lt;br&gt;+ email : str&lt;br&gt;+ mot_de_passe_hash : str" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="user">
+          <mxGeometry y="26" width="220" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="user-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="user">
+          <mxGeometry y="104" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="user-m" value="+ __init__()&lt;br&gt;+ __str__()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="user">
+          <mxGeometry y="112" width="220" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="admin" value="Administrateur" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="910" width="220" height="112" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-a" value="+ date_nomination : str" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="admin">
+          <mxGeometry y="26" width="220" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-s" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="admin">
+          <mxGeometry y="68" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-m" value="+ reinitialiser_base()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="admin">
+          <mxGeometry y="76" width="220" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- ============ FLECHES : VUE -> SERVICE (association) ============ -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.15;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="vue-graph" target="svc-temp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.4;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="vue-graph" target="svc-pays">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.85;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="vue-graph" target="svc-multi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="vue-user" target="svc-user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ FLECHES : SERVICE -> DAO (association) ============ -->
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="svc-obs" target="dao-obs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.15;exitY=1;exitDx=0;exitDy=0;entryX=0.85;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="svc-temp" target="dao-obs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.85;exitY=1;exitDx=0;exitDy=0;entryX=0.15;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="svc-temp" target="dao-ind">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.1;exitY=1;exitDx=0;exitDy=0;entryX=0.7;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="svc-pays" target="dao-obs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.4;exitY=1;exitDx=0;exitDy=0;entryX=0.85;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="svc-pays" target="dao-pays">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.1;exitY=1;exitDx=0;exitDy=0;entryX=0.35;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="svc-multi" target="dao-obs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.6;exitY=1;exitDx=0;exitDy=0;entryX=0.85;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="svc-multi" target="dao-ind">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="svc-user" target="dao-user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ FLECHES : DAO -> DBConnection (association) ============ -->
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.15;entryDx=0;entryDy=0;" edge="1" parent="1" source="dao-obs" target="dbconn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="1" source="dao-pays" target="dbconn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.45;entryDx=0;entryDy=0;" edge="1" parent="1" source="dao-ind" target="dbconn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.6;entryDx=0;entryDy=0;" edge="1" parent="1" source="dao-prof" target="dbconn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="dao-user" target="dbconn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ FLECHES : DAO -> METIER (dependance, pointille) ============ -->
+        <mxCell id="e18" value="&amp;laquo;cree&amp;raquo;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;dashed=1;exitX=0.6;exitY=1;exitDx=0;exitDy=0;entryX=0.6;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="dao-obs" target="obs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e19" value="&amp;laquo;cree&amp;raquo;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;dashed=1;exitX=0.55;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="dao-pays" target="pays">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" value="&amp;laquo;cree&amp;raquo;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="dao-ind" target="ind">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e21" value="&amp;laquo;cree&amp;raquo;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="dao-prof" target="prof">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e22" value="&amp;laquo;cree&amp;raquo;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="dao-user" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ FLECHES : ASSOCIATIONS METIER ============ -->
+        <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="obs" target="pays">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e23-a" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="e23">
+          <mxGeometry x="-0.7" relative="1" as="geometry"><mxPoint y="-10" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="e23-b" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="e23">
+          <mxGeometry x="0.7" relative="1" as="geometry"><mxPoint y="-10" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="e24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.4;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="obs" target="ind">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="140" y="905" />
+              <mxPoint x="730" y="905" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e24-a" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="e24">
+          <mxGeometry x="-0.85" relative="1" as="geometry"><mxPoint x="20" y="-10" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="e24-b" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="e24">
+          <mxGeometry x="0.85" relative="1" as="geometry"><mxPoint x="-18" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="e25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;endSize=12;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="obs" target="prof">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="228" y="960" />
+              <mxPoint x="990" y="960" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e25-a" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="e25">
+          <mxGeometry x="-0.88" relative="1" as="geometry"><mxPoint x="20" y="-10" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="e25-b" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="e25">
+          <mxGeometry x="0.88" relative="1" as="geometry"><mxPoint x="-22" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- ============ FLECHE : HERITAGE ============ -->
+        <mxCell id="e26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=0;endSize=14;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="admin" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ================= LEGENDE ================= -->
+        <mxCell id="leg" value="LEGENDE" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;align=left;fontStyle=1;spacingLeft=8;spacingTop=4;fillColor=#F5F5F5;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="790" width="250" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1" value="Association dirigee&lt;br&gt;&lt;i&gt;« A connait B »&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="815" width="160" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1e" style="html=1;endArrow=open;endFill=0;endSize=12;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1435" y="832" as="sourcePoint" />
+            <mxPoint x="1495" y="832" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg2" value="Dependance&lt;br&gt;&lt;i&gt;« A cree / utilise B »&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="865" width="160" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2e" style="html=1;endArrow=open;endFill=0;endSize=12;dashed=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1435" y="882" as="sourcePoint" />
+            <mxPoint x="1495" y="882" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg3" value="Heritage&lt;br&gt;&lt;i&gt;« A est un B »&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="915" width="160" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3e" style="html=1;endArrow=block;endFill=0;endSize=14;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1435" y="932" as="sourcePoint" />
+            <mxPoint x="1495" y="932" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
