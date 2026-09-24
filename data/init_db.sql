@@ -1,1 +1,2 @@
 -- permettra d'initialiser notre bdd
+-- créer les tables sql qui correspondent à nos business object
