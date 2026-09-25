@@ -103,7 +103,7 @@ def nettoyer(data):
     df["profession"] = separation.map(lambda couple: couple[0])
     df["tranche_age"] = separation.map(lambda couple: couple[1])
 
-    # 6. une seule source par observation : on privilégie l'enquête emploi (LFS)
+    # 6. Parfois on a 2 valeurs provenant de 2 sources différentes donc il faut choisir : on privilégie l'enquête emploi (LFS)
     df["priorite"] = (~df["source"].str.contains("LFS")).astype(int)
     df = df.sort_values(["priorite", "source"]).drop_duplicates(subset=CLE_OBSERVATION, keep="first")
 
