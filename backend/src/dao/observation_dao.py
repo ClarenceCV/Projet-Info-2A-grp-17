@@ -76,7 +76,7 @@ class ObservationDAO:
         ]
 
         # with connection : commit si tout se passe bien, rollback en cas d'erreur
-        with DBConnection().connection as connection:
+        with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 execute_values(
                     cursor,
@@ -198,7 +198,7 @@ class ObservationDAO:
 
     def derniere_periode(self, code_indicateur: str) -> str | None:
         """
-        Période la plus récente disponible pour un indicateur (utile pour F4).
+        Période la plus récente disponible pour un indicateur (utile pour la fonctionnalité 4).
 
         Returns:
             str | None: ex '2026Q2', ou None si l'indicateur n'a aucune observation
@@ -222,7 +222,7 @@ class ObservationDAO:
         Returns:
             bool: True si une observation a été modifiée, False si l'id n'existe pas
         """
-        with DBConnection().connection as connection:
+        with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 cursor.execute(
                     "UPDATE laborscope.observation "
