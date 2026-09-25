@@ -1,0 +1,17 @@
+[project]
+name = "laborscope"
+version = "0.1.0"
+description = "LaborScope : analyse interactive du marché du travail mondial (ILOSTAT) - ENSAI 2A groupe 17"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas",
+    "psycopg2-binary",
+    "python-dotenv",
+    "requests",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
