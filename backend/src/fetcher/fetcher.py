@@ -4,7 +4,22 @@ from io import StringIO
 
 # lien pour le code : https://rtavenar.github.io/poly_python/content/api.html
 
-url = "https://rplumber.ilo.org/data/indicator?id=EMP_5EMP_SEX_OC2_NB_Q&timefrom=2020&timeto=2026&type=label&format=.csv"
+URL_ILOSTAT = "https://rplumber.ilo.org/data/indicator"
+
+
+def construire_url(code_indicateur, annee_debut=2020):
+    '''
+    Construit l'url de l'API ILOSTAT pour un indicateur.
+    type=both : on récupère à la fois les codes (ex : 'FRA') et les libellés (ex : 'France')
+
+    params:
+        code_indicateur: str
+            code ILOSTAT de l'indicateur (ex : 'EMP_5EMP_SEX_OC2_NB_Q')
+        annee_debut: int
+            première année récupérée
+    '''
+    return f"{URL_ILOSTAT}?id={code_indicateur}&timefrom={annee_debut}&type=both&format=.csv"
+
 
 def load_data(url):
     '''
@@ -14,10 +29,12 @@ def load_data(url):
         url: chr
             API venant de ILOSTAT
     '''
-    reponse = requests.get(url)
-    print(type(print(reponse))) # Attention erreur si != 200
+    reponse = requests.get(url, timeout=300)
+    reponse.raise_for_status()  # erreur si le code HTTP n'est pas 200
+    if not reponse.text.strip():
+        raise ValueError(f"L'API ILOSTAT a renvoyé une réponse vide : {url}")
 
-    data = pd.read_csv(StringIO(reponse.text))
+    data = pd.read_csv(StringIO(reponse.text), low_memory=False)
     return data
 
 
@@ -75,13 +92,13 @@ def filter_columns(data, colonnes_a_garder, renommage=None):
 
     return data_filtree
 
-# Exemple d'utilisation:
-
-data = load_data(url="https://rplumber.ilo.org/data/indicator?id=EMP_5EMP_SEX_OC2_NB_Q&timefrom=2020&timeto=2026&type=label&format=.csv")
-get_columns_info(data)
-# On choisit les colonnes que l'on veut et leurs noms
-colonnes_keep = ["ref_area.label", "source.label", "sex.label", "classif1.label", "time", "obs_value"]
-rename = ["area", "source", "sex", "profession", "date", "value"]
-# On filtre
-data = filter_columns(data=data, colonnes_a_garder=colonnes_keep, renommage=rename) 
-print(data)
+# Exemple d'utilisation (seulement si on lance ce fichier directement, pas lors d'un import) :
+if __name__ == "__main__":
+    data = load_data(url=construire_url("EMP_5EMP_SEX_OC2_NB_Q"))
+    get_columns_info(data)
+    # On choisit les colonnes que l'on veut et leurs noms
+    colonnes_keep = ["ref_area.label", "source.label", "sex.label", "classif1.label", "time", "obs_value"]
+    rename = ["area", "source", "sex", "profession", "date", "value"]
+    # On filtre
+    data = filter_columns(data=data, colonnes_a_garder=colonnes_keep, renommage=rename)
+    print(data)
