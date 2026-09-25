@@ -51,7 +51,6 @@ CREATE TABLE laborscope.observation (
     id_profession   INTEGER          REFERENCES laborscope.profession(id_profession) ON DELETE CASCADE,
     tranche_age     VARCHAR(50),
     sexe            VARCHAR(50)      NOT NULL,
-    source          VARCHAR(255)     NOT NULL,
     periode         CHAR(6)          NOT NULL CHECK (periode ~ '^[0-9]{4}Q[1-4]$'),  -- ex : '2024Q1'
     valeur          DOUBLE PRECISION NOT NULL,
     date_maj        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -60,7 +59,7 @@ CREATE TABLE laborscope.observation (
     -- NULLS NOT DISTINCT (PostgreSQL >= 15) : deux NULL sont considérés égaux,
     -- sinon les lignes sans profession / sans tranche d'âge pourraient être dupliquées.
     CONSTRAINT uq_observation UNIQUE NULLS NOT DISTINCT
-        (id_indicateur, id_pays, id_profession, tranche_age, sexe, source, periode)
+        (id_indicateur, id_pays, id_profession, tranche_age, sexe, periode)
 );
 
 -- Accélère les recherches les plus fréquentes (F3, F4, F5)

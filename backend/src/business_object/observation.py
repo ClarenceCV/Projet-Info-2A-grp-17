@@ -18,7 +18,6 @@ class Observation:
         sexe (str): ventilation par sexe ('Total', 'Male', 'Female'...)
         periode (str): trimestre au format 'AAAAQn' (ex : '2024Q1')
         valeur (float): valeur observée, dans l'unité de l'indicateur (milliers ou %)
-        source (str): enquête d'origine (ex : 'LFS - Labour Force Survey')
         profession (Profession | None): seulement pour les indicateurs par profession
         tranche_age (str | None): seulement pour les indicateurs par âge (ex : '15-24')
         id_observation (int | None): identifiant en base, None tant que non enregistrée
@@ -33,7 +32,6 @@ class Observation:
         sexe: str,
         periode: str,
         valeur: float,
-        source: str,
         profession: Profession | None = None,
         tranche_age: str | None = None,
         id_observation: int | None = None,
@@ -52,8 +50,6 @@ class Observation:
             raise TypeError("valeur should be a number")
         if math.isnan(valeur):
             raise ValueError("valeur should not be NaN")
-        if not isinstance(source, str) or not source:
-            raise ValueError("source should be a non empty string")
         if profession is not None and not isinstance(profession, Profession):
             raise TypeError("profession should be a Profession or None")
         if tranche_age is not None and not isinstance(tranche_age, str):
@@ -66,7 +62,6 @@ class Observation:
         self.sexe = sexe
         self.periode = periode
         self.valeur = float(valeur)
-        self.source = source
         self.profession = profession
         self.tranche_age = tranche_age
         self.id_observation = id_observation
@@ -97,5 +92,5 @@ class Observation:
             f"Observation(indicateur={self.indicateur.code_ilostat!r}, pays={self.pays.code_iso!r}, "
             f"sexe={self.sexe!r}, tranche_age={self.tranche_age!r}, "
             f"profession={self.profession.libelle_profession if self.profession else None!r}, "
-            f"periode={self.periode!r}, valeur={self.valeur!r}, source={self.source!r})"
+            f"periode={self.periode!r}, valeur={self.valeur!r})"
         )
