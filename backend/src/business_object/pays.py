@@ -40,42 +40,57 @@ class Pays:
     def __hash__(self):
         return hash((self.code_iso, self.nom_pays))
 
-    def continent(self, code_iso: str | None = None) -> str | None:
-        """Renvoie le continent auquel appartient le pays.
+    @staticmethod
+    def continent_de(code_iso: str) -> str | None:
+        """Renvoie le continent auquel appartient un pays, à partir de son code ISO.
 
         Args:
-            code_iso (str | None): code ISO du pays étudié.
-                                Si None, utilise le code du pays courant.
+            code_iso (str): code ISO à 3 lettres du pays étudié (ex : 'FRA').
 
         Returns:
             str | None: code du continent (AF, AS, EU, NA, OC, SA)
                     ou None si le code est inconnu.
         """
 
-        code = code_iso or self.code_iso
-
         try:
-            return pc.country_alpha2_to_continent_code(code.upper())
-        except (KeyError, TypeError):
+            # ILOSTAT donne des codes à 3 lettres ('FRA'), pycountry_convert attend 2 lettres ('FR')
+            code_alpha2 = pc.country_alpha3_to_country_alpha2(code_iso.upper())
+            return pc.country_alpha2_to_continent_code(code_alpha2)
+        except (KeyError, AttributeError):
             return None
 
-
-    def groupes(self, code_iso: str | None = None) -> list[str]:
-        """Renvoie les groupes auxquels appartient le pays.
-
-        Args:
-            code_iso (str | None): code ISO du pays étudié.
-                                Si None, utilise le code du pays courant.
+    def continent(self) -> str | None:
+        """Renvoie le continent auquel appartient le pays courant.
 
         Returns:
-            list[str]: liste des groupes auxquels appartient le pays.
+            str | None: code du continent (AF, AS, EU, NA, OC, SA)
+                    ou None si le code est inconnu.
+        """
+        return Pays.continent_de(self.code_iso)
+
+    @staticmethod
+    def groupes_de(code_iso: str) -> list[str]:
+        """Renvoie les groupes auxquels appartient un pays, à partir de son code ISO.
+
+        Args:
+            code_iso (str): code ISO du pays étudié (ex : 'FRA').
+
+        Returns:
+            list[str]: sigles des groupes auxquels appartient le pays (ex : ['EU', 'G7', ...]).
         """
 
-        code = code_iso or self.code_iso
-
         try:
-            return worldcountrygroups.search_groups(country=code.upper())
-        except (KeyError, ValueError):
+            groupes = worldcountrygroups.search_groups(country=code_iso.upper())
+            return [groupe.acronym or groupe.name for groupe in groupes]
+        except (KeyError, ValueError, AttributeError):
             return []
+
+    def groupes(self) -> list[str]:
+        """Renvoie les groupes auxquels appartient le pays courant.
+
+        Returns:
+            list[str]: sigles des groupes auxquels appartient le pays.
+        """
+        return Pays.groupes_de(self.code_iso)
 
 

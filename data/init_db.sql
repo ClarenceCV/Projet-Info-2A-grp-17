@@ -1,82 +1,53 @@
--- Initialise la base de données LaborScope
--- Crée les tables correspondant à nos business objects (Pays, Indicateur, Profession, Observation)
+-- Initialise la base de données LaborScope (modèle en étoile)
+--   - pays, indicateur : tables de dimensions (référentiels)
+--   - observation      : table de faits (une ligne = une valeur ILOSTAT)
+-- Les indicateurs ne sont pas insérés ici : l'import les crée à partir de la configuration Python.
 -- ATTENTION : supprime tout le schéma existant (utilisé aussi par utils/reset_database.py)
 
 DROP SCHEMA IF EXISTS laborscope CASCADE;
 CREATE SCHEMA laborscope;
+SET search_path TO laborscope;
 
 
 -- ---------------------------------------------------------------------
 -- Pays (ou zone géographique : ILOSTAT fournit aussi des régions, ex : 'X01' = Monde)
 -- ---------------------------------------------------------------------
-CREATE TABLE laborscope.pays (
-    id_pays   SERIAL       PRIMARY KEY,
-    code_iso  VARCHAR(10)  NOT NULL UNIQUE,   -- 'FRA', 'DEU'... (colonne ref_area d'ILOSTAT)
-    nom       VARCHAR(100) NOT NULL
+CREATE TABLE pays (
+    code_iso  TEXT PRIMARY KEY,               -- 'FRA' (colonne ref_area d'ILOSTAT)
+    nom       TEXT NOT NULL                   -- 'France' (colonne ref_area.label)
 );
 
 
 -- ---------------------------------------------------------------------
 -- Indicateur ILOSTAT
 -- ---------------------------------------------------------------------
-CREATE TABLE laborscope.indicateur (
-    id_indicateur  SERIAL       PRIMARY KEY,
-    code_ilostat   VARCHAR(50)  NOT NULL UNIQUE,  -- ex : 'EMP_5EMP_SEX_OC2_NB_Q'
-    libelle        VARCHAR(255) NOT NULL,
-    description    TEXT,
-    unite          VARCHAR(50)  NOT NULL          -- 'milliers' ou '%'
+CREATE TABLE indicateur (
+    id            SERIAL PRIMARY KEY,
+    code          TEXT NOT NULL UNIQUE,       -- id appelé dans l'API, ex : 'EMP_5EMP_SEX_OC2_NB_Q'
+    libelle       TEXT NOT NULL,              -- nom lisible, ex : 'Emploi par sexe et profession'
+    unite         TEXT NOT NULL,              -- 'milliers' ou '%'
+    frequence     CHAR(1) NOT NULL,           -- 'Q' (trimestriel), 'A' (annuel), 'M' (mensuel)
+    nom_classif1  TEXT                        -- ce que contient observation.classif1 : 'profession', 'tranche_age'
 );
 
 
 -- ---------------------------------------------------------------------
--- Profession (classif1 de l'indicateur emploi par profession)
+-- Observation : une valeur ILOSTAT pour un indicateur, un pays, une source,
+-- une période, un sexe et une ventilation (classif1) donnés.
+-- Les colonnes source, sexe et classif1 contiennent des libellés nettoyés par le parser.
 -- ---------------------------------------------------------------------
-CREATE TABLE laborscope.profession (
-    id_profession  SERIAL       PRIMARY KEY,
-    libelle        VARCHAR(255) NOT NULL UNIQUE,
-    niveau         INTEGER                        -- niveau dans la nomenclature (optionnel)
+CREATE TABLE observation (
+    indicateur_id  INT  NOT NULL REFERENCES indicateur(id) ON DELETE CASCADE,
+    code_iso       TEXT NOT NULL REFERENCES pays(code_iso),
+    source         TEXT NOT NULL,                -- 'LFS - Employment Survey'
+    periode        TEXT NOT NULL,                -- '2024Q4' : tri alphabétique = tri chronologique
+    sexe           TEXT NOT NULL,                -- 'Total', 'Male', 'Female'
+    classif1       TEXT NOT NULL DEFAULT '_NA',  -- '22 - Health professionals', '15-24' ('_NA' si absent)
+    valeur         DOUBLE PRECISION NOT NULL,
+    statut         TEXT,                         -- obs_status : NULL ou 'U' (valeur peu fiable)
+    date_maj       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    -- Identité d'une observation. Empêche les doublons quand l'import est relancé :
+    -- une observation déjà présente voit sa valeur mise à jour (INSERT ... ON CONFLICT).
+    PRIMARY KEY (indicateur_id, code_iso, source, periode, sexe, classif1)
 );
-
-
--- ---------------------------------------------------------------------
--- Observation : une ligne de données ILOSTAT
--- Une seule table pour tous les indicateurs :
---   - id_profession est rempli seulement pour les indicateurs par profession
---   - tranche_age est rempli seulement pour les indicateurs par âge
--- ---------------------------------------------------------------------
-CREATE TABLE laborscope.observation (
-    id_observation  SERIAL           PRIMARY KEY,
-    id_indicateur   INTEGER          NOT NULL REFERENCES laborscope.indicateur(id_indicateur) ON DELETE CASCADE,
-    id_pays         INTEGER          NOT NULL REFERENCES laborscope.pays(id_pays) ON DELETE CASCADE,
-    id_profession   INTEGER          REFERENCES laborscope.profession(id_profession) ON DELETE CASCADE,
-    tranche_age     VARCHAR(50),
-    sexe            VARCHAR(50)      NOT NULL,
-    periode         CHAR(6)          NOT NULL CHECK (periode ~ '^[0-9]{4}Q[1-4]$'),  -- ex : '2024Q1'
-    valeur          DOUBLE PRECISION NOT NULL,
-    date_maj        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    -- Empêche les doublons quand le fetcher est relancé (récupération périodique).
-    -- NULLS NOT DISTINCT (PostgreSQL >= 15) : deux NULL sont considérés égaux,
-    -- sinon les lignes sans profession / sans tranche d'âge pourraient être dupliquées.
-    CONSTRAINT uq_observation UNIQUE NULLS NOT DISTINCT
-        (id_indicateur, id_pays, id_profession, tranche_age, sexe, periode)
-);
-
--- Accélère les recherches les plus fréquentes (F3, F4, F5)
-CREATE INDEX idx_observation_recherche
-    ON laborscope.observation (id_indicateur, id_pays, periode);
-
-
--- ---------------------------------------------------------------------
--- Indicateurs suivis par l'application
--- ---------------------------------------------------------------------
-INSERT INTO laborscope.indicateur (code_ilostat, libelle, description, unite) VALUES
-    ('EMP_5EMP_SEX_OC2_NB_Q',
-     'Emploi par sexe et profession',
-     'Nombre de personnes en emploi, par sexe et grand groupe de profession (CITP-08), trimestriel',
-     'milliers'),
-    -- TODO : code à vérifier sur ILOSTAT (taux d'activité vs ratio emploi/population EMP_DWAP_...)
-    ('EAP_DWAP_SEX_AGE_RT_Q',
-     'Taux d''activité par sexe et âge',
-     'Population active rapportée à la population en âge de travailler, par sexe et tranche d''âge, trimestriel',
-     '%');
