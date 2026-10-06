@@ -73,27 +73,36 @@ classDiagram
     }
 
     %% ===================== Couche Objet métier =====================
+    classDiagram
+    direction LR
+
+    %% ========== Objets métier / configuration ==========
     class Indicateur {
-        -id : int
-        -code : str
-        -nom : str
-        -description : str
-        -unite : str
+        <<dataclass>>
+        +code : str = "EMP_5EMP_SEX_OC2_NB_Q"
+        +libelle : str = "Emploi par sexe et profession"
+        +unite : str = "milliers"
+        +frequence : str = "Q"
+        +nom_classif1 : str = "profession"
     }
     class Pays {
-        -id : int
-        -code_iso : str
-        -nom : str
-        -region : str
+        +code_iso : str = "FRA"
+        +nom_pays : str = "France"
+        +continent_de(code_iso)$ str
+        +continent() str
+        +groupes_de(code_iso)$ list~str~
+        +groupes() list~str~
     }
-    class Observation {
-        -id : int
-        -sexe : str
-        -tranche_age : str
-        -profession : str
-        -periode : str
-        -valeur : float
+    class Filtre {
+        <<dataclass>>
+        +pays : list~str~ = ["FRA", "DEU"]
+        +periode_min : str = "2023Q1"
+        +periode_max : str = "2024Q4"
+        +sexe : str = "Female"
+        +classif1 : str = None
     }
+
+
     class Utilisateur {
         -id : int
         -nom : str

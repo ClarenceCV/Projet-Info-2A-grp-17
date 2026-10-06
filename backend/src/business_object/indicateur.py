@@ -1,50 +1,35 @@
+from dataclasses import dataclass
+
+#le décorateur dataclass permet de coder les méthodes init, repr et eq de la manière naturelle
+@dataclass(frozen=True) # le frozen fixe les indicateurs (pas de modifications après la création)
 class Indicateur:
     """
-    Classe pour les indicateurs ILOSTAT
+    Indicateur ILOSTAT (pour l'instant on en a 2).
+
     Attributes:
-        code_ilostat (str): code unique de l'indicateur (ex : 'EMP_5EMP_SEX_OC2_NB_Q')
-        libelle (str): nom lisible de l'indicateur
-        unite (str): unité des valeurs ('milliers' ou '%')
-        description (str | None): description détaillée
-        id_indicateur (int | None): identifiant en base, None tant que non enregistré
+        code (str): identifiant du dataset dans l'API, ex : 'EMP_5EMP_SEX_OC2_NB_Q'
+        libelle (str): nom lisible affiché à l'utilisateur, ex : 'Emploi par sexe et profession'
+        unite (str): unité des valeurs, 'milliers' ou '%'
+        frequence (str): 'Q' (trimestriel), 'A' (annuel) ou 'M' (mensuel)
+        nom_classif1 (str | None): ce que contient la colonne classif1, ex : 'profession'
     """
 
-    def __init__(
-        self,
-        code_ilostat: str,
-        libelle: str,
-        unite: str,
-        description: str | None = None,
-        id_indicateur: int | None = None,
-    ):
-        """Constructor"""
-        if not isinstance(code_ilostat, str) or not code_ilostat:
-            raise ValueError("code_ilostat should be a non empty string")
-        if not isinstance(libelle, str) or not libelle:
-            raise ValueError("libelle should be a non empty string")
-        if not isinstance(unite, str) or not unite:
-            raise ValueError("unite should be a non empty string")
-        if description is not None and not isinstance(description, str):
-            raise TypeError("description should be a string or None")
-        if id_indicateur is not None and not isinstance(id_indicateur, int):
-            raise TypeError("id_indicateur should be an integer or None")
+    code: str
+    libelle: str
+    unite: str
+    frequence: str
+    nom_classif1: str | None = None
 
-        self.code_ilostat = code_ilostat
-        self.libelle = libelle
-        self.unite = unite
-        self.description = description
-        self.id_indicateur = id_indicateur
+    def __post_init__(self):
+        """Vérifie les attributs juste après la création de l'objet"""
+        for nom in ("code", "libelle", "unite"):
+            valeur = getattr(self, nom)
+            if not isinstance(valeur, str) or not valeur:
+                raise ValueError(f"{nom} should be a non empty string")
+        if self.frequence not in ("Q", "A", "M"):
+            raise ValueError("frequence should be 'Q', 'A' or 'M'")
+        if self.nom_classif1 is not None and not isinstance(self.nom_classif1, str):
+            raise TypeError("nom_classif1 should be a string or None")
 
     def __str__(self):
         return f"{self.libelle} ({self.unite})"
-
-    def __repr__(self):
-        return f"Indicateur(code_ilostat={self.code_ilostat!r}, libelle={self.libelle!r})"
-
-    def __eq__(self, other):
-        if not isinstance(other, Indicateur):
-            return NotImplemented
-        return self.code_ilostat == other.code_ilostat
-
-    def __hash__(self):
-        return hash(self.code_ilostat)
