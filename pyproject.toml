@@ -11,6 +11,8 @@ dependencies = [
     "requests",
     "pycountry_convert",
     "worldcountrygroups",
+    "fastapi>=0.142.2",
+    "uvicorn>=0.54.0",
 ]
 
 [dependency-groups]
