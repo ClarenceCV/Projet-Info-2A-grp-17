@@ -34,3 +34,42 @@ class IndicateurDAO:
                     asdict(indicateur),  # {'code': 'EMP_...', 'libelle': '...', ...}
                 )
                 return cursor.fetchone()["id"]
+
+    def lister(self) -> list[Indicateur]:
+        """
+        Liste tous les indicateurs enregistrés dans la base.
+
+        Returns:
+            list[Indicateur]: indicateurs triés par code
+        """
+        with DBConnection().connection as connection:  # noqa: SIM117
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT code, libelle, unite, frequence, nom_classif1 "
+                    "FROM laborscope.indicateur ORDER BY code;"
+                )
+                lignes = cursor.fetchall()
+
+        # chaque ligne est un dict {'code': ..., 'libelle': ...} : ** le transforme en arguments nommés
+        return [Indicateur(**ligne) for ligne in lignes]
+
+    def trouver_par_code(self, code: str) -> Indicateur | None:
+        """
+        Cherche un indicateur par son code.
+
+        params:
+            code: ex 'EMP_5EMP_SEX_OC2_NB_Q'
+
+        Returns:
+            Indicateur | None: l'indicateur, ou None s'il n'est pas dans la base
+        """
+        with DBConnection().connection as connection:  # noqa: SIM117
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT code, libelle, unite, frequence, nom_classif1 "
+                    "FROM laborscope.indicateur WHERE code = %(code)s;",
+                    {"code": code},
+                )
+                ligne = cursor.fetchone()  # None si aucune ligne
+
+        return Indicateur(**ligne) if ligne else None
