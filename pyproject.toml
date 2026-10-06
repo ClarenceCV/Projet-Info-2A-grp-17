@@ -9,6 +9,8 @@ dependencies = [
     "psycopg2-binary",
     "python-dotenv",
     "requests",
+    "pycountry_convert",
+    "worldcountrygroups",
 ]
 
 [dependency-groups]
