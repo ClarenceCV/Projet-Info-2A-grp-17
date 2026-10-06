@@ -40,42 +40,42 @@ class Pays:
     def __hash__(self):
         return hash((self.code_iso, self.nom_pays))
 
-def continent(self, code_iso: str | None = None) -> str | None:
-    """Renvoie le continent auquel appartient le pays.
+    def continent(self, code_iso: str | None = None) -> str | None:
+        """Renvoie le continent auquel appartient le pays.
 
-    Args:
-        code_iso (str | None): code ISO du pays étudié.
-                             Si None, utilise le code du pays courant.
+        Args:
+            code_iso (str | None): code ISO du pays étudié.
+                                Si None, utilise le code du pays courant.
 
-    Returns:
-        str | None: code du continent (AF, AS, EU, NA, OC, SA)
-                   ou None si le code est inconnu.
-    """
+        Returns:
+            str | None: code du continent (AF, AS, EU, NA, OC, SA)
+                    ou None si le code est inconnu.
+        """
 
-    code = code_iso or self.code_iso
+        code = code_iso or self.code_iso
 
-    try:
-        return pc.country_alpha2_to_continent_code(code.upper())
-    except (KeyError, TypeError):
-        return None
+        try:
+            return pc.country_alpha2_to_continent_code(code.upper())
+        except (KeyError, TypeError):
+            return None
 
 
-def groupes(self, code_iso: str | None = None) -> list[str]:
-    """Renvoie les groupes auxquels appartient le pays.
+    def groupes(self, code_iso: str | None = None) -> list[str]:
+        """Renvoie les groupes auxquels appartient le pays.
 
-    Args:
-        code_iso (str | None): code ISO du pays étudié.
-                             Si None, utilise le code du pays courant.
+        Args:
+            code_iso (str | None): code ISO du pays étudié.
+                                Si None, utilise le code du pays courant.
 
-    Returns:
-        list[str]: liste des groupes auxquels appartient le pays.
-    """
+        Returns:
+            list[str]: liste des groupes auxquels appartient le pays.
+        """
 
-    code = code_iso or self.code_iso
+        code = code_iso or self.code_iso
 
-    try:
-        return worldcountrygroups.search_groups(country=code.upper())
-    except (KeyError, ValueError):
-        return []
+        try:
+            return worldcountrygroups.search_groups(country=code.upper())
+        except (KeyError, ValueError):
+            return []
 
 
