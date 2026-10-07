@@ -4,8 +4,8 @@
 
 | Rôle | Fiche | Fonctionnalités du sujet | Nom |
 |---|---|---|---|
-| **A** — Données et administration | [A_donnees_admin.md](A_donnees_admin.md) | F1, F2, F6 (données), logs, tests, CI |Clar | 
-| **B** — Utilisateurs, sécurité, squelette frontend | [B_utilisateurs_frontend.md](B_utilisateurs_frontend.md) | F6 (comptes, rôles, historique), Streamlit |Laure t |
+| **A** — Données et administration | [A_donnees_admin.md](A_donnees_admin.md) | F1, F2, F6 (données), logs, tests, CI |Clarence | 
+| **B** — Utilisateurs, sécurité, squelette frontend | [B_utilisateurs_frontend.md](B_utilisateurs_frontend.md) | F6 (comptes, rôles, historique), Streamlit |Laurent |
 | **C** — Évolution d'un indicateur | [C_evolution_F3.md](C_evolution_F3.md) | F3 | |
 | **D** — Comparaison entre pays + carte | [D_comparaison_pays_F4_FO2.md](D_comparaison_pays_F4_FO2.md) | F4, FO2 | |
 | **E** — Multi-indicateurs + rapport PDF | [E_multi_indicateurs_F5_FO3.md](E_multi_indicateurs_F5_FO3.md) | F5, FO3 | |
