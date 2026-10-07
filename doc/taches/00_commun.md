@@ -4,8 +4,8 @@
 
 | Rôle | Fiche | Fonctionnalités du sujet | Nom |
 |---|---|---|---|
-| **A** — Données et administration | [A_donnees_admin.md](A_donnees_admin.md) | F1, F2, F6 (données), logs, tests, CI | |
-| **B** — Utilisateurs, sécurité, squelette frontend | [B_utilisateurs_frontend.md](B_utilisateurs_frontend.md) | F6 (comptes, rôles, historique), Streamlit | |
+| **A** — Données et administration | [A_donnees_admin.md](A_donnees_admin.md) | F1, F2, F6 (données), logs, tests, CI |Clar | 
+| **B** — Utilisateurs, sécurité, squelette frontend | [B_utilisateurs_frontend.md](B_utilisateurs_frontend.md) | F6 (comptes, rôles, historique), Streamlit |Laure t |
 | **C** — Évolution d'un indicateur | [C_evolution_F3.md](C_evolution_F3.md) | F3 | |
 | **D** — Comparaison entre pays + carte | [D_comparaison_pays_F4_FO2.md](D_comparaison_pays_F4_FO2.md) | F4, FO2 | |
 | **E** — Multi-indicateurs + rapport PDF | [E_multi_indicateurs_F5_FO3.md](E_multi_indicateurs_F5_FO3.md) | F5, FO3 | |
@@ -170,29 +170,17 @@ Tout le monde pousse directement sur `main`. Pour que ça reste vivable :
 | `data/init_db.sql` | A gère les tables de données, B ajoute `utilisateur` et `journal` |
 | `pyproject.toml` / `uv.lock` | `uv add <paquet>` (jamais d'édition à la main) |
 | `frontend/app.py` (créé par B) | ajouter **sa page** dans la navigation |
-| `doc/api.md` | décrire **son** endpoint |
 
 6. **Ne jamais commiter** `.env`, des mots de passe ou des fichiers CSV de test.
 
 ---
 
-## 5. Le contrat d'API (`doc/api.md`) — semaine 1
+## 5. La documentation de l'API
 
-Avant de coder, chaque personne décrit **ses** endpoints dans `doc/api.md` : adresse, paramètres, exemple de réponse JSON, erreurs.
-Une fois ce contrat écrit, B peut préparer les pages Streamlit avec de fausses données pendant que les autres codent le backend.
-
-Modèle à recopier :
-
-````markdown
-## GET /analyses/evolution   (responsable : C)
-Paramètres : indicateur (obligatoire), pays (liste), sexe (défaut Total), classif1, n_periodes (défaut 8)
-Réponse 200 :
-```json
-[{"code_iso": "FRA", "nom_pays": "France", "periode": "2024Q4", "valeur": 52.07,
-  "variation_abs": 0.3, "variation_pct": 0.58}]
-```
-Erreurs : 404 indicateur inconnu
-````
+Pas de document à écrire pendant le développement :
+- **chaque fiche (C, D, E) contient déjà le contrat proposé** de son endpoint (adresse, paramètres, exemple de réponse JSON). B s'en sert pour préparer les pages Streamlit. Si tu veux changer un nom ou un format par rapport à ta fiche, **préviens B** ;
+- **`/docs`** (généré automatiquement par FastAPI) est la documentation de référence : elle est toujours à jour avec le code ;
+- **en fin de projet** (semaine 5), A liste tous les endpoints dans le README.
 
 ---
 
@@ -200,7 +188,7 @@ Erreurs : 404 indicateur inconnu
 
 | Semaine | Objectif |
 |---|---|
-| **S1 — 7 au 13 oct** | tout le monde fait tourner le projet sur Onyxia ; contrats dans `doc/api.md` ; A : tests + `/pays` ; B : squelette Streamlit + gardes provisoires |
+| **S1 — 7 au 13 oct** | tout le monde fait tourner le projet sur Onyxia et comprend le parcours de `/observations` ; A : tests + `/pays` ; B : squelette Streamlit + gardes provisoires |
 | **S2 — 14 au 20 oct** | services + tests |
 | **S3 — 21 au 23 oct** | schémas + endpoints, testés dans `/docs` |
 | *24 au 31 oct* | vacances |

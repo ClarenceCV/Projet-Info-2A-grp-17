@@ -64,11 +64,14 @@ Ouvre ces fichiers dans l'ordre et lis-les en entier, en suivant la requête `GE
 
 ---
 
-## Étape 1 — Le contrat de ton endpoint (semaine 1)
+## Étape 1 — Le contrat de ton endpoint (semaine 1, 15 minutes)
+
+Voici ce que ton endpoint recevra et renverra. **Lis-le simplement** : B s'en sert pour préparer ta page Streamlit.
+Si en codant tu veux changer un nom de paramètre ou de champ, pas de souci, mais **préviens B**.
 
 **Nouveauté** : chaque indicateur a **ses propres filtres** (emploi → `classif1=Total` ; taux → `classif1=15+`). Avec de simples paramètres d'URL, ce serait illisible. On envoie donc une **liste de sélections dans le corps de la requête** (JSON) avec `POST`.
 
-Écris ta section dans `doc/api.md`. Proposition :
+Le contrat :
 
 ```
 POST /analyses/multi-indicateurs
@@ -308,7 +311,7 @@ Sélecteurs, puis `st.download_button("Télécharger le rapport", data=<octets d
 ## Checklist
 
 - [ ] S1 : projet lancé sur Onyxia (30.766), parcours du code compris, exercices 0.c faits
-- [ ] S1 : contrat dans `doc/api.md`
+- [ ] S1 : contrat de l'étape 1 lu (et B prévenu si changement)
 - [ ] S2 : `Selection` + `MultiIndicateursService.comparer` testé en console
 - [ ] S2 : tests F5 (`uv run pytest` passe)
 - [ ] S3 : schémas + endpoint `POST`, testé dans `/docs`

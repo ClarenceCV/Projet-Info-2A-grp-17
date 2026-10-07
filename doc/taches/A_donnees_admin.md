@@ -105,7 +105,6 @@ C, D et E ont besoin de proposer à l'utilisateur les valeurs possibles de `clas
   et créer un **`.env.example`** (mêmes clés, valeurs vides) que les autres copieront.
 - Supprimer ce qui ne sert plus : `business_object/observation.py`, `business_object/profession.py`, `data/data.py` (vide), et dans `fetcher/parser.py` les fonctions `nettoyer`, `mapper`, `separer_classif1` (seule `retirer_prefixe` est utilisée).
   Vérifier ensuite que tout s'importe encore : `uv run python -c "import main"` depuis `backend/src`.
-- Écrire `doc/api.md` avec les endpoints existants (`/indicateurs`, `/observations`, `/pays`) au format de la fiche commune.
 
 ---
 
@@ -200,7 +199,7 @@ Supprimer du rapport : la classe `Observation`, « deux bases distinctes ».
 
 - [ ] S1 : `uv run pytest` fonctionne + test d'exemple — **prévenir le groupe**
 - [ ] S1 : `GET /pays` et `GET /indicateurs/{code}/classif1`
-- [ ] S1 : `.env` retiré de git, `.env.example`, ancien code supprimé, `doc/api.md`
+- [ ] S1 : `.env` retiré de git, `.env.example`, ancien code supprimé
 - [ ] S2 : import robuste (erreurs par pays)
 - [ ] S2-S3 : `POST /admin/import`, `PUT`/`DELETE /admin/observations`
 - [ ] S2-S3 : liste de pays élargie avec D
