@@ -19,3 +19,8 @@ dependencies = [
 dev = [
     "pytest",
 ]
+
+
+[tool.pytest.ini_options]
+pythonpath = ["backend/src"]
+testpaths = ["backend/tests"]
