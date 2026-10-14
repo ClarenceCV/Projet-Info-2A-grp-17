@@ -1,9 +1,9 @@
 # Accès à la table pays. Entrée : DataFrame ; sortie : sql
 
 import pandas as pd
-from psycopg2.extras import execute_values
-
+from buisness_object.pays.py import Pays
 from dao.db_connection import DBConnection
+from psycopg2.extras import execute_values
 
 
 class PaysDAO:
@@ -36,3 +36,21 @@ class PaysDAO:
                     lignes,
                 )
         return len(lignes)
+
+    def lister(self) -> list[Pays]:
+        """
+        Liste tous les pays enregistrés dans la base.
+
+        Return:
+            list[Pays]: liste des pays de la base ordonné par nom.
+        """
+        with DBConnection().connection as connection:  # noqa: SIM117
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    " SELECT code_iso, nom AS nom_pays "  # AS nom_pays pour correspondre à la classe pays
+                    " FROM laborscope.pays ORDER BY nom "
+                )
+            lignes = cursor.fetchall()
+
+        # chaque ligne est un dict {'code': ..., 'libelle': ...} : ** le transforme en arguments nommés
+        return [Pays(**ligne) for ligne in lignes]    
