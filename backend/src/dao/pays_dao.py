@@ -47,10 +47,13 @@ class PaysDAO:
         with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 cursor.execute(
-                    " SELECT code_iso, nom AS nom_pays "  # AS nom_pays pour correspondre à la classe pays
+                    " SELECT DISTINCT code_iso, nom "  # AS nom_pays pour correspondre à la classe pays
                     " FROM laborscope.pays ORDER BY nom "
                 )
             lignes = cursor.fetchall()
 
         # chaque ligne est un dict {'code': ..., 'libelle': ...} : ** le transforme en arguments nommés
-        return [Pays(**ligne) for ligne in lignes]    
+        return [
+            Pays(code_iso=ligne["code_iso"], nom_pays=ligne["nom"])
+            for ligne in lignes
+            ]
