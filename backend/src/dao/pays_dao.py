@@ -1,7 +1,7 @@
 # Accès à la table pays. Entrée : DataFrame ; sortie : sql
 
 import pandas as pd
-from buisness_object.pays.py import Pays
+from business_object.pays import Pays
 from dao.db_connection import DBConnection
 from psycopg2.extras import execute_values
 

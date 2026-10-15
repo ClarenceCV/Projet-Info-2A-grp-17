@@ -12,7 +12,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
-from controller import indicateur_controller, observation_controller
+from controller import indicateur_controller, observation_controller, evolution_controller
 
 # charge le .env (connexion à la base, host et port du webservice)
 dotenv.load_dotenv(override=True)
@@ -22,6 +22,7 @@ app = FastAPI(title="LaborScope", description="Analyse du marché du travail mon
 # chaque controller regroupe les endpoints d'un thème, sous un préfixe commun
 app.include_router(indicateur_controller.router, prefix="/indicateurs", tags=["Indicateurs"])
 app.include_router(observation_controller.router, prefix="/observations", tags=["Observations"])
+app.include_router(evolution_controller.router, prefix="/analyses", tags=["Analyses"])
 
 
 @app.get("/", include_in_schema=False)
