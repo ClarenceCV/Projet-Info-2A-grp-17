@@ -13,6 +13,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
 from controller import indicateur_controller, observation_controller, evolution_controller
+from controller import pays_controller
 
 # charge le .env (connexion à la base, host et port du webservice)
 dotenv.load_dotenv(override=True)
@@ -23,6 +24,7 @@ app = FastAPI(title="LaborScope", description="Analyse du marché du travail mon
 app.include_router(indicateur_controller.router, prefix="/indicateurs", tags=["Indicateurs"])
 app.include_router(observation_controller.router, prefix="/observations", tags=["Observations"])
 app.include_router(evolution_controller.router, prefix="/analyses", tags=["Analyses"])
+app.include_router(pays_controller.router, prefix="/pays", tags=["Pays"])
 
 
 @app.get("/", include_in_schema=False)
