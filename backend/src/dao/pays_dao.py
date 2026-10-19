@@ -50,7 +50,7 @@ class PaysDAO:
                     " SELECT DISTINCT code_iso, nom "  # AS nom_pays pour correspondre à la classe pays
                     " FROM laborscope.pays ORDER BY nom "
                 )
-            lignes = cursor.fetchall()
+                lignes = cursor.fetchall()
 
         # chaque ligne est un dict {'code': ..., 'libelle': ...} : ** le transforme en arguments nommés
         return [
