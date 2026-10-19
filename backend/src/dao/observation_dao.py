@@ -126,3 +126,28 @@ class ObservationDAO:
 
         # columns= : garde les bonnes colonnes même si aucune ligne n'est trouvée
         return pd.DataFrame(lignes, columns=COLONNES_LECTURE)
+
+    def lister_classif1(self, code_indicateur: str) -> list[str]:
+        """
+        Liste les données spécifiques d'un indicateur (tranche d'âge ou
+        la profession par ex)
+
+        Params:
+            code_indicateur: le code de l'indicateur (obligatoire)
+        Returns:
+            Liste des modalités propres à l'indicateur (comme la tranche d'âge
+            ou les professions)
+        """
+        with DBConnection().connection as connection:  # noqa: SIM117
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT DISTINCT o.classif1                            "
+                    "FROM laborscope.observation o                         "
+                    "JOIN laborscope.indicateur i ON i.id = o.indicateur_id"
+                    "WHERE i.code = %(code)s ORDER BY o.classif1`          "
+                )
+            lignes = cursor.fetchall()
+        
+        return lignes
+
+ 
