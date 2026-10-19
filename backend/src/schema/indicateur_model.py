@@ -15,3 +15,11 @@ class IndicateurModel(BaseModel):
     unite: str
     frequence: str
     nom_classif1: str | None = None
+
+
+class IndicateurClassif1Model(BaseModel):
+    """
+    Modèle pour renvoyer les modalités d'un indictaur
+    """
+    code: str
+    modalites: list[str]
