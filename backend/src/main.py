@@ -23,7 +23,7 @@ app = FastAPI(title="LaborScope", description="Analyse du marché du travail mon
 # chaque controller regroupe les endpoints d'un thème, sous un préfixe commun
 app.include_router(indicateur_controller.router, prefix="/indicateurs", tags=["Indicateurs"])
 app.include_router(observation_controller.router, prefix="/observations", tags=["Observations"])
-app.include_router(evolution_controller.router, prefix="/analyses", tags=["Analyses"])
+#app.include_router(evolution_controller.router, prefix="/analyses", tags=["Analyses"])
 app.include_router(pays_controller.router, prefix="/pays", tags=["Pays"])
 
 
