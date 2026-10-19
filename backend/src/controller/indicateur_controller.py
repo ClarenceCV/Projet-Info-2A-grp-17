@@ -3,9 +3,10 @@
 from dataclasses import asdict
 
 from fastapi import APIRouter, HTTPException
+from schema.indicateur_model import IndicateurModel, IndicateurClassif1Model
 
-from schema.indicateur_model import IndicateurModel
 from service.indicateur_service import IndicateurService
+from service.observation_service import ObservationService
 
 router = APIRouter()
 
@@ -28,3 +29,12 @@ async def indicateur_par_code(code: str):
     if indicateur is None:
         raise HTTPException(status_code=404, detail=f"Indicateur {code} introuvable.")
     return IndicateurModel(**asdict(indicateur))
+
+
+@router.get("/{code}/classif1", response_model=IndicateurClassif1Model)
+async def liste_classif1(code: str):
+    indicateur = IndicateurService().trouver_par_code(code)
+    if indicateur is None:
+        raise HTTPException(status_code=404, detail=f"Indicateur {code} introuvable.")
+    modalites = ObservationService().lister_classif1(code)
+    return IndicateurClassif1Model(code=code, modalites=modalites)
