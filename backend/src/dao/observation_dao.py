@@ -141,13 +141,12 @@ class ObservationDAO:
         with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT DISTINCT o.classif1                            "
-                    "FROM laborscope.observation o                         "
-                    "JOIN laborscope.indicateur i ON i.id = o.indicateur_id"
-                    "WHERE i.code = %(code)s ORDER BY o.classif1`          "
+                    "SELECT DISTINCT o.classif1 "
+                    "FROM laborscope.observation o "
+                    "JOIN laborscope.indicateur i ON i.id = o.indicateur_id "
+                    "WHERE i.code = %(code)s AND o.classif1 IS NOT NULL "
+                    "ORDER BY 1",
+                    {"code": code_indicateur},
                 )
-            lignes = cursor.fetchall()
-        
-        return lignes
-
- 
+                lignes = cursor.fetchall()
+        return [ligne["classif1"] for ligne in lignes]
