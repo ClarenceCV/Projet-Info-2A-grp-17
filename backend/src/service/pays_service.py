@@ -1,5 +1,5 @@
 
-from buisness_object.pays.py import Pays
+from business_object.pays import Pays
 from dao.pays_dao import PaysDAO
 
 
@@ -12,4 +12,4 @@ class PaysService:
         """
         Liste les pays
         """
-        return PaysDAO.lister()
+        return PaysDAO.lister(self)
