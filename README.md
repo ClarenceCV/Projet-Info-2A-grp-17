@@ -4,7 +4,7 @@ Analyse interactive du marché du travail mondial à partir des données de l'OI
 
 
 
-## LAncer l'application sur Onyxia
+## Lancer l'application sur Onyxia
 
 
 1. **Lancer un service PosteGreSQL** (Le README du service ontient host, user, mot de passe pour le .env après).
@@ -33,7 +33,7 @@ git pull
 uv sync
 ```
 
-5. Préparer la base (seulement si nécessaire) : une fois au début ou si vous voulez reset les données (observations et utilisateurs)
+5. Préparer la base de donnée : une seule fois au début ou si vous voulez reset les données (observations et utilisateurs)
 ```bash
 cd backend/src
 uv run python -m utils.reset_database      # supprime et recrée toutes les tables (vides)
@@ -51,7 +51,7 @@ uv run python main.py
 cd frontend
 uv run streamlit run src/app.py
 ```
-`Ctrl+C` arrête un serveur.
+`Ctrl+C` pour arrêter un serveur.
 
 7. Ouvrir dans le navigateur
 Retourner sur vos services Onyxia. Cliquer sur "Ouvrir" puis Onyxia affiche un lien par port.
