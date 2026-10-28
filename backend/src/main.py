@@ -14,6 +14,7 @@ from fastapi.responses import RedirectResponse
 from controller import indicateur_controller, observation_controller, evolution_controller
 from controller import pays_controller
 from controller import multi_indicateurs_controller
+from controller import login_controller, utilisateur_controller
 
 # charge le .env (connexion à la base, host et port du webservice)
 dotenv.load_dotenv(override=True)
@@ -26,6 +27,8 @@ app.include_router(observation_controller.router, prefix="/observations", tags=[
 app.include_router(evolution_controller.router, prefix="/analyses", tags=["Analyses"])
 app.include_router(pays_controller.router, prefix="/pays", tags=["Pays"])
 app.include_router(multi_indicateurs_controller.router, prefix="/analyses", tags=["Analyses"])
+app.include_router(login_controller.router, tags=["Connexion"])
+app.include_router(utilisateur_controller.router, prefix="/utilisateurs", tags=["Utilisateurs"])
 
 
 @app.get("/", include_in_schema=False)
