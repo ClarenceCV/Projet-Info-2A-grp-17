@@ -1,6 +1,6 @@
 # Ce fichier centralise tout ce qui concerne les autorisations de connexion (admin/user)
-# 
-# Il y a don toutes les fonctions exécutées par FastAPI AVANT un endpoint (avec Depends)
+#
+# Il y a donc toutes les fonctions exécutées par FastAPI AVANT un endpoint (avec Depends)
 # pour savoir qui fait la requête et s'il en a le droit.
 #
 # Utilisation dans un controller :
@@ -8,43 +8,57 @@
 #     from controller.auth import utilisateur_connecte, admin_requis
 #
 #     @router.get("/...")
-#     async def mon_endpoint(..., utilisateur=Depends(utilisateur_connecte)):   # connecté
-#     async def mon_endpoint(..., utilisateur=Depends(admin_requis)):           # admin
+#     def mon_endpoint(..., utilisateur=Depends(utilisateur_connecte)):   # connecté (sinon 401)
+#     def mon_endpoint(..., utilisateur=Depends(admin_requis)):           # admin (sinon 401 / 403)
 #
-# VERSION PROVISOIRE pour commencer à coder les différents users / admin :
-# tout le monde passe, avec un administrateur fictif.
-# La vraie vérification (token en base, 401 / 403) remplacera le contenu des fonctions,
-# sans changer leur nom : les controllers qui les utilisent n'auront rien à modifier.
+# Le client envoie son token (obtenu avec POST /login) dans l'en-tête HTTP 'X-Auth-Token'.
+# Dans /docs : bouton « Authorize » en haut à droite, coller le token une fois pour toutes.
+# (inspiré du template ENSAI : verify_token dans backend/src/utils/security.py)
 
-from fastapi import Depends, Header
+from fastapi import Depends, HTTPException, Security
+from fastapi.security import APIKeyHeader
 
-# utilisateur renvoyé tant que la connexion n'existe pas
-UTILISATEUR_FICTIF = {"pseudo": "dev", "role": "admin"}
+from business_object.utilisateur import Utilisateur
+from service.utilisateur_service import UtilisateurService
+
+# Lecture de l'en-tête X-Auth-Token. APIKeyHeader (plutôt que Header) fait aussi apparaître
+# le bouton « Authorize » dans /docs. auto_error=False : si l'en-tête manque, on reçoit None
+# et c'est nous qui renvoyons l'erreur 401, avec notre message.
+lecture_token = APIKeyHeader(
+    name="X-Auth-Token",
+    auto_error=False,
+    description="Token obtenu avec POST /login",
+)
 
 
-def utilisateur_connecte(x_auth_token: str | None = Header(None)) -> dict:
+def utilisateur_connecte(token: str | None = Security(lecture_token)) -> Utilisateur:
     """
     Renvoie l'utilisateur qui fait la requête, à partir de son token.
-    Le token est lu dans l'en-tête HTTP 'X-Auth-Token' (FastAPI fait la correspondance
-    avec le nom du paramètre x_auth_token).
-
-    Provisoire : renvoie toujours l'utilisateur fictif, avec ou sans token.
 
     Returns:
-        dict: l'utilisateur connecté
+        Utilisateur: l'utilisateur connecté
+
+    Raises:
+        HTTPException 401: token absent, inconnu, ou effacé par une déconnexion
     """
-    return UTILISATEUR_FICTIF
+    utilisateur = UtilisateurService().trouver_par_token(token)
+    if utilisateur is None:
+        raise HTTPException(status_code=401, detail="Connexion requise.")
+    return utilisateur
 
 
-def admin_requis(utilisateur: dict = Depends(utilisateur_connecte)) -> dict:
+def admin_requis(utilisateur: Utilisateur = Depends(utilisateur_connecte)) -> Utilisateur:
     """
     Vérifie que l'utilisateur connecté est administrateur.
-    Dépend de utilisateur_connecte : FastAPI vérifie d'abord la connexion,
+    Dépend de utilisateur_connecte : FastAPI vérifie d'abord la connexion (401),
     puis appelle cette fonction avec l'utilisateur trouvé.
 
-    Provisoire : laisse tout passer.
-
     Returns:
-        dict: l'utilisateur connecté (administrateur)
+        Utilisateur: l'utilisateur connecté (administrateur)
+
+    Raises:
+        HTTPException 403: l'utilisateur est connecté mais n'est pas administrateur
     """
+    if not utilisateur.est_admin:
+        raise HTTPException(status_code=403, detail="Réservé aux administrateurs.")
     return utilisateur

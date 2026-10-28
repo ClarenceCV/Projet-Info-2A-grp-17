@@ -1,10 +1,12 @@
-# Endpoints de connexion (sans préfixe, c.f. main.py) : POST /login
+# Endpoints de connexion (sans préfixe, c.f. main.py) : POST /login, POST /logout
 # (repris du template ENSAI : backend/src/controller/login_controller.py)
 
 from dataclasses import asdict
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
+from business_object.utilisateur import Utilisateur
+from controller.auth import utilisateur_connecte
 from schema.utilisateur_model import ConnexionModel, IdentifiantsModel, UtilisateurModel
 from service.utilisateur_service import UtilisateurService
 
@@ -25,3 +27,13 @@ def se_connecter(identifiants: IdentifiantsModel):
 
     utilisateur, token = resultat
     return ConnexionModel(token=token, utilisateur=UtilisateurModel(**asdict(utilisateur)))
+
+
+@router.post("/logout")
+def se_deconnecter(utilisateur: Utilisateur = Depends(utilisateur_connecte)):
+    """
+    Ferme la session de l'utilisateur connecté : son token ne fonctionnera plus.
+    Erreur 401 si personne n'est connecté.
+    """
+    UtilisateurService().se_deconnecter(utilisateur)
+    return {"message": f"Au revoir {utilisateur.pseudo}."}
