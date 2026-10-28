@@ -1,0 +1,12 @@
+# Configuration de Streamlit, lue automatiquement au lancement
+# (Streamlit cherche le dossier .streamlit dans le dossier d'où on lance la commande : frontend/)
+
+[server]
+port = 8000          # port ouvert dans le service VSCode Onyxia (le 5000 est pris par l'API)
+headless = true      # pas d'ouverture de navigateur ni de question au premier lancement (on est sur un serveur)
+
+[browser]
+gatherUsageStats = false   # n'envoie pas de statistiques d'utilisation à Streamlit
+
+[theme]
+primaryColor = "#1963a0"   # couleur des boutons et des éléments actifs (reprise du template)
