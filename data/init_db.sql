@@ -1,6 +1,9 @@
--- Initialise la base de données LaborScope (modèle en étoile)
+-- Initialise la base de données LaborScope
+--   Données (modèle en étoile) :
 --   - pays, indicateur : tables de dimensions (référentiels)
 --   - observation      : table de faits (une ligne = une valeur ILOSTAT)
+--   Comptes (F6) :
+--   - utilisateur, journal
 -- Les indicateurs ne sont pas insérés ici : l'import les crée à partir de la configuration Python.
 -- ATTENTION : supprime tout le schéma existant (utilisé aussi par utils/reset_database.py)
 
@@ -50,4 +53,31 @@ CREATE TABLE observation (
     -- Identité d'une observation. Empêche les doublons quand l'import est relancé :
     -- une observation déjà présente voit sa valeur mise à jour (INSERT ... ON CONFLICT).
     PRIMARY KEY (indicateur_id, code_iso, source, periode, sexe, classif1)
+);
+
+
+-- ---------------------------------------------------------------------
+-- Utilisateur de l'application (F6) : deux rôles, 'utilisateur' et 'admin'
+-- ---------------------------------------------------------------------
+CREATE TABLE utilisateur (
+    id                 SERIAL PRIMARY KEY,
+    pseudo             TEXT NOT NULL UNIQUE,                 -- identifiant de connexion
+    mdp_hash           TEXT NOT NULL,                        -- hash bcrypt : JAMAIS le mot de passe en clair
+    role               TEXT NOT NULL DEFAULT 'utilisateur'
+                       CHECK (role IN ('utilisateur', 'admin')),
+    token              TEXT UNIQUE,                          -- jeton de session, NULL si déconnecté
+    date_creation      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- ---------------------------------------------------------------------
+-- Journal des actions (F6 : « suivi des activités » par l'administrateur)
+-- ---------------------------------------------------------------------
+CREATE TABLE journal (
+    id              SERIAL PRIMARY KEY,
+    utilisateur_id  INT REFERENCES utilisateur(id) ON DELETE SET NULL,  -- NULL si le compte a été supprimé
+    pseudo          TEXT,                     -- copié au moment de l'action : reste lisible après suppression
+    action          TEXT NOT NULL,            -- 'connexion', 'creation_compte', 'suppression_donnee'...
+    detail          TEXT,                     -- précision libre, ex : 'EMP_5WAP_SEX_AGE_RT_Q, FRA, 2024Q4'
+    date            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

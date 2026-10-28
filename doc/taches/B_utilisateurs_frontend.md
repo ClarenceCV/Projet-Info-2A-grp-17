@@ -111,7 +111,7 @@ frontend/
 CREATE TABLE utilisateur (
     id                 SERIAL PRIMARY KEY,
     pseudo             TEXT NOT NULL UNIQUE,
-    mot_de_passe_hash  TEXT NOT NULL,             -- jamais le mot de passe en clair
+    mdp_hash           TEXT NOT NULL,             -- jamais le mot de passe en clair
     role               TEXT NOT NULL DEFAULT 'utilisateur' CHECK (role IN ('utilisateur', 'admin')),
     token              TEXT UNIQUE,               -- jeton de session, NULL si déconnecté
     date_creation      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
