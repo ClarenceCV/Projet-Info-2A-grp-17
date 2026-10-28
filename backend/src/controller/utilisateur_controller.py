@@ -2,12 +2,23 @@
 
 from dataclasses import asdict
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from business_object.utilisateur import Utilisateur
+from controller.auth import utilisateur_connecte
 from schema.utilisateur_model import IdentifiantsModel, UtilisateurModel
 from service.utilisateur_service import UtilisateurService
 
 router = APIRouter()
+
+
+@router.get("/moi", response_model=UtilisateurModel)
+def qui_suis_je(utilisateur: Utilisateur = Depends(utilisateur_connecte)):
+    """
+    Renvoie l'utilisateur connecté (celui à qui appartient le token).
+    Erreur 401 si personne n'est connecté.
+    """
+    return UtilisateurModel(**asdict(utilisateur))
 
 
 # def (et pas async def) : bcrypt met ~0,4 s à hacher et psycopg2 attend la base ;
