@@ -23,6 +23,9 @@ Analyse interactive du marché du travail mondial à partir des données de l'OI
 
    BACKEND_URL=http://localhost:5000
    BACKEND_TIMEOUT=10
+
+   ADMIN_PSEUDO=admin
+   ADMIN_MDP=un_mot_de_passe_securise
    ```
 
 ---
@@ -37,6 +40,7 @@ uv sync
 ```bash
 cd backend/src
 uv run python -m utils.reset_database      # supprime et recrée toutes les tables (vides)
+uv run python -m utils.creer_admin         # crée l'administrateur décrit dans le .env (ADMIN_PSEUDO, ADMIN_MDP)
 uv run python -m fetcher.charger_donnees   # importe les données ILOSTAT 
 ```
 
