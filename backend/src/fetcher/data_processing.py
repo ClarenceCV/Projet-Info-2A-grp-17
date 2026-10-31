@@ -6,8 +6,9 @@
 # Le téléchargement réutilise les fonctions de fetcher.py (construire_url, load_data).
 # Les requêtes SQL restent dans le dossier dao.
 
-import pandas as pd
+import time
 
+import pandas as pd
 from business_object.indicateur import Indicateur
 from config_import import ANNEE_DEBUT, PAYS_SUIVIS
 from dao.indicateur_dao import IndicateurDAO
@@ -58,13 +59,28 @@ class DataProcessing:
         Returns:
             pd.DataFrame: données brutes de tous les pays réunies (colonnes de l'API ILOSTAT)
         """
+        sleep = 3
+        nb_try = 2
         morceaux = []
         for code_iso in PAYS_SUIVIS:
             # url de fetcher.py + filtre sur un seul pays
             url = construire_url(indicator, ANNEE_DEBUT) + f"&ref_area={code_iso}"
-            df_pays = load_data(url)
+            df_pays = None
+            for essaie in range(1, nb_try +1):
+                try:
+                    df_pays = load_data(url)
+                    break                                 # si succès on sort de la boucle d'essaie
+                except Exception as e:
+                    print(f"  Essai {essaie}/{nb_try} échoué pour {code_iso} : {e}")
+                    if essaie < nb_try:
+                        time.sleep(sleep)                     # on attend avant de réessayer          
+
+            if df_pays is None:
+                print(f"  AVERTISSEMENT : {code_iso} ignoré pour {indicator}")
+                continue                       # on passe au pays suivant
+
             print(f"  {indicator} - {code_iso} : {len(df_pays)} lignes")
-            if not df_pays.empty:  # pays sans données : on passe au suivant
+            if not df_pays.empty:                     # pays sans données : on passe au suivant
                 morceaux.append(df_pays)
 
         if not morceaux:
