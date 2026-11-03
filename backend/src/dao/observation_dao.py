@@ -4,6 +4,8 @@ import pandas as pd
 from psycopg2.extras import execute_values
 
 from dao.db_connection import DBConnection
+from schema.observation_model import CleObservationModel
+
 
 # Colonnes du DataFrame propre envoyées dans la table observation (même nom des deux côtés)
 COLONNES_OBSERVATION = ["code_iso", "source", "periode", "sexe", "classif1", "valeur", "statut"]
@@ -150,3 +152,59 @@ class ObservationDAO:
                 )
                 lignes = cursor.fetchall()
         return [ligne["classif1"] for ligne in lignes]
+
+    def modifier(self, cle: CleObservationModel, nouvelle_valeur: float) -> bool:
+        """
+        Modifie la valeur d'une observation identifiée par sa clé primaire.
+
+        Returns:
+            bool: True si une observation a été modifiée, False sinon.
+        """
+        requete = """
+            UPDATE laborscope.observation
+            SET valeur = %(nouvelle_valeur)s,
+                date_maj = CURRENT_TIMESTAMP
+            WHERE indicateur_id = %(indicateur_id)s
+            AND code_iso = %(code_iso)s
+            AND source = %(source)s
+            AND periode = %(periode)s
+            AND sexe = %(sexe)s
+            AND classif1 = %(classif1)s;
+        """
+
+        parametres = {
+            "indicateur_id": indicateur_id,
+            "code_iso": code_iso,
+            "source": source,
+            "periode": periode,
+            "sexe": sexe,
+            "classif1": classif1,
+            "nouvelle_valeur": nouvelle_valeur,
+        }
+
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(requete, parametres)
+                return cursor.rowcount == 1
+
+def supprimer(self, cle: CleObservationModel) -> bool:
+    """
+    Supprime une observation identifiée par sa clé primaire.
+
+    Returns:
+        bool: True si une observation a été supprimée, False sinon.
+    """
+    requete = """
+        DELETE FROM laborscope.observation
+        WHERE indicateur_id = %(indicateur_id)s
+          AND code_iso = %(code_iso)s
+          AND source = %(source)s
+          AND periode = %(periode)s
+          AND sexe = %(sexe)s
+          AND classif1 = %(classif1)s;
+    """
+
+    with DBConnection().connection as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(requete, cle.model_dump())
+            return cursor.rowcount == 1

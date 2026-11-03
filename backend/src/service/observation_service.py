@@ -3,6 +3,7 @@
 
 import pandas as pd
 from dao.observation_dao import ObservationDAO
+from schema.observation_model import CleObservationModel
 
 
 class ObservationService:
@@ -41,3 +42,25 @@ class ObservationService:
             DataFrame avec toutes les modalités.
         """
         return ObservationDAO().lister_classif1(code_indicateur)
+
+    def modifier(self, cle: CleObservationModel, nouvelle_valeur: float) -> bool:
+        """
+        Modifie la valeur d'une observation à partir de sa clé primaire.
+
+        Args:
+            cle: tuple contenant les 6 éléments de la clé primaire.
+            nouvelle_valeur: nouvelle valeur de l'observation.
+
+        Returns:
+            bool: True si la modification a réussi, False sinon.
+        """
+        return ObservationDAO().modifier(cle, nouvelle_valeur)
+
+    def supprimer(self, cle: CleObservationModel) -> bool:
+        """
+        Supprime une observation à partir de sa clé primaire.
+
+        Returns:
+            bool: True si la suppression a réussi, False sinon.
+        """
+        return ObservationDAO().supprimer(cle)
