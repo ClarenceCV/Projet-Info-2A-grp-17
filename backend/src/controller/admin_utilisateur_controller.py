@@ -9,7 +9,9 @@ from fetcher.data_processing import DataProcessing
 from fastapi import APIRouter, Depends, HTTPException, status
 from schema.utilisateur_model import CreationUtilisateurModel, UtilisateurModel
 from service.utilisateur_service import UtilisateurService
+from service.journal_service import ActionJournal
 from config_import import INDICATEURS
+from service.journal_service import JournalService
 
 router = APIRouter()
 
@@ -40,10 +42,26 @@ def creer_utilisateur(nouveau: CreationUtilisateurModel, admin: Utilisateur = De
 
 @router.post("/import")
 def forcer_import(admin: Utilisateur = Depends(admin_requis)):  # noqa: B008
-    """
-    Force le chargement de l'API externe
-    """
-    DataProcessing().charger(INDICATEURS)
+    nb_obs = DataProcessing().charger(INDICATEURS)
+
+    if nb_obs is None:
+        raise HTTPException(
+            status_code=500,
+            detail="Aucune observation n'a été enregistrée."
+        )
+
+    journal_ok = JournalService().enregistrer(action="import_donnees", utilisateur=admin)
+
+    if not journal_ok:
+        raise HTTPException(
+            status_code=500,
+            detail="Impossible d'enregistrer l'action dans le journal."
+        )
+
+    return {
+        "message": "Import terminé.",
+        "observations_enregistrees": nb_obs
+    }
 
 
 @router.delete("/{id_utilisateur}")
