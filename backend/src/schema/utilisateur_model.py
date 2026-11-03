@@ -3,6 +3,7 @@
 # (même principe que PlayerModel / PlayerReadModel dans le template ENSAI)
 
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -19,6 +20,16 @@ class IdentifiantsModel(BaseModel):
 
     pseudo: str
     mot_de_passe: str
+
+
+class CreationUtilisateurModel(IdentifiantsModel):
+    """
+    Création d'un compte par un administrateur (POST /admin/utilisateurs) : il peut choisir le rôle.
+    Hérite de pseudo et mot_de_passe ; Literal n'accepte que les deux valeurs indiquées (sinon 422).
+    ex : {"pseudo": "marie", "mot_de_passe": "motdepasse123", "role": "admin"}
+    """
+
+    role: Literal["utilisateur", "admin"] = "utilisateur"
 
 
 # ---------------------------------------------------------------------------------------

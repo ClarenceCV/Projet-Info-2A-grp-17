@@ -10,6 +10,9 @@
 
 import streamlit as st
 
+from utils.auth_guard import verifier_session
+from utils.session import deconnecter
+
 # Réglages de l'onglet du navigateur : doit être la première commande Streamlit (une seule fois, ici)
 st.set_page_config(page_title="LaborScope", page_icon="📊", layout="wide")
 
@@ -38,17 +41,10 @@ pages_admin = [
     st.Page("pages/admin_logs.py", title="Logs et historique", icon=":material/history:"),
 ]
 
-# --- TEMPORAIRE (jusqu'à la page de connexion) : simuler un rôle pour tester les menus ----
-
-with st.sidebar.expander("🛠️ Simuler un rôle (développement)"):
-    role_simule = st.radio(
-        "Rôle", options=["visiteur", "utilisateur", "admin"], key="role_simule", horizontal=True
-    )
-st.session_state["role"] = None if role_simule == "visiteur" else role_simule
-
 # --- Le menu, selon le rôle ----------------------------------------------------------------
 
-role = st.session_state.get("role")  # None (pas connecté), 'utilisateur' ou 'admin'
+verifier_session()  # le token est-il toujours valable ? (sinon : retour au menu du visiteur)
+role = st.session_state.get("role")  # None (pas connecté), 'utilisateur' ou 'admin' (c.f. utils/session.py)
 
 if role is None:
     menu = {"": [accueil] + pages_visiteur}
@@ -61,18 +57,8 @@ pg = st.navigation(menu)  # dessine le menu latéral et renvoie la page choisie
 
 # --- Bas du menu latéral : qui est connecté + déconnexion ---------------------------------
 
-def se_deconnecter():
-    """
-    Oublie l'utilisateur connecté (la vraie déconnexion côté API arrivera avec la page de connexion).
-    Appelée par le bouton (on_click) AVANT la réexécution du script : le menu sera celui du visiteur.
-    """
-    for cle in ("token", "pseudo", "role"):
-        st.session_state.pop(cle, None)
-    st.session_state["role_simule"] = "visiteur"  # TEMPORAIRE
-
-
 if role is not None:
-    st.sidebar.caption(f"Connecté en tant que **{role}**")
-    st.sidebar.button("Se déconnecter", icon=":material/logout:", on_click=se_deconnecter)
+    st.sidebar.caption(f"Connecté : **{st.session_state['pseudo']}** ({role})")
+    st.sidebar.button("Se déconnecter", icon=":material/logout:", on_click=deconnecter)
 
 pg.run()  # exécute le fichier de la page choisie

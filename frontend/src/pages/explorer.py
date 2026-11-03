@@ -6,7 +6,10 @@ import pandas as pd
 import streamlit as st
 
 from utils.api_client import api_client
+from utils.auth_guard import exiger_connexion
 from utils.selecteurs import choisir_classif1, choisir_indicateur, choisir_pays, choisir_sexe
+
+exiger_connexion()  # protège la page (c.f. utils/auth_guard.py)
 
 st.title("Explorer les données")
 st.write("Consultez les observations ILOSTAT enregistrées dans la base.")

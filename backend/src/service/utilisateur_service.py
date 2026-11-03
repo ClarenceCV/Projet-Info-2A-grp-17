@@ -1,10 +1,12 @@
 # Logique métier des comptes utilisateurs (F6) : création, connexion, déconnexion.
 # Le controller appelle le service, le service appelle le DAO.
+# Chaque action est notée dans le journal (c.f. service/journal_service.py).
 
 import secrets
 
 from business_object.utilisateur import Utilisateur
 from dao.utilisateur_dao import UtilisateurDAO
+from service.journal_service import JournalService
 from utils.securite import hacher_mdp, verifier_mdp
 
 LONGUEUR_MIN_MDP = 8
@@ -17,7 +19,9 @@ class UtilisateurService:
     Service des utilisateurs.
     """
 
-    def creer_compte(self, pseudo: str, mot_de_passe: str, role: str = "utilisateur") -> Utilisateur | None:
+    def creer_compte(
+        self, pseudo: str, mot_de_passe: str, role: str = "utilisateur", auteur: Utilisateur | None = None
+    ) -> Utilisateur | None:
         """
         Crée un compte : vérifie le pseudo et le mot de passe, hache le mot de passe, enregistre.
 
@@ -25,6 +29,7 @@ class UtilisateurService:
             pseudo: identifiant de connexion (espaces au début et à la fin retirés)
             mot_de_passe: mot de passe en clair (jamais enregistré tel quel)
             role: 'utilisateur' (par défaut) ou 'admin' (seul un admin pourra créer un admin)
+            auteur: l'administrateur qui crée le compte (None : la personne crée son propre compte)
 
         Returns:
             Utilisateur | None: le compte créé, ou None si le pseudo est déjà pris
@@ -40,7 +45,13 @@ class UtilisateurService:
         if len(mot_de_passe.encode("utf-8")) > LONGUEUR_MAX_MDP:
             raise ValueError("Le mot de passe est trop long (72 octets maximum).")
 
-        return UtilisateurDAO().creer(pseudo, hacher_mdp(mot_de_passe), role)
+        utilisateur = UtilisateurDAO().creer(pseudo, hacher_mdp(mot_de_passe), role)
+        if utilisateur is not None:
+            if auteur is None:  # inscription : c'est le nouveau compte qui fait l'action
+                JournalService().enregistrer(utilisateur, "creation_compte", f"rôle {role}")
+            else:  # création par un administrateur
+                JournalService().enregistrer(auteur, "creation_compte", f"compte « {pseudo} », rôle {role}")
+        return utilisateur
 
     def se_connecter(self, pseudo: str, mot_de_passe: str) -> tuple[Utilisateur, str] | None:
         """
@@ -54,11 +65,14 @@ class UtilisateurService:
         dao = UtilisateurDAO()
         mdp_hash = dao.lire_mdp_hash(pseudo.strip())
         if mdp_hash is None or not verifier_mdp(mot_de_passe, mdp_hash):
+            # utile pour repérer des tentatives répétées sur un même compte
+            JournalService().enregistrer(None, "echec_connexion", pseudo=pseudo.strip())
             return None
 
         utilisateur = dao.trouver_par_pseudo(pseudo.strip())
         token = secrets.token_urlsafe(32)  # 32 octets aléatoires → ~43 caractères, impossible à deviner
         dao.enregistrer_token(utilisateur.id, token)
+        JournalService().enregistrer(utilisateur, "connexion")
         return utilisateur, token
 
     def se_deconnecter(self, utilisateur: Utilisateur) -> bool:
@@ -68,6 +82,7 @@ class UtilisateurService:
         Returns:
             bool: True si la déconnexion a été enregistrée
         """
+        JournalService().enregistrer(utilisateur, "deconnexion")
         return UtilisateurDAO().enregistrer_token(utilisateur.id, None)
 
     def trouver_par_token(self, token: str | None) -> Utilisateur | None:
@@ -78,3 +93,35 @@ class UtilisateurService:
             Utilisateur | None: None si le token est absent, inconnu ou effacé (déconnexion)
         """
         return UtilisateurDAO().trouver_par_token(token)
+
+    # ------------------------------------------------------------------
+    # Administration (réservé aux administrateurs, c.f. admin_utilisateur_controller)
+    # ------------------------------------------------------------------
+    def lister(self) -> list[Utilisateur]:
+        """
+        Returns:
+            list[Utilisateur]: tous les comptes, triés par pseudo
+        """
+        return UtilisateurDAO().lister()
+
+    def supprimer(self, admin: Utilisateur, id_utilisateur: int) -> bool:
+        """
+        Supprime un compte. Un administrateur ne peut pas supprimer son propre compte
+        (sinon il pourrait ne plus rester aucun administrateur pour gérer l'application).
+
+        params:
+            admin: l'administrateur qui fait la demande
+            id_utilisateur: id du compte à supprimer
+
+        Returns:
+            bool: True si le compte a été supprimé, False s'il n'existe pas
+
+        Raises:
+            ValueError: si l'administrateur essaie de supprimer son propre compte
+        """
+        if id_utilisateur == admin.id:
+            raise ValueError("Vous ne pouvez pas supprimer votre propre compte.")
+        supprime = UtilisateurDAO().supprimer(id_utilisateur)
+        if supprime:
+            JournalService().enregistrer(admin, "suppression_compte", f"compte n°{id_utilisateur}")
+        return supprime

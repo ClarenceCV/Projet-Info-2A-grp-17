@@ -23,9 +23,6 @@ Analyse interactive du marché du travail mondial à partir des données de l'OI
 
    BACKEND_URL=http://localhost:5000
    BACKEND_TIMEOUT=10
-
-   ADMIN_PSEUDO=admin
-   ADMIN_MDP=un_mot_de_passe_securise
    ```
 
 ---
@@ -39,10 +36,15 @@ uv sync
 5. Préparer la base de donnée : une seule fois au début ou si vous voulez reset les données (observations et utilisateurs)
 ```bash
 cd backend/src
-uv run python -m utils.reset_database      # supprime et recrée toutes les tables (vides)
-uv run python -m utils.creer_admin         # crée l'administrateur décrit dans le .env (ADMIN_PSEUDO, ADMIN_MDP)
+uv run python -m utils.reset_database      # supprime et recrée toutes les tables, puis les comptes par défaut
 uv run python -m fetcher.charger_donnees   # importe les données ILOSTAT 
 ```
+Comptes créés à chaque reset, pour se connecter tout de suite :
+
+| Pseudo | Mot de passe | Rôle |
+|---|---|---|
+| `user` | `user` | utilisateur |
+| `admin` | `admin` | administrateur |
 
 6. Lancer l'API et l'interface (deux terminaux, à laisser ouverts)
 ```bash

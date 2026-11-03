@@ -174,7 +174,7 @@ def admin_requis(utilisateur: Utilisateur = Depends(utilisateur_connecte)) -> Ut
 
 ### 2.e Le premier administrateur
 
-Personne ne peut créer d'admin sans être déjà admin : prévoir un script `utils/creer_admin.py` (pseudo + mot de passe lus dans le `.env` : `ADMIN_PSEUDO`, `ADMIN_PASSWORD`) à lancer après `reset_database`. L'ajouter dans `.env.example` et dans le README (avec A).
+Personne ne peut créer d'admin sans être déjà admin : `utils/comptes_par_defaut.py` crée `user / user` (utilisateur) et `admin / admin` (administrateur), appelé automatiquement à la fin de `reset_database`.
 
 ---
 
