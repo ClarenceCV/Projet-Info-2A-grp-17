@@ -125,3 +125,19 @@ class UtilisateurService:
         if supprime:
             JournalService().enregistrer(admin, "suppression_compte", f"compte n°{id_utilisateur}")
         return supprime
+
+    def initialiser_admin(self):
+        """
+        Permet de créer un administrateur
+        (utilisé dans main.py pour avoir ce compte admin dès le lancement de l'app)
+        """
+        utilisateurs = self.lister()
+
+        admin_existe = any(u.role == "admin" for u in utilisateurs)
+
+        if not admin_existe:
+            self.creer_compte(
+                pseudo="admin",
+                mot_de_passe="admin123",
+                role="admin"
+            )
