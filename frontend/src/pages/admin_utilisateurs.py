@@ -6,5 +6,9 @@
 
 import streamlit as st
 
+from utils.auth_guard import exiger_admin
+
+exiger_admin()  # protège la page (c.f. utils/auth_guard.py)
+
 st.title("Gestion des utilisateurs")
 st.info("🚧 Page en construction : responsable B.")

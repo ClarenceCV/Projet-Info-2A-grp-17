@@ -6,5 +6,9 @@
 
 import streamlit as st
 
+from utils.auth_guard import exiger_admin
+
+exiger_admin()  # protège la page (c.f. utils/auth_guard.py)
+
 st.title("Logs et historique")
 st.info("🚧 Page en construction : responsable A (logs) et B (historique).")

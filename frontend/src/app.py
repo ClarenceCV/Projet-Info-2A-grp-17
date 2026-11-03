@@ -10,6 +10,7 @@
 
 import streamlit as st
 
+from utils.auth_guard import verifier_session
 from utils.session import deconnecter
 
 # Réglages de l'onglet du navigateur : doit être la première commande Streamlit (une seule fois, ici)
@@ -42,6 +43,7 @@ pages_admin = [
 
 # --- Le menu, selon le rôle ----------------------------------------------------------------
 
+verifier_session()  # le token est-il toujours valable ? (sinon : retour au menu du visiteur)
 role = st.session_state.get("role")  # None (pas connecté), 'utilisateur' ou 'admin' (c.f. utils/session.py)
 
 if role is None:
