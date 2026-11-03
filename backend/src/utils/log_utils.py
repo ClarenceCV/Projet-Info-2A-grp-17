@@ -15,8 +15,6 @@ LOG_DIR = BACKEND_DIR / "logs"
 # Création automatique du dossier s'il n'existe pas
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
-import yaml
-
 
 def initialize_logs(name: str):
     """Initialize logging from a configuration file"""
@@ -59,6 +57,7 @@ def get_logger(module_name: str, max_size: int = 25):
     short_name = ".".join(short_prefix + [parts[-1]])
 
     return logging.getLogger(short_name)
+
 
 def log(func):
     """Decorator to log method calls and their outputs.
