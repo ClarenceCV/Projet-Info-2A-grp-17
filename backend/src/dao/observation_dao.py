@@ -153,7 +153,11 @@ class ObservationDAO:
                 lignes = cursor.fetchall()
         return [ligne["classif1"] for ligne in lignes]
 
-    def modifier(self, cle: CleObservationModel, nouvelle_valeur: float) -> bool:
+    def modifier(
+        self,
+        cle: CleObservationModel,
+        nouvelle_valeur: float
+    ) -> bool:
         """
         Modifie la valeur d'une observation identifiée par sa clé primaire.
 
@@ -173,12 +177,7 @@ class ObservationDAO:
         """
 
         parametres = {
-            "indicateur_id": indicateur_id,
-            "code_iso": code_iso,
-            "source": source,
-            "periode": periode,
-            "sexe": sexe,
-            "classif1": classif1,
+            **cle.model_dump(),
             "nouvelle_valeur": nouvelle_valeur,
         }
 
