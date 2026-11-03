@@ -233,7 +233,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from utils.api_client import get
+from utils.api_client import api_client
 from utils.selecteurs import choisir_classif1, choisir_indicateur, choisir_pays, choisir_sexe
 
 st.title("Évolution d'un indicateur")
@@ -244,9 +244,12 @@ classif1 = choisir_classif1(indicateur)
 sexe = choisir_sexe()
 n = st.slider("Nombre de trimestres", 2, 20, 8)
 
-donnees = get("/analyses/evolution", {"indicateur": indicateur, "pays": pays,
-                                      "classif1": classif1, "sexe": sexe, "n_periodes": n})
-df = pd.DataFrame(donnees)
+reponse = api_client.get("/analyses/evolution", params={"indicateur": indicateur, "pays": pays,
+                                                       "classif1": classif1, "sexe": sexe, "n_periodes": n})
+if reponse["status_code"] != 200:   # 0 = backend injoignable, sinon erreur renvoyée par l'API
+    st.error(reponse["data"])
+    st.stop()
+df = pd.DataFrame(reponse["data"])
 st.plotly_chart(px.line(df, x="periode", y="valeur", color="nom_pays", markers=True))
 st.dataframe(df)   # tableau avec les variations
 ```
