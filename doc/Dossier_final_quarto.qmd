@@ -1,0 +1,84 @@
+---
+title: "Dossier_final_grp_17"
+format: html
+editor: visual
+subtitle: "Rapport final"
+tableofcontents: "Table des matières"
+---
+
+\newpage
+
+##**REMERCIEMENTS** 
+
+Nous tenons à exprimer notre sincère gratitude à toutes les personnes qui ont contribué, de
+près ou de loin, à la réalisation de ce projet.
+
+Nos remerciements vont tout d'abord à **M. Ludovic DENEUVILLE**, responsable du module, pour
+son encadrement.
+
+Nous remercions tout particulièrement **M. Anas KNEFATI**, notre tuteur, pour sa disponibilité,
+la pertinence de ses conseils et ses remarques constructives, qui nous ont permis de faire
+progresser le projet à chaque étape.
+
+Nous adressons également nos remerciements à l'ensemble de l'équipe pédagogique de l'École
+nationale de la statistique et de l'analyse de l'information (ENSAI) pour la qualité de la
+formation dispensée et les ressources mises à notre disposition.
+
+Enfin, nous félicitons les membres du groupe pour leur investissement, leur esprit d'équipe et leur bonne humeur durant ces mois de travail.
+
+##**Résumé** {.unnumbered}
+
+Le projet **LaborScope** vise à rendre accessible l'exploration des données du marché du travail mondial, issues de la base ILOSTAT de l'Organisation internationale du Travail (OIT). Cette base, très riche, rassemble de nombreux indicateurs (emploi, chômage, secteurs d'activité, inégalités entre les sexes...), mais sa taille et sa complexité en limitent l'usage par des utilisateurs non spécialistes.
+
+Pour répondre à ce besoin, nous avons conçu et développé une application interactive permettant de \[sélectionner un pays, une période et un indicateur\], de \[visualiser les évolutions sous forme de graphiques et de cartes\] et de \[comparer plusieurs pays ou régions\]. La démarche suivie comprend une étude préalable (cahier des charges, identification des utilisateurs, structure de la base de données), une phase de conception fondée sur des diagrammes UML (cas d'utilisation, classes, activités, séquences), puis une phase de réalisation reposant sur \[Python, une base de données relationnelle et une interface web\].
+
+L'application obtenue permet \[d'explorer rapidement les données ILOSTAT et d'en dégager des tendances\], tout en gérant les difficultés propres à ces données : valeurs manquantes, couverture inégale selon les pays et les années, hétérogénéité des définitions. Ce rapport présente la conception, la réalisation et les résultats du projet, puis en dresse les limites et les perspectives d'évolution.
+
+**Mots-clés :** marché du travail, ILOSTAT, visualisation de données, application interactive, conception UML
+
+
+\newpage
+
+##**INTRODUCTION** {.unnumbered}
+
+Le marché du travail est au cœur des préoccupations économiques et sociales contemporaines. Chômage, emploi informel, inégalités entre les sexes ou encore évolution des secteurs d'activité : ces indicateurs conditionnent les politiques publiques et les décisions des organisations internationales, des entreprises et des chercheurs. L'Organisation internationale du Travail (OIT) en assure le suivi à l'échelle mondiale grâce à sa base de données ILOSTAT, qui rassemble des milliers d'indicateurs harmonisés couvrant la plupart des pays du monde.
+
+Cette richesse constitue pourtant une difficulté. Le volume et la diversité des données rendent leur exploration fastidieuse pour un utilisateur non spécialiste : il faut identifier les bons indicateurs, comprendre leurs définitions, gérer les valeurs manquantes et les différences de couverture entre pays et entre années, puis produire des comparaisons lisibles. Il manque ainsi un outil simple, accessible et interactif permettant d'explorer ces données et d'en dégager rapidement des enseignements.
+
+C'est dans ce contexte que s'inscrit le projet **LaborScope**, réalisé dans le cadre de notre formation à l'École nationale de la statistique et de l'analyse de l'information (ENSAI). Son objectif est de concevoir et de développer une application d'analyse interactive du marché du travail mondial à partir des données ILOSTAT. Elle doit permettre à l'utilisateur de \[sélectionner un pays, une période et un indicateur\], de \[visualiser les évolutions sous forme de graphiques et de cartes\] et de \[comparer plusieurs pays ou régions\], le tout au sein d'une interface claire et ergonomique.
+
+Dans le rapport intermédiaire, nous avons posé les bases du projet : cahier des charges, identification des utilisateurs, fonctionnalités attendues, structure de la base de données et organisation du travail en équipe. Le présent rapport final en constitue l'aboutissement. Il présente la conception détaillée de l'application, sa réalisation, les choix techniques effectués ainsi que les résultats obtenus.
+
+Ce document s'organise en \[quatre\] chapitres. Le premier rappelle l'étude préalable (contexte, cahier des charges et architecture générale). Le deuxième expose le modèle de conception à travers les diagrammes UML (cas d'utilisation, classes, activités et séquences). Le troisième décrit la réalisation de l'application : technologies employées, implémentation des fonctionnalités et analyse des résultats. Enfin, le dernier chapitre dresse le bilan du projet, en soulignant ses limites et les perspectives d'amélioration envisageables.
+
+\newpage
+
+##**Chapitre1: Description du projet**
+
+###1.1.Le cahier de charges
+
+####Présentation d’ensemble du projet
+
+Le “LaborScope” est une application dédiée à l’analyse des statistiques mondiales du marché du travail. C’est une application interactive alimentée par les données ouvertes de l'Organisation Internationale du Travail (ILOSTAT). L’objectif de cette application est dans un premier temps, de récupérer des données brutes (des indicateurs) comme l'emploi par sexe et profession, ou la population en âge de travailler depuis le site, de les extraire et de les stocker localement pour des fins d’analyse et de visualisation.
+
+C’est une application sécurisée (avec gestion des utilisateurs et administrateurs) disposant de différentes fonctionnalités permettant de suivre l’évolution des indicateurs dans le temps, faire une comparaison entre plusieurs pays ou croiser plusieurs indicateurs sur un même graphique. Elle peut être complétée par une interface web interactive (Streamlit) pour visualiser les résultats sans avoir à coder et générer automatiquement un rapport d’analyse au format PDF.
+
+L'objectif final est de transformer des données statistiques brutes et complexes en un outil simple qui permet de comprendre, comment évolue l'emploi dans le monde et comment les pays se comparent entre eux.
+
+####Identification des utilisateurs
+
+On distingue deux types d’utilisateurs dans l’accès aux fonctionnalités de l’application: les utilisateurs et les administrateurs.
+
+Les utilisateurs disposent d’un compte classique leur permettant de consulter des analyses, et de visualiser les données. Ils peuvent également générer de manière automatique des rapports d’analyse au format PDF contenant les données qu’ils ont consultées. Les administrateurs sont chargés de la gestion des comptes utilisateurs classiques et peuvent modifier ou supprimer des données. Ils peuvent également faire un suivi des activités. Les utilisateurs de l’application ne peuvent pas obtenir le statut d’administrateur. Ceci permet de mieux contrôler l’accès aux modifications des données.
+
+###1.2.Organisation du travail
+
+
+
+##Chapitre2:Modelisation de l'application
+
+##Chapitre3: Implémentation
+
+##Chapitre4: Fonctionnement de l'application
+
+##**CONCLUSION**
