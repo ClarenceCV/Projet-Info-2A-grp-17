@@ -24,6 +24,7 @@ from controller import (
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from utils.log_utils import initialize_logs
+from service.utilisateur_service import UtilisateurService
 
 # charge le .env (connexion à la base, host et port du webservice)
 dotenv.load_dotenv(override=True)
@@ -31,6 +32,8 @@ dotenv.load_dotenv(override=True)
 # initialisation des logs:
 initialize_logs("laborscope")
 
+# initialisation du compte admin si la base n'est pas chargé
+UtilisateurService().initialiser_admin()
 
 app = FastAPI(title="LaborScope", description="Analyse du marché du travail mondial (ILOSTAT)")
 
@@ -59,9 +62,11 @@ async def hello_name(name: str):
     return {"message": f"Hello {name}"}
 
 
+
 if __name__ == "__main__":
     uvicorn.run(
         app,
         host=os.getenv("UVICORN_HOST", "0.0.0.0"),  # 0.0.0.0 sur Onyxia pour être joignable
         port=int(os.getenv("UVICORN_PORT", "5000")),
     )
+
