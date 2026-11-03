@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32'",
@@ -492,6 +492,7 @@ dependencies = [
     { name = "plotly" },
     { name = "psycopg2-binary" },
     { name = "pycountry-convert" },
+    { name = "pytest" },
     { name = "python-dotenv" },
     { name = "requests" },
     { name = "streamlit" },
@@ -512,6 +513,7 @@ requires-dist = [
     { name = "plotly", specifier = ">=7.1.0" },
     { name = "psycopg2-binary" },
     { name = "pycountry-convert" },
+    { name = "pytest", specifier = ">=9.1.1" },
     { name = "python-dotenv" },
     { name = "requests" },
     { name = "streamlit", specifier = ">=1.66.1" },
