@@ -20,7 +20,7 @@ class EvolutionService:
     def evolution(
         self,
         code_indicateur: str,
-        pays: list[str],              
+        pays: list[str],            
         classif1: str,
         sexe: str = "Total",
         n_periodes: int = 8
@@ -70,4 +70,3 @@ class EvolutionService:
         df = df.groupby("code_iso").tail(n_periodes)
 
         return df[COLONNES_EVOLUTION].reset_index(drop=True)
-
