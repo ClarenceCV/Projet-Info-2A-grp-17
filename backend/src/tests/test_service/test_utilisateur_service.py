@@ -125,3 +125,34 @@ def test_se_deconnecter_efface_le_token():
     with patch.object(UtilisateurDAO, "enregistrer_token", return_value=True) as faux_token:
         assert UtilisateurService().se_deconnecter(JDUPONT)
     faux_token.assert_called_once_with(1, None)
+
+
+# --- Administration -----------------------------------------------------------------------
+
+ADMIN = Utilisateur(pseudo="admin", role="admin", id=2)
+
+
+def test_supprimer_un_autre_compte():
+    with patch.object(UtilisateurDAO, "supprimer", return_value=True) as faux_supprimer:
+        assert UtilisateurService().supprimer(ADMIN, 1)
+    faux_supprimer.assert_called_once_with(1)
+
+
+def test_supprimer_compte_inexistant():
+    with patch.object(UtilisateurDAO, "supprimer", return_value=False):
+        assert not UtilisateurService().supprimer(ADMIN, 999)
+
+
+def test_admin_ne_peut_pas_se_supprimer_lui_meme():
+    # GIVEN : le DAO ne doit jamais être appelé
+    with patch.object(UtilisateurDAO, "supprimer") as faux_supprimer:
+        # WHEN / THEN
+        with pytest.raises(ValueError):
+            UtilisateurService().supprimer(ADMIN, ADMIN.id)
+    faux_supprimer.assert_not_called()
+
+
+def test_creer_compte_admin():
+    with patch.object(UtilisateurDAO, "creer", return_value=ADMIN) as faux_creer:
+        UtilisateurService().creer_compte("admin2", "motdepasse123", role="admin")
+    assert faux_creer.call_args.args[2] == "admin"

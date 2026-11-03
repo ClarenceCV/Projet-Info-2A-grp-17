@@ -8,6 +8,12 @@
 # Utilise les sélecteurs (utils/selecteurs.py) et le client API (utils/api_client.py) de B.
 # ####Adapter les noms de fonctions importées à ceux réellement présents dans le code de B.
 
+
+from utils.auth_guard import exiger_connexion
+
+exiger_connexion()  # protège la page (c.f. utils/auth_guard.py)
+
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px

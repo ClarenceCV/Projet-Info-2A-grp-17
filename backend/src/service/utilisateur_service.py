@@ -78,3 +78,32 @@ class UtilisateurService:
             Utilisateur | None: None si le token est absent, inconnu ou effacé (déconnexion)
         """
         return UtilisateurDAO().trouver_par_token(token)
+
+    # ------------------------------------------------------------------
+    # Administration (réservé aux administrateurs, c.f. admin_utilisateur_controller)
+    # ------------------------------------------------------------------
+    def lister(self) -> list[Utilisateur]:
+        """
+        Returns:
+            list[Utilisateur]: tous les comptes, triés par pseudo
+        """
+        return UtilisateurDAO().lister()
+
+    def supprimer(self, admin: Utilisateur, id_utilisateur: int) -> bool:
+        """
+        Supprime un compte. Un administrateur ne peut pas supprimer son propre compte
+        (sinon il pourrait ne plus rester aucun administrateur pour gérer l'application).
+
+        params:
+            admin: l'administrateur qui fait la demande
+            id_utilisateur: id du compte à supprimer
+
+        Returns:
+            bool: True si le compte a été supprimé, False s'il n'existe pas
+
+        Raises:
+            ValueError: si l'administrateur essaie de supprimer son propre compte
+        """
+        if id_utilisateur == admin.id:
+            raise ValueError("Vous ne pouvez pas supprimer votre propre compte.")
+        return UtilisateurDAO().supprimer(id_utilisateur)
