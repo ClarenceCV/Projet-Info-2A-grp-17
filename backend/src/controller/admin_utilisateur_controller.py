@@ -4,14 +4,15 @@
 from dataclasses import asdict
 
 from business_object.utilisateur import Utilisateur
-from controller.auth import admin_requis
-from fetcher.data_processing import DataProcessing
-from fastapi import APIRouter, Depends, HTTPException, status
-from schema.utilisateur_model import CreationUtilisateurModel, UtilisateurModel
-from service.utilisateur_service import UtilisateurService
-from service.journal_service import ActionJournal
 from config_import import INDICATEURS
+from controller.auth import admin_requis
+from fastapi import APIRouter, Depends, HTTPException, status
+from fetcher.data_processing import DataProcessing
+from schema.observation_model import CleObservationModel
+from schema.utilisateur_model import CreationUtilisateurModel, UtilisateurModel
 from service.journal_service import JournalService
+from service.observation_service import ObservationService
+from service.utilisateur_service import UtilisateurService
 
 router = APIRouter()
 
@@ -64,6 +65,38 @@ def forcer_import(admin: Utilisateur = Depends(admin_requis)):  # noqa: B008
     }
 
 
+@router.put("observations")
+def modifier_observation(
+    cle: CleObservationModel,
+    nouvelle_valeur: int,
+    admin: Utilisateur = Depends(admin_requis)
+):
+    """
+    Modifie une observation existante (identifiée par une cle) pour modifier sa valeur.
+    Cette action est enregistré dans le journal
+    """
+
+    journal = JournalService().enregistrer(action="modification_donnee", utilisateur=admin, detail=f"modification de l'observation {cle}")
+
+    if not journal:
+        raise HTTPException(
+            status_code=500,
+            detail="Impossible d'enregistrer l'action dans le journal."
+        )
+    
+    succes = ObservationService().modifier(
+        cle, nouvelle_valeur
+    )
+
+    if not succes:
+        raise HTTPException(
+            status_code=404,
+            detail="Observation introuvable."
+        )
+
+    return {"message": "Observation modifiée avec succès."}
+
+
 @router.delete("/{id_utilisateur}")
 def supprimer_utilisateur(id_utilisateur: int, admin: Utilisateur = Depends(admin_requis)):
     """
@@ -78,3 +111,30 @@ def supprimer_utilisateur(id_utilisateur: int, admin: Utilisateur = Depends(admi
     if not supprime:
         raise HTTPException(status_code=404, detail=f"Utilisateur {id_utilisateur} introuvable.")
     return {"message": f"Utilisateur {id_utilisateur} supprimé."}
+
+@router.delete("/observation")
+def supprimer_observation(
+    cle: CleObservationModel,
+    admin: Utilisateur = Depends(admin_requis),  # noqa: B008
+):
+    """
+    Supprime une observation.
+    Réservé aux administrateurs.
+    """
+    succes = ObservationService().supprimer(cle)
+
+    journal = JournalService().enregistrer(action="suppression_donnee", utilisateur=admin)
+
+    if not journal:
+        raise HTTPException(
+            status_code = 500,
+            detail="Action non enregistré dans le journal"
+        )
+
+    if not succes:
+        raise HTTPException(
+            status_code=404,
+            detail="Observation introuvable."
+        )
+
+    return {"message": "Observation supprimée avec succès."}
