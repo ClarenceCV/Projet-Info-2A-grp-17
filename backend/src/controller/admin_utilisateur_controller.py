@@ -26,7 +26,9 @@ def creer_utilisateur(nouveau: CreationUtilisateurModel, admin: Utilisateur = De
     Erreur 400 si le pseudo ou le mot de passe est invalide, ou si le pseudo est déjà pris.
     """
     try:
-        utilisateur = UtilisateurService().creer_compte(nouveau.pseudo, nouveau.mot_de_passe, nouveau.role)
+        utilisateur = UtilisateurService().creer_compte(
+            nouveau.pseudo, nouveau.mot_de_passe, nouveau.role, auteur=admin  # l'admin est noté au journal
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
 

@@ -15,6 +15,7 @@ from controller import indicateur_controller, observation_controller, evolution_
 from controller import pays_controller
 from controller import multi_indicateurs_controller
 from controller import login_controller, utilisateur_controller, admin_utilisateur_controller
+from controller import journal_controller
 from controller import comparaison_pays_controller
 
 # charge le .env (connexion à la base, host et port du webservice)
@@ -31,6 +32,7 @@ app.include_router(multi_indicateurs_controller.router, prefix="/analyses", tags
 app.include_router(login_controller.router, tags=["Connexion"])
 app.include_router(utilisateur_controller.router, prefix="/utilisateurs", tags=["Utilisateurs"])
 app.include_router(admin_utilisateur_controller.router, prefix="/admin/utilisateurs", tags=["Administration"])
+app.include_router(journal_controller.router, prefix="/admin/journal", tags=["Administration"])
 app.include_router(comparaison_pays_controller.router, prefix="/analyses", tags=["Analyses"])
 
 
