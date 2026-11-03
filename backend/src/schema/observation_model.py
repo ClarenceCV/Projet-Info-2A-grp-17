@@ -21,3 +21,15 @@ class ObservationModel(BaseModel):
     valeur: float
     unite: str
     statut: str | None = None
+
+class CleObservationModel(BaseModel):
+    """
+    Schéma d'un clé pour identifier une observation
+    ex: {}
+    """
+    indicateur_id: int
+    code_iso: str
+    source: str
+    periode: str
+    sexe: str
+    classif1: str
