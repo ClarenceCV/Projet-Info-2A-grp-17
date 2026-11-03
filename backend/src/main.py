@@ -19,6 +19,7 @@ from controller import (
     observation_controller,
     pays_controller,
     utilisateur_controller,
+    admin_utilisateur_controller
 )
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse

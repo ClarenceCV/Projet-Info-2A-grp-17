@@ -3,10 +3,10 @@
 
 from dataclasses import asdict
 
-from fastapi import APIRouter, Depends, HTTPException, status
-
 from business_object.utilisateur import Utilisateur
 from controller.auth import admin_requis
+from fetcher.data_processing import DataProcessing
+from fastapi import APIRouter, Depends, HTTPException, status
 from schema.utilisateur_model import CreationUtilisateurModel, UtilisateurModel
 from service.utilisateur_service import UtilisateurService
 
@@ -35,6 +35,14 @@ def creer_utilisateur(nouveau: CreationUtilisateurModel, admin: Utilisateur = De
     if utilisateur is None:
         raise HTTPException(status_code=400, detail="Ce pseudo est déjà utilisé.")
     return UtilisateurModel(**asdict(utilisateur))
+
+@router.post("/import")
+def forcer_import(admin: Utilisateur = Depends(admin_requis)):
+    """
+    Force le chargement de l'API externe
+    """
+    DataProcessing().charger(INDICATEURS)
+    return
 
 
 @router.delete("/{id_utilisateur}")
