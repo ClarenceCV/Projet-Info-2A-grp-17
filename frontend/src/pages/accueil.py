@@ -23,4 +23,4 @@ if role is None:
     if colonne_droite.button("Créer un compte", use_container_width=True):
         st.switch_page("pages/creer_compte.py")
 else:
-    st.success(f"Vous êtes connecté ({role}). Choisissez une analyse dans le menu à gauche.")
+    st.success(f"Bonjour {st.session_state['pseudo']} ! Choisissez une analyse dans le menu à gauche.")

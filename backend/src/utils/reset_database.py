@@ -1,4 +1,5 @@
-# Réinitialise la base de données : exécute data/init_db.sql (c.f. tp3)
+# Réinitialise la base de données : exécute data/init_db.sql (c.f. tp3),
+# puis recrée les comptes par défaut (user / user et admin / admin, c.f. utils/comptes_par_defaut.py)
 # ATTENTION : supprime et recrée le schéma laborscope, toutes les données sont perdues
 #
 # Lancement (depuis backend/src) :
@@ -9,6 +10,7 @@ from pathlib import Path
 import dotenv
 
 from dao.db_connection import DBConnection
+from utils.comptes_par_defaut import creer_comptes_par_defaut
 
 # chemin vers data/init_db.sql, calculé à partir de l'emplacement de ce fichier
 CHEMIN_INIT_DB = Path(__file__).resolve().parents[3] / "data" / "init_db.sql"
@@ -59,5 +61,7 @@ if __name__ == "__main__":
 
     reset = ResetDatabase()
     reset.lancer()
+    print("Comptes par défaut :")
+    creer_comptes_par_defaut()
     print("Base de données réinitialisée. Tables du schéma laborscope :")
     reset.afficher_tables()
