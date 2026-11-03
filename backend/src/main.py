@@ -6,18 +6,28 @@
 # (sur Onyxia : Mes services > VSCode > Ouvrir > lien du port 5000)
 
 import os
+
 import dotenv
 import uvicorn
-
+from controller import (
+    evolution_controller,
+    indicateur_controller,
+    login_controller,
+    multi_indicateurs_controller,
+    observation_controller,
+    pays_controller,
+    utilisateur_controller,
+)
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
-from controller import indicateur_controller, observation_controller, evolution_controller
-from controller import pays_controller
-from controller import multi_indicateurs_controller
-from controller import login_controller, utilisateur_controller
+from utils.log_utils import get_logger, initialize_logs
 
 # charge le .env (connexion à la base, host et port du webservice)
 dotenv.load_dotenv(override=True)
+
+# initialisation des logs:
+initialize_logs("laborscope")
+
 
 app = FastAPI(title="LaborScope", description="Analyse du marché du travail mondial (ILOSTAT)")
 
