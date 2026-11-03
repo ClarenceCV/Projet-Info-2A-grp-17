@@ -9,6 +9,7 @@ from fetcher.data_processing import DataProcessing
 from fastapi import APIRouter, Depends, HTTPException, status
 from schema.utilisateur_model import CreationUtilisateurModel, UtilisateurModel
 from service.utilisateur_service import UtilisateurService
+from config_import import INDICATEURS
 
 router = APIRouter()
 
@@ -36,13 +37,13 @@ def creer_utilisateur(nouveau: CreationUtilisateurModel, admin: Utilisateur = De
         raise HTTPException(status_code=400, detail="Ce pseudo est déjà utilisé.")
     return UtilisateurModel(**asdict(utilisateur))
 
+
 @router.post("/import")
-def forcer_import(admin: Utilisateur = Depends(admin_requis)):
+def forcer_import(admin: Utilisateur = Depends(admin_requis)):  # noqa: B008
     """
     Force le chargement de l'API externe
     """
     DataProcessing().charger(INDICATEURS)
-    return
 
 
 @router.delete("/{id_utilisateur}")
