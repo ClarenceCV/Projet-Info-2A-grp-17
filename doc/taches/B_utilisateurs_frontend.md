@@ -90,7 +90,7 @@ frontend/
 
 À faire :
 1. `uv add streamlit plotly`
-2. `api_client.py` : une fonction `get(chemin, params)` et `post(chemin, json)` qui appellent `BACKEND_URL` (du `.env`) et ajoutent l'en-tête `X-Auth-Token` à partir de `st.session_state["token"]`.
+2. `api_client.py` : un objet `api_client` avec les méthodes `api_client.get(chemin, params=...)`, `.post(chemin, json=...)`, `.put`, `.delete`, qui appellent `BACKEND_URL` (du `.env`), ajoutent l'en-tête `X-Auth-Token` à partir de `st.session_state["token"]`, et renvoient `{"status_code": ..., "data": ...}`.
 3. `selecteurs.py` : `choisir_indicateur()` (appelle `GET /indicateurs`), `choisir_pays(multiple=True)` (appelle `GET /pays` de A), `choisir_sexe()`, `choisir_classif1(code_indicateur)` (appelle `GET /indicateurs/{code}/classif1` de A). **C, D et E les réutiliseront** : ça évite que chacun recode les mêmes menus.
 4. `app.py` avec `st.navigation` : menu utilisateur (Évolution, Comparaison pays, Carte, Multi-indicateurs, Rapport) et, **si admin**, menu administrateur en plus. Pour l'instant toutes les pages affichent « en construction ».
 5. Lancer sur Onyxia (port 8000) :

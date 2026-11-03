@@ -237,7 +237,7 @@ async def comparer_indicateurs(selections: list[SelectionModel]):
 
 `frontend/pages/multi_indicateurs.py`, avec les sélecteurs et le client API de B.
 - Permettre de construire 2 à 4 sélections (une colonne `st.columns` par sélection : indicateur, pays, classif1, sexe).
-- Appeler `post("/analyses/multi-indicateurs", json=[...])`.
+- Appeler `api_client.post("/analyses/multi-indicateurs", json=[...])` (avec `from utils.api_client import api_client`), puis tester `reponse["status_code"]` et lire `reponse["data"]`.
 - Graphique : `px.line(df, x="periode", y="valeur_base100", color="serie", markers=True)` + une ligne horizontale à 100.
 - Option : un bouton pour afficher les valeurs brutes (deux axes Y avec `plotly.graph_objects`).
 

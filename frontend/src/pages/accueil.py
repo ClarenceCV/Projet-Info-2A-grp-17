@@ -18,9 +18,9 @@ if role is None:
     st.info("Connectez-vous ou créez un compte pour accéder aux analyses.")
     colonne_gauche, colonne_droite = st.columns(2)
     # st.switch_page : aller directement à une autre page (elle doit faire partie du menu)
-    if colonne_gauche.button("Se connecter", type="primary", use_container_width=True):
+    if colonne_gauche.button("Se connecter", type="primary", width="stretch"):
         st.switch_page("pages/connexion.py")
-    if colonne_droite.button("Créer un compte", use_container_width=True):
+    if colonne_droite.button("Créer un compte", width="stretch"):
         st.switch_page("pages/creer_compte.py")
 else:
     st.success(f"Bonjour {st.session_state['pseudo']} ! Choisissez une analyse dans le menu à gauche.")

@@ -243,8 +243,9 @@ Réutilise **les sélecteurs** et **le client API** de B (`utils/selecteurs.py`,
 ### `frontend/pages/carte.py` — FO2 (à commencer quand F4 marche)
 **Pas besoin de nouvel endpoint** : la carte, c'est la comparaison de **tous** les pays, affichée autrement.
 ```python
-donnees = get("/analyses/comparaison-pays", {"indicateur": indicateur, "classif1": classif1, "sexe": sexe})
-df = pd.DataFrame(donnees["classement"])
+reponse = api_client.get("/analyses/comparaison-pays",
+                         params={"indicateur": indicateur, "classif1": classif1, "sexe": sexe})
+df = pd.DataFrame(reponse["data"]["classement"])   # après avoir vérifié reponse["status_code"] == 200
 fig = px.choropleth(df, locations="code_iso", color="valeur", hover_name="nom_pays",
                     color_continuous_scale="Viridis")      # code_iso = code ISO à 3 lettres : Plotly le reconnaît
 st.plotly_chart(fig)
