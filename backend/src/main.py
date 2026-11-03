@@ -10,8 +10,10 @@ import os
 import dotenv
 import uvicorn
 from controller import (
+    comparaison_pays_controller,
     evolution_controller,
     indicateur_controller,
+    journal_controller,
     login_controller,
     multi_indicateurs_controller,
     observation_controller,
@@ -20,12 +22,7 @@ from controller import (
 )
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
-from controller import indicateur_controller, observation_controller, evolution_controller
-from controller import pays_controller
-from controller import multi_indicateurs_controller
-from controller import login_controller, utilisateur_controller, admin_utilisateur_controller
-from controller import journal_controller
-from controller import comparaison_pays_controller
+from utils.log_utils import initialize_logs
 
 # charge le .env (connexion à la base, host et port du webservice)
 dotenv.load_dotenv(override=True)
