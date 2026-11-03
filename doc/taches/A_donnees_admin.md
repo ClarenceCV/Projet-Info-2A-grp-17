@@ -197,10 +197,10 @@ Supprimer du rapport : la classe `Observation`, « deux bases distinctes ».
 
 ## Checklist
 
-- [ ] S1 : `uv run pytest` fonctionne + test d'exemple — **prévenir le groupe**
-- [ ] S1 : `GET /pays` et `GET /indicateurs/{code}/classif1`
-- [ ] S1 : `.env` retiré de git, `.env.example`, ancien code supprimé
-- [ ] S2 : import robuste (erreurs par pays)
+- [x] S1 : `uv run pytest` fonctionne + test d'exemple — **prévenir le groupe**
+- [x] S1 : `GET /pays` et `GET /indicateurs/{code}/classif1`
+- [x] S1 : `.env` retiré de git, `.env.example`, ancien code supprimé
+- [x] S2 : import robuste (erreurs par pays)
 - [ ] S2-S3 : `POST /admin/import`, `PUT`/`DELETE /admin/observations`
 - [ ] S2-S3 : liste de pays élargie avec D
 - [ ] S4 : logs + `GET /admin/logs` + journal branché
