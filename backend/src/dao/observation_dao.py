@@ -186,24 +186,24 @@ class ObservationDAO:
                 cursor.execute(requete, parametres)
                 return cursor.rowcount == 1
 
-def supprimer(self, cle: CleObservationModel) -> bool:
-    """
-    Supprime une observation identifiée par sa clé primaire.
+    def supprimer(self, cle: CleObservationModel) -> bool:
+        """
+        Supprime une observation identifiée par sa clé primaire.
 
-    Returns:
-        bool: True si une observation a été supprimée, False sinon.
-    """
-    requete = """
-        DELETE FROM laborscope.observation
-        WHERE indicateur_id = %(indicateur_id)s
-          AND code_iso = %(code_iso)s
-          AND source = %(source)s
-          AND periode = %(periode)s
-          AND sexe = %(sexe)s
-          AND classif1 = %(classif1)s;
-    """
+        Returns:
+            bool: True si une observation a été supprimée, False sinon.
+        """
+        requete = """
+            DELETE FROM laborscope.observation
+            WHERE indicateur_id = %(indicateur_id)s
+            AND code_iso = %(code_iso)s
+            AND source = %(source)s
+            AND periode = %(periode)s
+            AND sexe = %(sexe)s
+            AND classif1 = %(classif1)s;
+        """
 
-    with DBConnection().connection as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(requete, cle.model_dump())
-            return cursor.rowcount == 1
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(requete, cle.model_dump())
+                return cursor.rowcount == 1
