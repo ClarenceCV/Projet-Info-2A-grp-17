@@ -1,0 +1,22 @@
+Ces bugs proviennent de l'application lancé depuis le frontend:
+
+Partie 1: Exploration des données
+
+1. Lorsque l'Allemagne est selectionné avec d'autres pays sur certaines profession (ex: 02) on a une erreur interne (code 500)
+
+Parie 2: Evolution
+1. Il est possible de choisir plusieurs pays et cela rend les graphiques bizarres (pour les deux indicateurs)
+Il faudra peut-être reirer la possibilité de choisir plusieurs pays ?
+
+Partie 3: Comparaison pays
+
+Partie 4: Carte du monde
+1. Utiliser une base de carte provenant d'un package
+2. Changer les couleurs pour un gradient d'une couleur unique
+
+Partie 5: Multi indicateurs
+1. Il faudra renommer les indicateurs car pour l'instant ils sont définis par leur code
+2. Il faudra également changer les couleurs que les courbes peuvent avoir (voir charte pour daltonisme etc)
+
+Partie 6: Rapport PDF
+1. Ne fonctionne pas pour l'instant
