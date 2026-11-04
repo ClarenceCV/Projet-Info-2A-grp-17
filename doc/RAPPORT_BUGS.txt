@@ -2,7 +2,7 @@ Ces bugs proviennent de l'application lancé depuis le frontend:
 
 Partie 1: Exploration des données
 
-1. Lorsque l'Allemagne est selectionné avec d'autres pays sur certaines profession (ex: 02) on a une erreur interne (code 500)
+1. Lorsque l'Allemagne est selectionné avec d'autres pays sur certaines profession (ex: 02) on a une erreur interne (code 500) FIXER (Clarence)
 
 Parie 2: Evolution
 1. Il est possible de choisir plusieurs pays et cela rend les graphiques bizarres (pour les deux indicateurs)
