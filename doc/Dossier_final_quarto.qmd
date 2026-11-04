@@ -1,32 +1,129 @@
 ---
-title: "Dossier_final_grp_17"
-format: html
+title: ""
+author: ""
+format:
+  pdf:
+    geometry:
+      - a4paper
+      - left=25mm
+      - right=25mm
+      - top=25mm
+      - bottom=25mm
+    pdf-engine: lualatex
+    documentclass: scrartcl
+    classoption:
+      - DIV=11
+      - numbers=noendperiod
+    include-in-header: header_eml.tex
+    keep-tex: false
+    highlight-style: pygments
+    listings: false
+    number-sections: false
+    pdf-engine-opts:
+      - "--shell-escape"
+    title-block-style: none
+lang: fr
+fontsize: 12pt
 editor: visual
-subtitle: "Rapport final"
-tableofcontents: "Table des matières"
 ---
 
+
+```{r setup, include=FALSE}
+# 0. Configuration globale pour la création du document
+
+knitr::opts_chunk$set(
+  echo      = FALSE,
+  warning   = FALSE,
+  message   = FALSE,
+  fig.align = "center",
+  out.width = "90%"
+)
+
+# Couleurs utilisés
+COL_MAIN    <- "#1565C0"
+COL_ACCENT  <- "#7B2FBE"
+COL_THIRD   <- "#FF6F00"
+COL_NEUTRAL <- "#546E7A"
+
+library(ggplot2)
+
+# Theme ggplot customisé
+theme_ise <- function() {
+  theme_bw(base_size = 11) +
+  theme(
+    axis.title       = element_text(color = COL_MAIN, face = "bold", size = 10),
+    axis.text        = element_text(color = "#6B7C85", size = 9),
+    plot.title       = element_text(color = COL_MAIN, face = "bold",
+                                    size = 12, hjust = 0),
+    plot.subtitle    = element_text(color = COL_MAIN, size = 9),
+    legend.title     = element_text(color = "#1A6B8A", face = "bold", size = 9),
+    legend.text      = element_text(color = "#6B7C85", size = 9),
+    legend.position  = "top",
+    strip.background = element_rect(fill = COL_MAIN),
+    strip.text       = element_text(color = "white", face = "bold", size = 9),
+    panel.grid.major = element_line(color = "#E0F4FF", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    panel.border     = element_rect(color = COL_MAIN, linewidth = 0.5),
+    panel.background = element_rect(fill = "transparent"),
+    plot.background  = element_rect(fill = "#F4F7FC", color = NA)
+  )
+}
+
+theme_set(theme_ise())
+
+library(kableExtra)
+
+# Theme générique du tableau utilisé dans Quarto
+kable_ise <- function(df, caption = NULL, digits = 3,
+                      col.names = NULL, escape = TRUE, source = "Source : Nos analyses sous R, WDI(2024)", ...) {
+  k <- knitr::kable(
+    df,
+    format    = "latex",
+    booktabs  = TRUE,
+    digits    = digits,
+    caption   = caption,
+    escape    = escape,
+    col.names = if (is.null(col.names)) colnames(df) else col.names,
+    ...
+  )
+  k <- k %>%
+    footnote(
+      general = source,
+      general_title = ""
+    )
+  k %>%
+    kable_styling(
+      latex_options = c("HOLD_position"),
+      font_size     = 11
+    ) %>%
+    row_spec(0, bold = TRUE, color = "white", background = "#1565C0") %>%
+    row_spec(seq(1, nrow(df), 2), background = "#E0F4FF")
+}
+```
+
+
+\tableofcontents
+\newpage
+\listoftables
+\newpage
+\listoffigures
 \newpage
 
-##**REMERCIEMENTS** 
+\##**REMERCIEMENTS**
 
-Nous tenons à exprimer notre sincère gratitude à toutes les personnes qui ont contribué, de
-près ou de loin, à la réalisation de ce projet.
+Nous tenons à exprimer notre sincère gratitude à toutes les personnes qui ont contribué, de près ou de loin, à la réalisation de ce projet.
 
-Nos remerciements vont tout d'abord à **M. Ludovic DENEUVILLE**, responsable du module, pour
-son encadrement.
+Nos remerciements vont tout d'abord à **M. Ludovic DENEUVILLE**, responsable du module, pour son encadrement.
 
-Nous remercions tout particulièrement **M. Anas KNEFATI**, notre tuteur, pour sa disponibilité,
-la pertinence de ses conseils et ses remarques constructives, qui nous ont permis de faire
-progresser le projet à chaque étape.
+Nous remercions tout particulièrement **M. Anas KNEFATI**, notre tuteur, pour sa disponibilité, la pertinence de ses conseils et ses remarques constructives, qui nous ont permis de faire progresser le projet à chaque étape.
 
-Nous adressons également nos remerciements à l'ensemble de l'équipe pédagogique de l'École
-nationale de la statistique et de l'analyse de l'information (ENSAI) pour la qualité de la
-formation dispensée et les ressources mises à notre disposition.
+Nous adressons également nos remerciements à l'ensemble de l'équipe pédagogique de l'École nationale de la statistique et de l'analyse de l'information (ENSAI) pour la qualité de la formation dispensée et les ressources mises à notre disposition.
 
 Enfin, nous félicitons les membres du groupe pour leur investissement, leur esprit d'équipe et leur bonne humeur durant ces mois de travail.
+\newpage
 
-##**Résumé** {.unnumbered}
+
+\##**Résumé** {.unnumbered}
 
 Le projet **LaborScope** vise à rendre accessible l'exploration des données du marché du travail mondial, issues de la base ILOSTAT de l'Organisation internationale du Travail (OIT). Cette base, très riche, rassemble de nombreux indicateurs (emploi, chômage, secteurs d'activité, inégalités entre les sexes...), mais sa taille et sa complexité en limitent l'usage par des utilisateurs non spécialistes.
 
@@ -36,10 +133,9 @@ L'application obtenue permet \[d'explorer rapidement les données ILOSTAT et d'e
 
 **Mots-clés :** marché du travail, ILOSTAT, visualisation de données, application interactive, conception UML
 
-
 \newpage
 
-##**INTRODUCTION** {.unnumbered}
+##INTRODUCTION
 
 Le marché du travail est au cœur des préoccupations économiques et sociales contemporaines. Chômage, emploi informel, inégalités entre les sexes ou encore évolution des secteurs d'activité : ces indicateurs conditionnent les politiques publiques et les décisions des organisations internationales, des entreprises et des chercheurs. L'Organisation internationale du Travail (OIT) en assure le suivi à l'échelle mondiale grâce à sa base de données ILOSTAT, qui rassemble des milliers d'indicateurs harmonisés couvrant la plupart des pays du monde.
 
@@ -73,12 +169,11 @@ Les utilisateurs disposent d’un compte classique leur permettant de consulter 
 
 ###1.2.Organisation du travail
 
-
-
 ##Chapitre2:Modelisation de l'application
 
 ##Chapitre3: Implémentation
 
 ##Chapitre4: Fonctionnement de l'application
 
-##**CONCLUSION**
+\##**CONCLUSION**
+
