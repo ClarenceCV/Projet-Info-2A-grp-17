@@ -61,33 +61,54 @@ class RapportService:
             }
         return stats
 
-    def conclusion(self, stats: dict[str, dict[str, Any]], df_comparaison: pd.DataFrame) -> str:
+    def conclusion(
+        self,
+        stats: dict[str, dict[str, Any]],
+        comparaison: dict
+    ) -> str:
         """Génère des phrases automatiques d'analyse à partir des chiffres calculés."""
+
         if not stats:
             return "Aucune donnee disponible pour etablir une conclusion."
 
         phrases = []
 
-        # Analyse d'évolution par pays
+        # 1. Analyse d'évolution par pays
         for pays, s in stats.items():
             sens = "augmente" if s["evolution"] >= 0 else "diminue"
             diff_abs = abs(s["evolution"])
+
             phrases.append(
-                f"Entre {s['periode_debut']} et {s['periode_fin']}, le marche dans le pays {s['nom_pays']} ({pays}) "
-                f"a {sens} de {diff_abs:.2f} points (passant de {s['val_debut']:.2f} a {s['val_fin']:.2f})."
+                f"Entre {s['periode_debut']} et {s['periode_fin']}, "
+                f"le marche dans le pays {s['nom_pays']} ({pays}) "
+                f"a {sens} de {diff_abs:.2f} points "
+                f"(passant de {s['val_debut']:.2f} a {s['val_fin']:.2f})."
             )
 
-        # Classement issu de la comparaison
-        if not df_comparaison.empty and "valeur" in df_comparaison.columns:
-            df_sorted = df_comparaison.sort_values("valeur", ascending=False)
+        # 2. Classement issu de la comparaison
+        classement = comparaison.get("classement", pd.DataFrame())
+
+        if not classement.empty and "valeur" in classement.columns:
+            df_sorted = classement.sort_values("valeur", ascending=False)
+
             top_row = df_sorted.iloc[0]
             bottom_row = df_sorted.iloc[-1]
+
+            nom_top = top_row.get("nom_pays") or top_row["code_iso"]
+            nom_bottom = bottom_row.get("nom_pays") or bottom_row["code_iso"]
+
+            periode = comparaison.get("periode_reference")
+
             phrases.append(
-                f"Sur la periode la plus recente, {top_row.get('nom_pays', top_row['code_iso'])} presente la valeur la plus elevee "
-                f"({top_row['valeur']:.2f}), tandis que {bottom_row.get('nom_pays', bottom_row['code_iso'])} enregistre la valeur la plus basse ({bottom_row['valeur']:.2f})."
+                f"Pour la periode de reference {periode}, "
+                f"{nom_top} presente la valeur la plus elevee "
+                f"({top_row['valeur']:.2f}), tandis que "
+                f"{nom_bottom} enregistre la valeur la plus basse "
+                f"({bottom_row['valeur']:.2f})."
             )
 
         return " ".join(phrases)
+
 
     def _generer_graphique_bytes(self, df_evolution: pd.DataFrame) -> io.BytesIO:
         """Génère un graphique d'évolution Matplotlib en mémoire (sans sauvegarde disque)."""
@@ -127,6 +148,10 @@ class RapportService:
         # 2. Calculs statistiques et conclusion
         stats = self.resume_statistique(evolution)
         conclusion_texte = self.conclusion(stats, comparaison)
+
+        print("Données évolution :", len(evolution))
+        print("Données classement :", len(comparaison["classement"]))
+        print("Statistiques :", stats)
 
         # 3. Assemblage FPDF2
         pdf = LaborScopePDF()
