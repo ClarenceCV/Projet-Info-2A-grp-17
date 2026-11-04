@@ -1,18 +1,21 @@
 # Endpoints d'administration des comptes (préfixe /admin/utilisateurs, c.f. main.py)
 # Tous réservés aux administrateurs : Depends(admin_requis) → 401 si pas connecté, 403 si pas admin.
 
+from collections import deque
 from dataclasses import asdict
 
 from business_object.utilisateur import Utilisateur
 from config_import import INDICATEURS
 from controller.auth import admin_requis
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fetcher.data_processing import DataProcessing
 from schema.observation_model import CleObservationModel
 from schema.utilisateur_model import CreationUtilisateurModel, UtilisateurModel
 from service.journal_service import JournalService
 from service.observation_service import ObservationService
 from service.utilisateur_service import UtilisateurService
+from utils.log_utils import LOG_DIR
+
 
 router = APIRouter()
 
@@ -21,6 +24,26 @@ router = APIRouter()
 def lister_utilisateurs(admin: Utilisateur = Depends(admin_requis)):
     """Liste tous les comptes (utilisateurs et administrateurs)."""
     return [UtilisateurModel(**asdict(u)) for u in UtilisateurService().lister()]
+
+
+@router.get("/logs")
+def visualisation_logs_admin(admin: Utilisateur = Depends(admin_requis), lignes: int = Query(default=100, ge=1, le=5000)):
+    """Renvoie les dernières lignes du fichier de logs."""
+    fichier_log = LOG_DIR / "laborscope.log"
+
+    if not fichier_log.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="Fichier de logs introuvable"
+        )
+
+    with fichier_log.open("r", encoding="utf-8") as fichier:
+        dernieres_lignes = list(deque(fichier, maxlen=lignes))
+
+    return {
+        "nombre_lignes": len(dernieres_lignes),
+        "logs": dernieres_lignes
+    }
 
 
 @router.post("", response_model=UtilisateurModel, status_code=status.HTTP_201_CREATED)
