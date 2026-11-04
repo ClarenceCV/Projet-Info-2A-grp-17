@@ -76,9 +76,5 @@ if __name__ == "__main__":
     uvicorn.run(
         app,
         host=os.getenv("UVICORN_HOST", "0.0.0.0"),  # 0.0.0.0 sur Onyxia pour être joignable
-        port=int(os.getenv("UVICORN_PORT", "5000")),
-<<<<<<< HEAD
+        port=int(os.getenv("UVICORN_PORT", "5000"))
     )
-=======
-    )
->>>>>>> 9b3e48db4c13f282205158e88ebf2edc7ffb4e5f

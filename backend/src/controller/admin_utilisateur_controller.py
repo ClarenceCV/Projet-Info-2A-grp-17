@@ -4,15 +4,11 @@
 from collections import deque
 from dataclasses import asdict
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 
 from business_object.utilisateur import Utilisateur
 from config_import import INDICATEURS
 from controller.auth import admin_requis
-<<<<<<< HEAD
-=======
-from fastapi import APIRouter, Depends, HTTPException, Query, status
->>>>>>> 9b3e48db4c13f282205158e88ebf2edc7ffb4e5f
 from fetcher.data_processing import DataProcessing
 from schema.observation_model import CleObservationModel
 from schema.utilisateur_model import CreationUtilisateurModel, UtilisateurModel
