@@ -125,7 +125,12 @@ class ObservationDAO:
                 lignes = cursor.fetchall()
 
         # columns= : garde les bonnes colonnes même si aucune ligne n'est trouvée
-        return pd.DataFrame(lignes, columns=COLONNES_LECTURE)
+        df = pd.DataFrame(lignes, columns=COLONNES_LECTURE)
+
+        # Remplace les valeurs manquantes (NaN) par None
+        df = df.astype(object).where(pd.notna(df), None)
+
+        return df
 
     def lister_classif1(self, code_indicateur: str) -> list[str]:
         """
