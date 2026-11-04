@@ -1,11 +1,9 @@
 # Accès à la table observation. Entrée : DataFrame ; sortie : sql (et inversement pour les lectures)
 
 import pandas as pd
-from psycopg2.extras import execute_values
-
 from dao.db_connection import DBConnection
+from psycopg2.extras import execute_values
 from schema.observation_model import CleObservationModel
-
 
 # Colonnes du DataFrame propre envoyées dans la table observation (même nom des deux côtés)
 COLONNES_OBSERVATION = ["code_iso", "source", "periode", "sexe", "classif1", "valeur", "statut"]
@@ -181,7 +179,7 @@ class ObservationDAO:
             "nouvelle_valeur": nouvelle_valeur,
         }
 
-        with DBConnection().connection as connection:
+        with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 cursor.execute(requete, parametres)
                 return cursor.rowcount == 1
@@ -203,7 +201,7 @@ class ObservationDAO:
             AND classif1 = %(classif1)s;
         """
 
-        with DBConnection().connection as connection:
+        with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 cursor.execute(requete, cle.model_dump())
                 return cursor.rowcount == 1

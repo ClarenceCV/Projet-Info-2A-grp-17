@@ -204,7 +204,7 @@ Supprimer du rapport : la classe `Observation`, « deux bases distinctes ».
 - [x] S2-S3 : `POST /admin/import`, `PUT`/`DELETE /admin/observations`
 - [ ] S2-S3 : liste de pays élargie avec D
 - [x] S4 : logs + `GET /admin/logs` + journal branché
-- [ ] S4-S5 : tests `parse_data`/`fetch_data`, CI, README
+- [x] S4-S5 : tests `parse_data`/`fetch_data`, CI, README
 - [ ] Rapport : architecture, base de données, F1-F2, admin données, diagramme de classes global, tests
 
 ## Tu dépends de / tu fournis à
