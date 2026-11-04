@@ -1,6 +1,6 @@
 import logging
 import logging.config
-import numbers
+import pandas as pd
 from functools import wraps
 from pathlib import Path
 
@@ -59,77 +59,100 @@ def get_logger(module_name: str, max_size: int = 25):
     return logging.getLogger(short_name)
 
 
-def log(func):
-    """Decorator to log method calls and their outputs.
+class LogIndentation:
+    """For indenting logs when entering a new method"""
 
-    When applied to a method, it logs:
-    - the method call with parameter values
-    - the return value of the method
-    """
+    current_indentation = 0
+    indentation_size = 2
+
+    @classmethod
+    def increase_indentation(cls):
+        """Increase indentation"""
+        cls.current_indentation += 1
+
+    @classmethod
+    def decrease_indentation(cls):
+        """Decrease indentation"""
+        cls.current_indentation -= 1
+
+    @classmethod
+    def get_indentation(cls):
+        """Get the current indentation"""
+        return " " * cls.indentation_size * cls.current_indentation
+
+
+def log(func):
+    """Log automatiquement l'entrée, la sortie et les erreurs d'une fonction."""
 
     SENSITIVE_KEYWORDS = {
-        "password",
-        "passwd",
-        "pwd",
-        "pass",
-        "token",
-        "secret",
-        "key",
+        "password", "passwd", "pwd", "pass",
+        "token", "secret", "key",
     }
 
     @wraps(func)
     def wrapper(*args, **kwargs):
+
         if args and hasattr(args[0], "__class__"):
-            logger = get_logger(f"{args[0].__class__.__module__}")
+            logger = get_logger(args[0].__class__.__module__)
         else:
-            logger = logging.getLogger(__name__)
+            logger = get_logger(func.__module__)
 
         LogIndentation.increase_indentation()
         indentation = LogIndentation.get_indentation()
 
-        # Retrieve method parameters
         method_name = func.__name__
-        param_names = func.__code__.co_varnames[1 : func.__code__.co_argcount]
+
+        # Récupération des paramètres
+        param_names = func.__code__.co_varnames[1:func.__code__.co_argcount]
         args_list = []
 
         for i, arg in enumerate(args[1:]):
             if i >= len(param_names):
                 break
+
             param_name = param_names[i].lower()
+
             if any(keyword in param_name for keyword in SENSITIVE_KEYWORDS):
                 args_list.append("*****")
             else:
-                args_list.append(str(arg) if not isinstance(arg, numbers.Number) else arg)
+                args_list.append(str(arg))
 
         for k, v in kwargs.items():
             if any(keyword in k.lower() for keyword in SENSITIVE_KEYWORDS):
                 args_list.append("*****")
             else:
-                args_list.append(str(v) if not isinstance(v, numbers.Number) else v)
+                args_list.append(str(v))
 
         args_tuple = tuple(args_list)
 
-        # Log method entry
         logger.info(f"{indentation}{method_name}{args_tuple} - START")
-        result = func(*args, **kwargs)
-        logger.info(f"{indentation}{method_name}{args_tuple} - END")
 
-        # Shorten long output for readability
-        if isinstance(result, list):
-            result_str = str([str(item) for item in result[:3]])
-            result_str += f" ... ({len(result)} elements)"
-        elif isinstance(result, dict):
-            result_str = [(str(k), str(v)) for k, v in list(result.items())[:3]]
-            result_str += f" ... ({len(result)} elements)"
-        elif isinstance(result, str) and len(result) > 50:
-            result_str = result[:50] + f" ... ({len(result)} characters)"
-        else:
-            result_str = str(result)
+        try:
+            result = func(*args, **kwargs)
 
-        logger.info(f"{indentation}  └─> Output: {result_str}")
+            # Résumé du résultat
+            if isinstance(result, pd.DataFrame):
+                result_str = (
+                    f"DataFrame : {len(result)} lignes, "
+                    f"{len(result.columns)} colonnes"
+                )
+            elif isinstance(result, list):
+                result_str = f"Liste : {len(result)} éléments"
+            elif isinstance(result, dict):
+                result_str = f"Dictionnaire : {len(result)} éléments"
+            else:
+                result_str = str(result)
 
-        LogIndentation.decrease_indentation()
+            logger.info(f"{indentation}{method_name} - END")
+            logger.info(f"{indentation}  └─> Output: {result_str}")
 
-        return result
+            return result
+
+        except Exception:
+            logger.exception(f"{indentation}{method_name} - ERROR")
+            raise
+
+        finally:
+            LogIndentation.decrease_indentation()
 
     return wrapper
