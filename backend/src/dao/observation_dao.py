@@ -1,9 +1,8 @@
 # Accès à la table observation. Entrée : DataFrame ; sortie : sql (et inversement pour les lectures)
 
 import pandas as pd
-from psycopg2.extras import execute_values
-
 from dao.db_connection import DBConnection
+from psycopg2.extras import execute_values
 from schema.observation_model import CleObservationModel
 
 # Colonnes du DataFrame propre envoyées dans la table observation (même nom des deux côtés)
@@ -180,28 +179,35 @@ class ObservationDAO:
             "nouvelle_valeur": nouvelle_valeur,
         }
 
-        with DBConnection().connection as connection:
+        with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 cursor.execute(requete, parametres)
                 return cursor.rowcount == 1
 
-def supprimer(self, cle: CleObservationModel) -> bool:
-    """
-    Supprime une observation identifiée par sa clé primaire.
+    def supprimer(self, cle: CleObservationModel) -> bool:
+        """
+        Supprime une observation identifiée par sa clé primaire.
 
-    Returns:
-        bool: True si une observation a été supprimée, False sinon.
-    """
-    requete = """
-        DELETE FROM laborscope.observation
-        WHERE indicateur_id = %(indicateur_id)s
-          AND code_iso = %(code_iso)s
-          AND source = %(source)s
-          AND periode = %(periode)s
-          AND sexe = %(sexe)s
-          AND classif1 = %(classif1)s;
-    """
+        Returns:
+            bool: True si une observation a été supprimée, False sinon.
+        """
+        requete = """
+            DELETE FROM laborscope.observation
+            WHERE indicateur_id = %(indicateur_id)s
+            AND code_iso = %(code_iso)s
+            AND source = %(source)s
+            AND periode = %(periode)s
+            AND sexe = %(sexe)s
+            AND classif1 = %(classif1)s;
+        """
 
+<<<<<<< HEAD
     with DBConnection().connection as connection, connection.cursor() as cursor:
         cursor.execute(requete, cle.model_dump())
         return cursor.rowcount == 1
+=======
+        with DBConnection().connection as connection:  # noqa: SIM117
+            with connection.cursor() as cursor:
+                cursor.execute(requete, cle.model_dump())
+                return cursor.rowcount == 1
+>>>>>>> 9b3e48db4c13f282205158e88ebf2edc7ffb4e5f
