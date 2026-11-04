@@ -200,14 +200,6 @@ class ObservationDAO:
             AND sexe = %(sexe)s
             AND classif1 = %(classif1)s;
         """
-
-<<<<<<< HEAD
-    with DBConnection().connection as connection, connection.cursor() as cursor:
-        cursor.execute(requete, cle.model_dump())
-        return cursor.rowcount == 1
-=======
-        with DBConnection().connection as connection:  # noqa: SIM117
-            with connection.cursor() as cursor:
-                cursor.execute(requete, cle.model_dump())
-                return cursor.rowcount == 1
->>>>>>> 9b3e48db4c13f282205158e88ebf2edc7ffb4e5f
+        with DBConnection().connection as connection, connection.cursor() as cursor:
+            cursor.execute(requete, cle.model_dump())
+            return cursor.rowcount == 1
