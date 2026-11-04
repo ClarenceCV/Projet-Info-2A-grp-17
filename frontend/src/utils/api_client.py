@@ -106,6 +106,47 @@ class APIClient:
         """Envoie une requête DELETE (suppression)."""
         return self._request("DELETE", path, json=json, **kwargs)
 
+    def telecharger_rapport(
+        self,
+        code_indicateur: str,
+        pays: list[str],
+        classif1: str,
+        sexe: str = "Total",
+        n_periodes: int = 8,
+    ) -> dict:
+        """
+        Appelle l'endpoint GET /rapport pour récupérer le contenu binaire du PDF (FO3).
+
+        Returns:
+            dict: {'status_code': 200, 'data': b'%PDF...'} ou dictionnaire d'erreur
+        """
+        url = f"{self.base_url}/rapport"
+        headers = self._get_headers()
+
+        params = [
+            ("indicateur", code_indicateur),
+            ("classif1", classif1),
+            ("sexe", sexe),
+            ("n_periodes", n_periodes),
+        ]
+        for p in pays:
+            params.append(("pays", p))
+
+        try:
+            response = self.session.get(
+                url, params=params, headers=headers, timeout=self.timeout
+            )
+            if response.status_code == 200:
+                return {"status_code": 200, "data": response.content}
+            return {"status_code": response.status_code, "data": response.text}
+
+        except requests.exceptions.Timeout:
+            return {"status_code": 0, "data": "Le backend ne répond pas (délai dépassé)."}
+        except requests.exceptions.ConnectionError:
+            return {"status_code": 0, "data": f"Impossible de joindre le backend ({self.base_url})."}
+        except requests.exceptions.RequestException as e:
+            return {"status_code": 0, "data": str(e)}
+
 
 # Instance unique, importée par toutes les pages
 api_client = APIClient(API_URL)

@@ -1,5 +1,6 @@
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter
+
 from schema.pays_model import PaysModel
 from service.pays_service import PaysService
 

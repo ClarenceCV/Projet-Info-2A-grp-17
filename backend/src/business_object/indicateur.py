@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 #le décorateur dataclass permet de coder les méthodes init, repr et eq de la manière naturelle
 @dataclass(frozen=True) # le frozen fixe les indicateurs (pas de modifications après la création)
 class Indicateur:

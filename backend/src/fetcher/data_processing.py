@@ -9,6 +9,7 @@
 import time
 
 import pandas as pd
+
 from business_object.indicateur import Indicateur
 from config_import import ANNEE_DEBUT, PAYS_SUIVIS
 from dao.indicateur_dao import IndicateurDAO

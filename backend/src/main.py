@@ -5,11 +5,22 @@
 # Puis ouvrir la documentation interactive : <url du service>/docs
 # (sur Onyxia : Mes services > VSCode > Ouvrir > lien du port 5000)
 
+# Point d'entrée du webservice FastAPI LaborScope.
+#
+# Lancement (depuis backend/src) :
+#     uv run python main.py
+# Puis ouvrir la documentation interactive : <url du service>/docs
+# (sur Onyxia : Mes services > VSCode > Ouvrir > lien du port 5000)
+
 import os
 
 import dotenv
 import uvicorn
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
+
 from controller import (
+    admin_utilisateur_controller,
     comparaison_pays_controller,
     evolution_controller,
     indicateur_controller,
@@ -18,13 +29,11 @@ from controller import (
     multi_indicateurs_controller,
     observation_controller,
     pays_controller,
+    rapport_controller,
     utilisateur_controller,
-    admin_utilisateur_controller
 )
-from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
-from utils.log_utils import initialize_logs
 from service.utilisateur_service import UtilisateurService
+from utils.log_utils import initialize_logs
 
 # charge le .env (connexion à la base, host et port du webservice)
 dotenv.load_dotenv(override=True)
@@ -48,6 +57,7 @@ app.include_router(utilisateur_controller.router, prefix="/utilisateurs", tags=[
 app.include_router(admin_utilisateur_controller.router, prefix="/admin/utilisateurs", tags=["Administration"])
 app.include_router(journal_controller.router, prefix="/admin/journal", tags=["Administration"])
 app.include_router(comparaison_pays_controller.router, prefix="/analyses", tags=["Analyses"])
+app.include_router(rapport_controller.router, tags=["Rapport"])
 
 
 @app.get("/", include_in_schema=False)
@@ -62,11 +72,9 @@ async def hello_name(name: str):
     return {"message": f"Hello {name}"}
 
 
-
 if __name__ == "__main__":
     uvicorn.run(
         app,
         host=os.getenv("UVICORN_HOST", "0.0.0.0"),  # 0.0.0.0 sur Onyxia pour être joignable
         port=int(os.getenv("UVICORN_PORT", "5000")),
     )
-

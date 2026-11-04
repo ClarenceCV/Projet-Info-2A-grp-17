@@ -1,6 +1,7 @@
 """Tests unitaires pour le service MultiIndicateursService (Fonctionnalité F5)."""
 
 from unittest.mock import patch
+
 import pandas as pd
 import pytest
 
@@ -9,7 +10,6 @@ from business_object.selection import Selection
 from dao.indicateur_dao import IndicateurDAO
 from dao.observation_dao import ObservationDAO
 from service.multi_indicateurs_service import MultiIndicateursService
-
 
 # ------------------------------------------------------------------------------
 # Fixtures & Helpers

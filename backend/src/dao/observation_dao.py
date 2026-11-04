@@ -6,7 +6,6 @@ from psycopg2.extras import execute_values
 from dao.db_connection import DBConnection
 from schema.observation_model import CleObservationModel
 
-
 # Colonnes du DataFrame propre envoyées dans la table observation (même nom des deux côtés)
 COLONNES_OBSERVATION = ["code_iso", "source", "periode", "sexe", "classif1", "valeur", "statut"]
 
@@ -203,7 +202,6 @@ def supprimer(self, cle: CleObservationModel) -> bool:
           AND classif1 = %(classif1)s;
     """
 
-    with DBConnection().connection as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(requete, cle.model_dump())
-            return cursor.rowcount == 1
+    with DBConnection().connection as connection, connection.cursor() as cursor:
+        cursor.execute(requete, cle.model_dump())
+        return cursor.rowcount == 1

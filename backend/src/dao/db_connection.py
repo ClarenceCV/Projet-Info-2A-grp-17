@@ -1,11 +1,15 @@
 # Ce fichier sert à se connecter proprement à la base de donnée sql
 
-import os # pour accéder aux variables d'environnement
+import os  # pour accéder aux variables d'environnement
 
-import psycopg2 # librairie essentielle pour faire le lien entre SQL et notre backend
-from psycopg2.extras import RealDictCursor # pour que le cursor puisse renvoyer un format dictionnaire propre
+import psycopg2  # librairie essentielle pour faire le lien entre SQL et notre backend
+from psycopg2.extras import (
+    RealDictCursor,  # pour que le cursor puisse renvoyer un format dictionnaire propre
+)
 
-from utils.singleton import Singleton # pour bloquer la possibiliter de créer plus d'une instance de la classe DB connxion (on en veut qu'une seule)
+from utils.singleton import (
+    Singleton,  # pour bloquer la possibiliter de créer plus d'une instance de la classe DB connxion (on en veut qu'une seule)
+)
 
 
 class DBConnection(metaclass=Singleton):

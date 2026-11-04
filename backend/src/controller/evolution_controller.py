@@ -1,6 +1,8 @@
 
 from typing import Literal
+
 from fastapi import APIRouter, HTTPException, Query
+
 from schema.evolution_model import EvolutionModel
 from service.evolution_service import EvolutionService
 from service.indicateur_service import IndicateurService

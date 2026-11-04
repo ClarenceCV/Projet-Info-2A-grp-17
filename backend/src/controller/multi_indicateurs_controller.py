@@ -1,6 +1,7 @@
 """Contrôleur API FastAPI pour l'analyse multi-indicateurs F5."""
 
 from typing import Any
+
 from fastapi import APIRouter, HTTPException, status
 
 from business_object.selection import Selection

@@ -3,8 +3,8 @@
 from dataclasses import asdict
 
 from fastapi import APIRouter, HTTPException
-from schema.indicateur_model import IndicateurModel, IndicateurClassif1Model
 
+from schema.indicateur_model import IndicateurClassif1Model, IndicateurModel
 from service.indicateur_service import IndicateurService
 from service.observation_service import ObservationService
 

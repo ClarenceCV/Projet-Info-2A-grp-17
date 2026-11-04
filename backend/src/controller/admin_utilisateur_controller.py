@@ -3,10 +3,11 @@
 
 from dataclasses import asdict
 
+from fastapi import APIRouter, Depends, HTTPException, status
+
 from business_object.utilisateur import Utilisateur
 from config_import import INDICATEURS
 from controller.auth import admin_requis
-from fastapi import APIRouter, Depends, HTTPException, status
 from fetcher.data_processing import DataProcessing
 from schema.observation_model import CleObservationModel
 from schema.utilisateur_model import CreationUtilisateurModel, UtilisateurModel

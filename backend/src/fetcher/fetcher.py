@@ -1,6 +1,7 @@
-import requests
-import pandas as pd
 from io import StringIO
+
+import pandas as pd
+import requests
 
 # lien pour le code : https://rtavenar.github.io/poly_python/content/api.html
 

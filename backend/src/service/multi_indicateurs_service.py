@@ -1,6 +1,7 @@
 # Logique métier de F5 : comparaison de plusieurs indicateurs sur un même même graphique
 
 import pandas as pd
+
 from business_object.selection import Selection
 from dao.indicateur_dao import IndicateurDAO
 from dao.observation_dao import ObservationDAO
