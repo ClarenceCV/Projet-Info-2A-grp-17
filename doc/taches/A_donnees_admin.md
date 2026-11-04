@@ -201,9 +201,9 @@ Supprimer du rapport : la classe `Observation`, « deux bases distinctes ».
 - [x] S1 : `GET /pays` et `GET /indicateurs/{code}/classif1`
 - [x] S1 : `.env` retiré de git, `.env.example`, ancien code supprimé
 - [x] S2 : import robuste (erreurs par pays)
-- [ ] S2-S3 : `POST /admin/import`, `PUT`/`DELETE /admin/observations`
+- [x] S2-S3 : `POST /admin/import`, `PUT`/`DELETE /admin/observations`
 - [ ] S2-S3 : liste de pays élargie avec D
-- [ ] S4 : logs + `GET /admin/logs` + journal branché
+- [x] S4 : logs + `GET /admin/logs` + journal branché
 - [ ] S4-S5 : tests `parse_data`/`fetch_data`, CI, README
 - [ ] Rapport : architecture, base de données, F1-F2, admin données, diagramme de classes global, tests
 
