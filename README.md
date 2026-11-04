@@ -1,8 +1,43 @@
 # Projet info - groupe 17 : LaborScope 
 
-Analyse interactive du marché du travail mondial à partir des données de l'OIT ([ILOSTAT](https://ilostat.ilo.org)).
+## Présentation de projet
 
+LaborScope est une application interactive qui analyse du marché du travail mondial à partir des données de l'OIT ([ILOSTAT](https://ilostat.ilo.org)).
+Elle possède au total 8 fonctionnalités:
 
+- F1: Extrait les données de l'API d'ILOSTAT
+- F2: Nettoie est stocks les données récupérées 
+- F3: Réalise une analyse temporelle selon un indicateur sur un pays.
+- F4: Réalise une analyse temporelle selon un indicateur pour plusieurs pays
+      et les compare
+- F5: Compare des analyses temporelles d'indicateurs différents (jusqu'à 4)
+      pour un pays.
+- F6: Permet la dynamique d'utilisateur et d'administrateu ainsi que
+      la création de compte
+- FO2: Observation d'une carte interactive qui représente plusieurs pays
+      selon leur valeur sur un indicateur
+- FO3: Création de rapports statistique sur un pays et ses valeurs selon
+      un indicateur.
+
+## Packages utilisés
+
+### Backend
+
+### Frontend
+
+## Base de donnée
+
+## Architecture du projet
+
+Le projet est organisé en deux parties principales :
+
+log/: permet de suivre toutes les interactions dans l'application
+
+backend/ : contient l'API, la logique métier et les interactions avec la base de données.
+
+frontend/ : contient l'interface utilisateur et les interactions avec l'API.
+
+D'autres dossier son utiliser comme .github qui contient la configuration d'une intégration continue avec Github Actions.
 
 ## Lancer l'application sur Onyxia
 
