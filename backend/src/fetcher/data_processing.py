@@ -16,6 +16,8 @@ from dao.observation_dao import ObservationDAO
 from dao.pays_dao import PaysDAO
 from fetcher.fetcher import URL_ILOSTAT, construire_url, load_data
 from fetcher.parser import retirer_prefixe
+from utils.log_utils import get_logger, log
+
 
 # Colonnes du CSV ILOSTAT à garder -> nom dans le DataFrame propre
 RENOMMAGE = {
@@ -35,6 +37,9 @@ COLONNES = ["code_iso", "nom_pays", "source", "periode", "sexe", "classif1", "va
 # Colonnes qui identifient une observation (= clé primaire de la table observation, sans l'indicateur)
 CLE = ["code_iso", "source", "periode", "sexe", "classif1"]
 
+# initialisation de logger
+logger = get_logger(__name__)
+
 
 class DataProcessing:
     """
@@ -44,10 +49,12 @@ class DataProcessing:
         url_API (str): adresse de l'API ILOSTAT (celle utilisée par construire_url)
     """
 
+    @log
     def __init__(self):
         """Constructor"""
         self.url_API = URL_ILOSTAT
 
+    @log
     def fetch_data(self, indicator: str) -> pd.DataFrame:
         """
         Télécharge un indicateur pour les pays suivis (c.f. config_import.py),
@@ -71,15 +78,15 @@ class DataProcessing:
                     df_pays = load_data(url)
                     break                                 # si succès on sort de la boucle d'essaie
                 except Exception as e:
-                    print(f"  Essai {essaie}/{nb_try} échoué pour {code_iso} : {e}")
+                    logger.info(f"  Essai {essaie}/{nb_try} échoué pour {code_iso} : {e}")
                     if essaie < nb_try:
                         time.sleep(sleep)                     # on attend avant de réessayer          
 
             if df_pays is None:
-                print(f"  AVERTISSEMENT : {code_iso} ignoré pour {indicator}")
+                logger.warning(f"  AVERTISSEMENT : {code_iso} ignoré pour {indicator}")
                 continue                       # on passe au pays suivant
 
-            print(f"  {indicator} - {code_iso} : {len(df_pays)} lignes")
+            logger.info(f"  {indicator} - {code_iso} : {len(df_pays)} lignes")
             if not df_pays.empty:                     # pays sans données : on passe au suivant
                 morceaux.append(df_pays)
 
@@ -87,6 +94,7 @@ class DataProcessing:
             return pd.DataFrame()
         return pd.concat(morceaux, ignore_index=True)
 
+    @log
     def parse_data(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Transforme le DataFrame brut en DataFrame propre.
@@ -129,11 +137,12 @@ class DataProcessing:
         # 4. doublons : deux sources différentes peuvent avoir le même libellé
         nb_doublons = df.duplicated(CLE).sum()
         if nb_doublons:
-            print(f"  Attention : {nb_doublons} doublons sur la clé, seule la première ligne est gardée")
+            logger.warning(f"  Attention : {nb_doublons} doublons sur la clé, seule la première ligne est gardée")
             df = df.drop_duplicates(CLE, keep="first")
 
         return df.reset_index(drop=True)
 
+    @log
     def save_data(self, indicateur: Indicateur, df: pd.DataFrame) -> int:
         """
         Enregistre en base un indicateur et ses observations, dans cet ordre :
@@ -152,6 +161,7 @@ class DataProcessing:
         PaysDAO().enregistrer(df[["code_iso", "nom_pays"]])
         return ObservationDAO().enregistrer(indicateur_id, df)
 
+    @log
     def charger(self, indicateurs: list[Indicateur]) -> int:
         """
         Télécharge, nettoie et enregistre en base chaque indicateur.
@@ -167,16 +177,16 @@ class DataProcessing:
         """
         total = 0
         for indicateur in indicateurs:
-            print(f"\n[{indicateur.code}] {indicateur}")
+            logger.info(f"\n[{indicateur.code}] {indicateur}")
             try:
                 brut = self.fetch_data(indicateur.code)
                 propre = self.parse_data(brut)
-                print(f"  {len(brut)} lignes brutes -> {len(propre)} lignes propres")
+                logger.info(f"  {len(brut)} lignes brutes -> {len(propre)} lignes propres")
                 nb = self.save_data(indicateur, propre)
-                print(f"  {nb} observations enregistrées en base")
+                logger.info(f"  {nb} observations enregistrées en base")
                 total += nb
             except Exception as e:
-                print(f"  ERREUR : {e}")
+                logger.error(f"  ERREUR : {e}")
 
-        print(f"\nTerminé : {total} observations enregistrées au total.")
+        logger.info(f"\nTerminé : {total} observations enregistrées au total.")
         return total
