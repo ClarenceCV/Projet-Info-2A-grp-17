@@ -171,7 +171,7 @@ class ObservationDAO:
             UPDATE laborscope.observation
             SET valeur = %(nouvelle_valeur)s,
                 date_maj = CURRENT_TIMESTAMP
-            WHERE indicateur_id = %(indicateur_id)s
+            WHERE indicateur_id = (SELECT id FROM laborscope.indicateur WHERE code = %(indicateur)s)
             AND code_iso = %(code_iso)s
             AND source = %(source)s
             AND periode = %(periode)s
@@ -198,7 +198,7 @@ class ObservationDAO:
         """
         requete = """
             DELETE FROM laborscope.observation
-            WHERE indicateur_id = %(indicateur_id)s
+            WHERE indicateur_id = (SELECT id FROM laborscope.indicateur WHERE code = %(indicateur)s)
             AND code_iso = %(code_iso)s
             AND source = %(source)s
             AND periode = %(periode)s

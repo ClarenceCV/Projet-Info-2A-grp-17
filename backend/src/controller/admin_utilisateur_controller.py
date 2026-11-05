@@ -89,10 +89,10 @@ def forcer_import(admin: Utilisateur = Depends(admin_requis)):  # noqa: B008
     }
 
 
-@router.put("observations")
+@router.put("/observations")
 def modifier_observation(
     cle: CleObservationModel,
-    nouvelle_valeur: int,
+    nouvelle_valeur: float,
     admin: Utilisateur = Depends(admin_requis)
 ):
     """
@@ -121,22 +121,9 @@ def modifier_observation(
     return {"message": "Observation modifiée avec succès."}
 
 
-@router.delete("/{id_utilisateur}")
-def supprimer_utilisateur(id_utilisateur: int, admin: Utilisateur = Depends(admin_requis)):
-    """
-    Supprime un compte à partir de son id (ses actions restent dans le journal).
-    Erreur 400 si l'administrateur essaie de supprimer son propre compte, 404 si l'id n'existe pas.
-    """
-    try:
-        supprime = UtilisateurService().supprimer(admin, id_utilisateur)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e)) from e
-
-    if not supprime:
-        raise HTTPException(status_code=404, detail=f"Utilisateur {id_utilisateur} introuvable.")
-    return {"message": f"Utilisateur {id_utilisateur} supprimé."}
-
-@router.delete("/observation")
+# Déclarée AVANT DELETE /{id_utilisateur} : FastAPI teste les routes dans l'ordre, et
+# "/{id_utilisateur}" capterait sinon "/observations" (puis erreur 422 : "observations" n'est pas un int).
+@router.delete("/observations")
 def supprimer_observation(
     cle: CleObservationModel,
     admin: Utilisateur = Depends(admin_requis),  # noqa: B008
@@ -162,3 +149,19 @@ def supprimer_observation(
         )
 
     return {"message": "Observation supprimée avec succès."}
+
+
+@router.delete("/{id_utilisateur}")
+def supprimer_utilisateur(id_utilisateur: int, admin: Utilisateur = Depends(admin_requis)):
+    """
+    Supprime un compte à partir de son id (ses actions restent dans le journal).
+    Erreur 400 si l'administrateur essaie de supprimer son propre compte, 404 si l'id n'existe pas.
+    """
+    try:
+        supprime = UtilisateurService().supprimer(admin, id_utilisateur)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+    if not supprime:
+        raise HTTPException(status_code=404, detail=f"Utilisateur {id_utilisateur} introuvable.")
+    return {"message": f"Utilisateur {id_utilisateur} supprimé."}

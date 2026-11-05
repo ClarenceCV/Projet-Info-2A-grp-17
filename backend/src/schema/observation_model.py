@@ -24,10 +24,12 @@ class ObservationModel(BaseModel):
 
 class CleObservationModel(BaseModel):
     """
-    Schéma d'un clé pour identifier une observation
-    ex: {}
+    Clé complète d'une observation (les 6 colonnes de sa clé primaire).
+    L'indicateur est donné par son CODE (comme dans ObservationModel) : le frontend ne connaît pas les id.
+    ex : {"indicateur": "EMP_5WAP_SEX_AGE_RT_Q", "code_iso": "FRA", "source": "LFS - Employment Survey",
+          "periode": "2024Q4", "sexe": "Female", "classif1": "15-24"}
     """
-    indicateur_id: int
+    indicateur: str
     code_iso: str
     source: str
     periode: str

@@ -39,10 +39,10 @@ def df_observations():
     })
 
 
-def cle_total(indicateur_id: int) -> CleObservationModel:
+def cle_total() -> CleObservationModel:
     """Clé de l'observation de test 'Total'"""
     return CleObservationModel(
-        indicateur_id=indicateur_id, code_iso="ZZZ", source="TEST",
+        indicateur="TEST_DAO", code_iso="ZZZ", source="TEST",
         periode="2024Q4", sexe="Total", classif1="15+",
     )
 
@@ -119,7 +119,7 @@ def test_modifier():
     dao = ObservationDAO()
     dao.enregistrer(indicateur_id, df_observations())
     # WHEN
-    ok = dao.modifier(cle_total(indicateur_id), 77.0)
+    ok = dao.modifier(cle_total(), 77.0)
     # THEN
     assert ok
     assert dao.lire("TEST_DAO", sexe="Total")["valeur"].iloc[0] == 77.0
@@ -129,7 +129,7 @@ def test_modifier_observation_inexistante():
     # GIVEN : la base ne contient pas l'observation
     indicateur_id = preparer_base()
     # WHEN
-    ok = ObservationDAO().modifier(cle_total(indicateur_id), 77.0)
+    ok = ObservationDAO().modifier(cle_total(), 77.0)
     # THEN
     assert not ok
 
@@ -140,7 +140,7 @@ def test_supprimer():
     dao = ObservationDAO()
     dao.enregistrer(indicateur_id, df_observations())
     # WHEN
-    ok = dao.supprimer(cle_total(indicateur_id))
+    ok = dao.supprimer(cle_total())
     # THEN : il ne reste que l'observation 'Female'
     assert ok
     assert list(dao.lire("TEST_DAO")["sexe"]) == ["Female"]
@@ -150,6 +150,6 @@ def test_supprimer_observation_inexistante():
     # GIVEN
     indicateur_id = preparer_base()
     # WHEN
-    ok = ObservationDAO().supprimer(cle_total(indicateur_id))
+    ok = ObservationDAO().supprimer(cle_total())
     # THEN
     assert not ok
