@@ -197,3 +197,24 @@ def test_creation_refusee_rien_au_journal(faux_journal):
     with patch.object(UtilisateurDAO, "creer", return_value=None):  # pseudo déjà pris
         UtilisateurService().creer_compte("jdupont", "motdepasse123")
     faux_journal.assert_not_called()
+
+
+# --- Premier administrateur (initialiser_admin, appelé au lancement de l'API) -------------
+
+
+def test_initialiser_admin_cree_un_admin_s_il_n_y_en_a_pas():
+    # GIVEN : la base ne contient qu'un utilisateur simple
+    with patch.object(UtilisateurDAO, "lister", return_value=[JDUPONT]), \
+         patch.object(UtilisateurService, "creer_compte") as faux_creer:
+        # WHEN
+        UtilisateurService().initialiser_admin()
+    # THEN : un compte admin est créé
+    faux_creer.assert_called_once()
+    assert faux_creer.call_args.kwargs["role"] == "admin"
+
+
+def test_initialiser_admin_ne_fait_rien_si_un_admin_existe():
+    with patch.object(UtilisateurDAO, "lister", return_value=[JDUPONT, ADMIN]), \
+         patch.object(UtilisateurService, "creer_compte") as faux_creer:
+        UtilisateurService().initialiser_admin()
+    faux_creer.assert_not_called()  # relancer l'API ne crée pas de doublon
