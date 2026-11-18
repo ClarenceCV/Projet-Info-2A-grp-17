@@ -5,47 +5,44 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, status
 
 from business_object.selection import Selection
-from schema.multi_indicateurs_model import PointSerieModel, SelectionModel
+from schema.multi_indicateurs_model import PointSerieModel, MultiIndicateursRequest
 from service.multi_indicateurs_service import MultiIndicateursService
 
 router = APIRouter()
 service = MultiIndicateursService()
 
-
 @router.post(
     "/multi-indicateurs",
     response_model=list[PointSerieModel],
     status_code=status.HTTP_200_OK,
-    summary="Comparer plusieurs indicateurs en base 100 (F5)",
+    summary="Comparer plusieurs indicateurs (F5)",
 )
 async def comparer_indicateurs(
-    selections: list[SelectionModel],
+    requete: MultiIndicateursRequest,
 ) -> list[dict[str, Any]]:
-    """Compare l'évolution temporelle de 2 à 4 indicateurs ramenés en base 100."""
-    if len(selections) < 2:
+    """Compare l'évolution temporelle de 1 à 4 indicateurs."""
+    if len(requete.selections) < 1:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Au moins 2 sélections sont requises pour effectuer une comparaison.",
+            detail="Au moins 1 sélection est requise.",
         )
 
-    # Instanciation explicite des dataclasses Selection
     selections_bo = [
         Selection(
-            indicateur=s.indicateur,
-            pays=s.pays,
+            indicateur=s.code_indicateur,
+            pays=s.code_iso,
             classif1=s.classif1,
             sexe=s.sexe,
         )
-        for s in selections
+        for s in requete.selections
     ]
 
     try:
-        df_resultat = service.comparer(selections_bo)
+        df_resultat = service.comparer(selections_bo, base_100=requete.base_100)
 
         if df_resultat.empty:
             return []
 
-        # Remplacement des valeurs manquantes/NaN pour éviter les erreurs de sérialisation JSON
         df_resultat = df_resultat.fillna("")
         return df_resultat.to_dict(orient="records")
 
