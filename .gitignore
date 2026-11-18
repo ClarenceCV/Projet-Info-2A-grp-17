@@ -167,3 +167,4 @@ doc/report/*.pdf
 doc/report/*.html
 doc/report/report_files/
 doc/report/.quarto/
+.Rproj.user
