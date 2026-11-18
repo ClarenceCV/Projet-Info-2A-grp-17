@@ -1,21 +1,13 @@
 """Schémas Pydantic pour la fonctionnalité F5 (Comparaison Multi-Indicateurs)."""
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 class SelectionModel(BaseModel):
-    """Filtres d'une courbe envoyés par le client (Streamlit / Client HTTP)."""
-
-    model_config = ConfigDict(populate_by_name=True)
-
-    indicateur: str = Field(
-        ...,
-        alias="code",
-        description="Code de l'indicateur (ex: 'EMP_5EMP_SEX_OC2_NB_Q')",
-    )
-    pays: str = Field(..., description="Code ISO3 du pays (ex: 'FRA')")
-    classif1: str = Field(..., description="Classification (ex: 'Total')")
-    sexe: str = Field("Total", description="Filtre sexe")
+    code_indicateur: str
+    code_iso: str
+    classif1: str | None = None
+    sexe: str = "Total"
 
 
 class PointSerieModel(BaseModel):
@@ -26,4 +18,9 @@ class PointSerieModel(BaseModel):
     periode: str = Field(..., description="Période (ex: '2024Q4')")
     valeur: float = Field(..., description="Valeur brute")
     unite: str = Field(..., description="Unité d'origine")
-    valeur_base100: float = Field(..., description="Valeur calculée en base 100")
+    valeur_base100: float | None = None
+
+
+class MultiIndicateursRequest(BaseModel):
+    selections: list[SelectionModel]
+    base_100: bool = True
