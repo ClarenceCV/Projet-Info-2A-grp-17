@@ -51,6 +51,22 @@ def charger_metadonnees() -> tuple[dict[str, str], list[str]]:
     return dict_ind, liste_pays
 
 
+@st.cache_data(ttl=3600)
+def charger_classif1(code_indicateur: str) -> list[str]:
+    """Modalités de classif1 disponibles pour un indicateur donné."""
+    res = api_client.get(f"/indicateurs/{code_indicateur}/classif1")
+    if res.get("status_code") != 200 or not isinstance(res.get("data"), dict):
+        return []
+
+    valeurs = []
+    for m in res["data"].get("modalites", []):
+        # Gère aussi bien une liste de chaînes qu'une liste d'objets
+        if isinstance(m, dict):
+            m = m.get("classif1", m.get("code", m.get("libelle")))
+        if m:
+            valeurs.append(m)
+    return valeurs
+
 dict_indicateurs, liste_pays = charger_metadonnees()
 codes_dispo = list(dict_indicateurs.keys())
 
@@ -100,12 +116,21 @@ with st.container(border=True):
                 disabled=not active,
             )
 
-            classif_choisie = st.text_input(
-                "Classification",
-                value="15+",
-                key=f"f5_classif_{i}",
-                disabled=not active,
-            )
+            classifs_dispo = charger_classif1(ind_choisi)
+
+            if classifs_dispo:
+                classif_choisie = st.selectbox(
+                    "Classification",
+                    options=classifs_dispo,
+                    index=0,
+                    # La clé inclut l'indicateur : quand il change, le widget est
+                    # réinitialisé au lieu de garder une valeur absente des options
+                    key=f"f5_classif_{i}_{ind_choisi}",
+                    disabled=not active,
+                )
+            else:
+                classif_choisie = None
+                st.caption("Aucune classification disponible pour cet indicateur.")
 
             sexe_choisi = st.selectbox(
                 "Sexe",
@@ -125,6 +150,7 @@ with st.container(border=True):
                     }
                 )
 
+
 # ------------------------------------------------------------------------------
 # 3. Affichage immediat du graphique comparatif
 # ------------------------------------------------------------------------------
@@ -141,22 +167,19 @@ else:
         df = pd.DataFrame(reponse["data"])
 
         if not df.empty:
-            df["serie_label"] = df.apply(
-                lambda r: f"{r['code_indicateur']} ({r['code_iso']} - {r.get('sexe', '')})",
-                axis=1,
-            )
+            colonne_y = "valeur_base100" if base_100 else "valeur"
 
             fig = px.line(
                 df,
                 x="periode",
-                y="valeur",
-                color="serie_label",
+                y=colonne_y,
+                color="serie",
                 markers=True,
                 title="Evolution Comparative Multi-Indicateurs",
                 labels={
                     "periode": "Periode",
-                    "valeur": "Indice (Base 100)" if base_100 else "Valeur brute",
-                    "serie_label": "Serie",
+                    colonne_y: "Indice (Base 100)" if base_100 else "Valeur brute",
+                    "serie": "Serie",
                 },
             )
             fig.update_layout(
