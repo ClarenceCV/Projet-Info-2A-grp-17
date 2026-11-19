@@ -1,12 +1,13 @@
-# Logique métier de la fonctionnalité F4 : comparaison d'un indicateur entre pays.
-# Le controller appelle le service, le service appelle le DAO.
-#
-# Choix pour « la période la plus récente disponible » : option (b)
-# -> on prend la dernière période DE CHAQUE PAYS (les pays ne sont pas forcément
-#    comparés à la même date : la colonne periode l'indique).
+"""
+Logique métier de la fonctionnalité F4 : comparaison d'un indicateur entre pays.
+Le controller appelle le service, le service appelle le DAO.
+
+Choix pour « la période la plus récente disponible » : option (b)
+-> on prend la dernière période DE CHAQUE PAYS (les pays ne sont pas forcément
+comparés à la même date : la colonne periode l'indique).
+"""
 
 import pandas as pd
-
 from dao.observation_dao import ObservationDAO
 
 # Colonnes renvoyées pour chaque pays du classement
@@ -49,13 +50,17 @@ class ComparaisonPaysService:
         # aucune donnée : on renvoie un résultat vide (pas d'erreur)
         if df.empty:
             vide = pd.DataFrame(columns=COLONNES_CLASSEMENT)
-            return {"periode_reference": None, "classement": vide, "plus_hauts": vide, "plus_bas": vide}
+            return {"periode_reference": None,
+                    "classement": vide,
+                    "plus_hauts": vide,
+                    "plus_bas": vide}
 
         # 1. une seule source par pays et par période : on garde la première par ordre alphabétique
         df = df.sort_values(["code_iso", "periode", "source"])
         df = df.drop_duplicates(["code_iso", "periode"], keep="first")
 
-        # 2. dernière période de chaque pays : tri par période, puis la dernière ligne de chaque pays
+        # 2. dernière période de chaque pays :
+        #  tri par période, puis la dernière ligne de chaque pays
         df = df.sort_values("periode")
         df = df.groupby("code_iso").tail(1)
 

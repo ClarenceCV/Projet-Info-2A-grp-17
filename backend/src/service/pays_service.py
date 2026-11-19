@@ -1,3 +1,6 @@
+"""
+Logique métier 
+"""
 
 from business_object.pays import Pays
 from dao.pays_dao import PaysDAO

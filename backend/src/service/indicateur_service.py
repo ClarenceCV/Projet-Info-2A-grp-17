@@ -1,5 +1,7 @@
-# Logique métier liée aux indicateurs.
-# Le controller appelle le service, le service appelle le DAO.
+"""
+Logique métier liée aux indicateurs.
+Le controller appelle le service, le service appelle le DAO.
+"""
 
 from business_object.indicateur import Indicateur
 from dao.indicateur_dao import IndicateurDAO

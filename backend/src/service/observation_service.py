@@ -1,5 +1,8 @@
-# Logique métier liée aux observations (plus tard : F3 évolution, F4 comparaison pays, F5 multi-indicateurs).
-# Le controller appelle le service, le service appelle le DAO.
+"""
+Logique métier liée aux observations (plus tard : F3 évolution,
+F4 comparaison pays, F5 multi-indicateurs).
+Le controller appelle le service, le service appelle le DAO.
+"""
 
 import pandas as pd
 
@@ -34,7 +37,7 @@ class ObservationService:
 
     def lister_classif1(self, code_indicateur: str) -> pd.DataFrame:
         """
-        Liste toutes les modalités disctinctes d'un indictauyr contenues dans 
+        Liste toutes les modalités disctinctes d'un indictauyr contenues dans
         les observations de la base (tranche d'age / profession).
 
         Params:

@@ -80,12 +80,15 @@ class RapportService:
         for pays, s in stats.items():
             sens = "augmente" if s["evolution"] >= 0 else "diminue"
             diff_abs = abs(s["evolution"])
+            debut, fin = s["periode_debut"], s["periode_fin"]
             phrases.append(
-                f"Entre {s['periode_debut']} et {s['periode_fin']}, le marche dans le pays {s['nom_pays']} ({pays}) "
-                f"a {sens} de {diff_abs:.2f} points (passant de {s['val_debut']:.2f} a {s['val_fin']:.2f})."
+                f"Entre {debut} et {fin}, le marche dans le pays "
+                f"{s['nom_pays']} ({pays}) a {sens} de {diff_abs:.2f} points "
+                f"(passant de {s['val_debut']:.2f} a {s['val_fin']:.2f})."
             )
 
-        # 2. Normalisation de 'comparaison' (accepte dict avec 'classement'/'observations'/'data' ou DataFrame)
+        # 2. Normalisation de 'comparaison' (accepte dict avec
+        # 'classement'/'observations'/'data' ou DataFrame)
         df_comparaison = pd.DataFrame()
         if isinstance(comparaison, dict):
             data_list = (
