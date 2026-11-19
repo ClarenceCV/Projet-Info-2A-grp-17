@@ -3,7 +3,10 @@
 
 import pandas as pd
 
+from utils.log_utils import log
 
+
+@log
 def retirer_prefixe(libelle):
     '''
     Retire le préfixe ajouté par ILOSTAT devant les libellés.

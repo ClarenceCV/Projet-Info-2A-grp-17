@@ -19,7 +19,6 @@ from fetcher.fetcher import URL_ILOSTAT, construire_url, load_data
 from fetcher.parser import retirer_prefixe
 from utils.log_utils import get_logger, log
 
-
 # Colonnes du CSV ILOSTAT à garder -> nom dans le DataFrame propre
 RENOMMAGE = {
     "ref_area": "code_iso",
@@ -35,7 +34,8 @@ RENOMMAGE = {
 # Colonnes du DataFrame propre (= colonnes de la table observation, + nom_pays pour la table pays)
 COLONNES = ["code_iso", "nom_pays", "source", "periode", "sexe", "classif1", "valeur", "statut"]
 
-# Colonnes qui identifient une observation (= clé primaire de la table observation, sans l'indicateur)
+# Colonnes qui identifient une observation
+# (= clé primaire de la table observation, sans l'indicateur)
 CLE = ["code_iso", "source", "periode", "sexe", "classif1"]
 
 # initialisation de logger
@@ -74,14 +74,14 @@ class DataProcessing:
             # url de fetcher.py + filtre sur un seul pays
             url = construire_url(indicator, ANNEE_DEBUT) + f"&ref_area={code_iso}"
             df_pays = None
-            for essaie in range(1, nb_try +1):
+            for essaie in range(1, nb_try + 1):
                 try:
                     df_pays = load_data(url)
                     break                                 # si succès on sort de la boucle d'essaie
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.info(f"  Essai {essaie}/{nb_try} échoué pour {code_iso} : {e}")
                     if essaie < nb_try:
-                        time.sleep(sleep)                     # on attend avant de réessayer          
+                        time.sleep(sleep)                     # on attend avant de réessayer
 
             if df_pays is None:
                 logger.warning(f"  AVERTISSEMENT : {code_iso} ignoré pour {indicator}")
@@ -110,7 +110,8 @@ class DataProcessing:
             df: DataFrame brut issu de fetch_data()
 
         Returns:
-            pd.DataFrame: colonnes code_iso, nom_pays, source, periode, sexe, classif1, valeur, statut
+            pd.DataFrame: colonnes code_iso, nom_pays, source, periode,
+                        sexe, classif1, valeur, statut
         """
         if df.empty:
             return pd.DataFrame(columns=COLONNES)
@@ -125,7 +126,8 @@ class DataProcessing:
             df["obs_status"] = None
         df = df[list(RENOMMAGE)].rename(columns=RENOMMAGE)
 
-        # 2. valeur convertie en nombre (les textes invalides deviennent NaN), puis lignes sans valeur supprimées
+        # 2. valeur convertie en nombre (les textes invalides deviennent NaN),
+        # puis lignes sans valeur supprimées
         df["valeur"] = pd.to_numeric(df["valeur"], errors="coerce")
         df = df.dropna(subset=["valeur"])
 
@@ -138,7 +140,10 @@ class DataProcessing:
         # 4. doublons : deux sources différentes peuvent avoir le même libellé
         nb_doublons = df.duplicated(CLE).sum()
         if nb_doublons:
-            logger.warning(f"  Attention : {nb_doublons} doublons sur la clé, seule la première ligne est gardée")
+            logger.warning(
+                f"  Attention : {nb_doublons} doublons sur la clé, "
+                "seule la première ligne est gardée"
+            )
             df = df.drop_duplicates(CLE, keep="first")
 
         return df.reset_index(drop=True)
@@ -186,7 +191,7 @@ class DataProcessing:
                 nb = self.save_data(indicateur, propre)
                 logger.info(f"  {nb} observations enregistrées en base")
                 total += nb
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.error(f"  ERREUR : {e}")
 
         logger.info(f"\nTerminé : {total} observations enregistrées au total.")
