@@ -1,4 +1,4 @@
-# Ce fichier sert à se connecter proprement à la base de donnée sql
+""" Ce fichier sert à se connecter proprement à la base de donnée sql """
 
 import os  # pour accéder aux variables d'environnement
 
@@ -6,9 +6,10 @@ import psycopg2  # librairie essentielle pour faire le lien entre SQL et notre b
 from psycopg2.extras import (
     RealDictCursor,  # pour que le cursor puisse renvoyer un format dictionnaire propre
 )
-
+from utils.log_utils import log
 from utils.singleton import (
-    Singleton,  # pour bloquer la possibiliter de créer plus d'une instance de la classe DB connxion (on en veut qu'une seule)
+    Singleton,  # pour bloquer la possibiliter de créer plus d'une instance de
+    # la classe DB connxion (on en veut qu'une seule)
 )
 
 
@@ -40,6 +41,7 @@ class DBConnection(metaclass=Singleton):
             cursor_factory=RealDictCursor,
         )
 
+    @log
     @property
     def connection(self):
         """Provides access to the underlying database connection.

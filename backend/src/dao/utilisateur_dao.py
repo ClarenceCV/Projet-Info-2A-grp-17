@@ -1,9 +1,12 @@
-# Accès à la table utilisateur. Entrée : valeurs Python ; sortie : objets Utilisateur
-# (inspiré du PlayerDao du template ENSAI : create, find_by_token, update, delete)
+"""
+Accès à la table utilisateur. Entrée : valeurs Python ; sortie : objets Utilisateur
+(inspiré du PlayerDao du template ENSAI : create, find_by_token, update, delete)
+"""
 
 from psycopg2.errors import UniqueViolation
-
 from business_object.utilisateur import Utilisateur
+from utils.log_utils import log
+
 from dao.db_connection import DBConnection
 
 # Colonnes lues pour construire un Utilisateur (jamais le hash du mot de passe)
@@ -49,6 +52,8 @@ class UtilisateurDAO:
     # ------------------------------------------------------------------
     # READ
     # ------------------------------------------------------------------
+
+    @log
     def trouver_par_pseudo(self, pseudo: str) -> Utilisateur | None:
         """
         Returns:
@@ -56,6 +61,7 @@ class UtilisateurDAO:
         """
         return self._trouver("pseudo", pseudo)
 
+    @log
     def trouver_par_token(self, token: str | None) -> Utilisateur | None:
         """
         Retrouve l'utilisateur connecté à partir de son token (utilisé à chaque requête protégée).
@@ -99,6 +105,7 @@ class UtilisateurDAO:
     # ------------------------------------------------------------------
     # UPDATE
     # ------------------------------------------------------------------
+    @log
     def enregistrer_token(self, id_utilisateur: int, token: str | None) -> bool:
         """
         Enregistre le token de session d'un utilisateur (connexion),
@@ -118,6 +125,7 @@ class UtilisateurDAO:
     # ------------------------------------------------------------------
     # DELETE
     # ------------------------------------------------------------------
+    @log
     def supprimer(self, id_utilisateur: int) -> bool:
         """
         Supprime un utilisateur. Ses lignes de journal sont gardées (utilisateur_id passe à NULL).
@@ -136,6 +144,7 @@ class UtilisateurDAO:
     # ------------------------------------------------------------------
     # Méthode commune aux recherches d'un seul utilisateur
     # ------------------------------------------------------------------
+    @log
     def _trouver(self, colonne: str, valeur: str) -> Utilisateur | None:
         """
         Cherche un utilisateur par la valeur d'une colonne ('pseudo' ou 'token').

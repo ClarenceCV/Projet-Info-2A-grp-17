@@ -1,9 +1,10 @@
-# Accès à la table journal. Entrée : objet ActionJournal ; sortie : objets ActionJournal
+""" Accès à la table journal. Entrée : objet ActionJournal ; sortie : objets ActionJournal """
 
 from dataclasses import asdict
 
 from business_object.action_journal import ActionJournal
 from dao.db_connection import DBConnection
+from utils.log_utils import log
 
 COLONNES_JOURNAL = "id, utilisateur_id, pseudo, action, detail, date"
 
@@ -13,6 +14,7 @@ class JournalDAO:
     Accès au journal des actions dans la base de données.
     """
 
+    @log
     def enregistrer(self, action: ActionJournal) -> bool:
         """
         Ajoute une action au journal (la date est remplie par la base).
@@ -29,11 +31,13 @@ class JournalDAO:
                 )
                 return cursor.rowcount == 1
 
+    @log
     def lister(
         self, action: str | None = None, pseudo: str | None = None, limite: int = 200
     ) -> list[ActionJournal]:
         """
-        Lit les actions du journal, les plus récentes d'abord. Chaque filtre laissé à None est ignoré.
+        Lit les actions du journal, les plus récentes d'abord. 
+        Chaque filtre laissé à None est ignoré.
 
         params:
             action: mot-clé exact, ex : 'connexion'
@@ -47,7 +51,8 @@ class JournalDAO:
         if action is not None:
             conditions.append("action = %(action)s")
         if pseudo:
-            conditions.append("pseudo ILIKE %(pseudo)s")  # ILIKE : LIKE sans tenir compte de la casse
+            conditions.append("pseudo ILIKE %(pseudo)s")
+        #  ILIKE : LIKE sans tenir compte de la casse
         where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
 
         with DBConnection().connection as connection:  # noqa: SIM117

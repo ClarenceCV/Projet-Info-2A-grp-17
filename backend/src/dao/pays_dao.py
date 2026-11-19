@@ -1,10 +1,13 @@
-# Accès à la table pays. Entrée : DataFrame ; sortie : sql
+"""
+Accès à la table pays. Entrée : DataFrame ; sortie : sql
+"""
 
 import pandas as pd
 from psycopg2.extras import execute_values
 
 from business_object.pays import Pays
 from dao.db_connection import DBConnection
+from utils.log_utils import log
 
 
 class PaysDAO:
@@ -12,6 +15,7 @@ class PaysDAO:
     Accès aux pays dans la base de données.
     """
 
+    @log
     def enregistrer(self, df_pays: pd.DataFrame) -> int:
         """
         Enregistre des pays. Ceux qui existent déjà (même code ISO) sont ignorés.
@@ -48,12 +52,14 @@ class PaysDAO:
         with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 cursor.execute(
-                    " SELECT DISTINCT code_iso, nom "  # AS nom_pays pour correspondre à la classe pays
+                    " SELECT DISTINCT code_iso, nom "
+                    # AS nom_pays pour correspondre à la classe pays
                     " FROM laborscope.pays ORDER BY nom "
                 )
                 lignes = cursor.fetchall()
 
-        # chaque ligne est un dict {'code': ..., 'libelle': ...} : ** le transforme en arguments nommés
+        # chaque ligne est un dict {'code': ..., 'libelle': ...} :
+        # ** le transforme en arguments nommés
         return [
             Pays(code_iso=ligne["code_iso"], nom_pays=ligne["nom"])
             for ligne in lignes
