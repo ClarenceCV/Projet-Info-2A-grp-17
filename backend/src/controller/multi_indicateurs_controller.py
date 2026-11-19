@@ -5,7 +5,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, status
 
 from business_object.selection import Selection
-from schema.multi_indicateurs_model import PointSerieModel, MultiIndicateursRequest
+from schema.multi_indicateurs_model import SelectionModel, MultiIndicateursRequest
 from service.multi_indicateurs_service import MultiIndicateursService
 
 router = APIRouter()
@@ -14,7 +14,7 @@ service = MultiIndicateursService()
 
 @router.post(
     "/multi-indicateurs",
-    response_model=list[PointSerieModel],
+    response_model=list[SelectionModel],
     summary="Comparer plusieurs indicateurs (F5)",
 )
 async def comparer_indicateurs(requete: MultiIndicateursRequest) -> list[dict[str, Any]]:
