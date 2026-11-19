@@ -41,8 +41,8 @@ class DBConnection(metaclass=Singleton):
             cursor_factory=RealDictCursor,
         )
 
-    @log
     @property
+    @log
     def connection(self):
         """Provides access to the underlying database connection.
         Returns:

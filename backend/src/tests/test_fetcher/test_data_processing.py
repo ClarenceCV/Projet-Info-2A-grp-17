@@ -40,7 +40,7 @@ def df_brut():
 # ---------------------------------------------------------
 
 def test_init(processing):
-    assert processing.url_API == "https://rplumber.ilo.org/data/indicator"
+    assert processing.url_api == "https://rplumber.ilo.org/data/indicator"
 
 
 # ---------------------------------------------------------
