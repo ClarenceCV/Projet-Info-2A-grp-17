@@ -1,3 +1,7 @@
+"""
+Test robuste du fonctionnement du paquet fetcher.
+"""
+
 from unittest.mock import patch
 
 import pandas as pd
