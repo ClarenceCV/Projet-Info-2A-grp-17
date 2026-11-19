@@ -1,6 +1,10 @@
-# Format JSON des utilisateurs échangé entre le backend et ses clients (navigateur, frontend).
-# On sépare ce que le client ENVOIE (avec le mot de passe) de ce que l'API RENVOIE (jamais de mot de passe)
-# (même principe que PlayerModel / PlayerReadModel dans le template ENSAI)
+"""
+Format JSON des utilisateurs échangé entre le backend et ses clients (navigateur, frontend).
+On sépare ce que le client ENVOIE (avec le mot de passe) de ce que l'API RENVOIE
+(jamais de mot de passe)
+
+(même principe que PlayerModel / PlayerReadModel dans le template ENSAI)
+"""
 
 from datetime import datetime
 from typing import Literal
@@ -14,7 +18,8 @@ from pydantic import BaseModel
 
 class IdentifiantsModel(BaseModel):
     """
-    Pseudo et mot de passe : pour créer un compte (POST /utilisateurs) ou se connecter (POST /login).
+    Pseudo et mot de passe : pour créer un compte (POST /utilisateurs)
+    ou se connecter (POST /login).
     ex : {"pseudo": "jdupont", "mot_de_passe": "motdepasse123"}
     """
 
@@ -40,7 +45,8 @@ class CreationUtilisateurModel(IdentifiantsModel):
 class UtilisateurModel(BaseModel):
     """
     Utilisateur renvoyé par l'API.
-    ex : {"id": 1, "pseudo": "jdupont", "role": "utilisateur", "date_creation": "2026-10-28T14:05:00"}
+    ex : {"id": 1, "pseudo": "jdupont", "role": "utilisateur",
+         "date_creation": "2026-10-28T14:05:00"}
     """
 
     id: int
