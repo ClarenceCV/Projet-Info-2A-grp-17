@@ -15,6 +15,7 @@ from service.multi_indicateurs_service import MultiIndicateursService
 # Fixtures & Helpers
 # ------------------------------------------------------------------------------
 
+
 @pytest.fixture
 def service() -> MultiIndicateursService:
     """Fournit une instance fraîche du service à chaque test."""
