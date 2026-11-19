@@ -19,7 +19,7 @@ class IndicateurModel(BaseModel):
 
 class IndicateurClassif1Model(BaseModel):
     """
-    Modèle pour renvoyer les modalités d'un indictaur
+    Modèle pour renvoyer les modalités d'un indictaur (classification ou tranche d'âge).
     """
     code: str
     modalites: list[str]
