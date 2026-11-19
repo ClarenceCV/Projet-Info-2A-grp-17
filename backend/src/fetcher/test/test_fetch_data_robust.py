@@ -12,7 +12,11 @@ def _code_pays(url: str) -> str:
 
 
 def test_fetch_data_un_pays_en_erreur():
-    """Un pays qui échoue est ignoré, les autres sont quand même renvoyés."""
+    """
+    Un pays qui échoue est ignoré, les autres sont quand même renvoyés.
+    Pour le pays qui échoue on essaye quand même de l'inclure
+    2 fois et s'il échoue encore il ne sera pas présent dans la base
+    """
     pays_en_panne = PAYS_SUIVIS[0]
     appels = []
 
@@ -30,7 +34,7 @@ def test_fetch_data_un_pays_en_erreur():
     pays_recus = set(df["ref_area"])
     assert pays_en_panne not in pays_recus
     assert pays_recus == set(PAYS_SUIVIS) - {pays_en_panne}
-    # le pays en panne a bien été réessayé (nb_try = 2 dans ton code)
+    # le pays en panne a bien été réessayé (nb_try = 2)
     assert appels.count(pays_en_panne) == 2
     faux_sleep.assert_called()   # on a attendu entre deux essais
 
