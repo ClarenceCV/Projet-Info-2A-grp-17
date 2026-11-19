@@ -23,6 +23,7 @@ class LaborScopePDF(FPDF):
     """Classe FPDF personnalisée pour l'en-tête et le pied de page du rapport."""
 
     def header(self) -> None:
+        """ Méthode pour formater haut de page"""
         self.set_font("Helvetica", "B", 14)
         self.cell(
             0,
@@ -36,6 +37,7 @@ class LaborScopePDF(FPDF):
         self.ln(5)
 
     def footer(self) -> None:
+        """Méthode pour formater le pied de page """
         self.set_y(-15)
         self.set_font("Helvetica", "I", 9)
         self.cell(0, 10, f"Page {self.page_no()}", align="C")
@@ -107,11 +109,21 @@ class RapportService:
             df_sorted = df_comparaison.sort_values("valeur", ascending=False)
             top_row = df_sorted.iloc[0]
             bottom_row = df_sorted.iloc[-1]
-            top_nom = top_row.get("nom_pays") or top_row.get("pays") or top_row.get("code_iso", "N/A")
-            bottom_nom = bottom_row.get("nom_pays") or bottom_row.get("pays") or bottom_row.get("code_iso", "N/A")
+            top_nom = (
+                top_row.get("nom_pays")
+                or top_row.get("pays")
+                or top_row.get("code_iso", "N/A")
+            )
+            bottom_nom = (
+                bottom_row.get("nom_pays")
+                or bottom_row.get("pays")
+                or bottom_row.get("code_iso", "N/A")
+            )
             phrases.append(
-                f"Sur la periode la plus recente, {top_nom} presente la valeur la plus elevee "
-                f"({top_row['valeur']:.2f}), tandis que {bottom_nom} enregistre la valeur la plus basse ({bottom_row['valeur']:.2f})."
+                f"Sur la periode la plus recente, {top_nom} presente "
+                f"la valeur la plus elevee ({top_row['valeur']:.2f}), "
+                f"tandis que {bottom_nom} enregistre "
+                f"la valeur la plus basse ({bottom_row['valeur']:.2f})."
             )
 
         return " ".join(phrases)
@@ -150,17 +162,23 @@ class RapportService:
         sexe_db = MAPPING_SEXE.get(sexe.upper(), sexe)
 
         # 1. Appel des services backend
-        evolution = EvolutionService().evolution(code_indicateur, pays, classif1, sexe_db, n_periodes)
+        evolution = EvolutionService().evolution(
+            code_indicateur, pays, classif1, sexe_db, n_periodes
+            )
 
         if evolution.empty and classif1.lower() == "total":
             for alternative in ["15+", "OC2_SKILL_TOTAL", "AGE_AGGREGATE_TOTAL"]:
-                evolution_alt = EvolutionService().evolution(code_indicateur, pays, alternative, sexe_db, n_periodes)
+                evolution_alt = EvolutionService().evolution(
+                    code_indicateur, pays, alternative, sexe_db, n_periodes
+                    )
                 if not evolution_alt.empty:
                     evolution = evolution_alt
                     classif1 = alternative
                     break
 
-        comparaison = ComparaisonPaysService().comparer_pays(code_indicateur, classif1, pays, sexe_db)
+        comparaison = ComparaisonPaysService().comparer_pays(
+            code_indicateur, classif1, pays, sexe_db
+            )
 
         # 2. Calculs statistiques et conclusion
         stats = self.resume_statistique(evolution)
@@ -177,7 +195,9 @@ class RapportService:
         pdf.multi_cell(
             0,
             6,
-            f"Indicateur : {code_indicateur}\nPays analyses : {', '.join(pays)}\nClassification : {classif1} | Sexe : {sexe_db}",
+            f"Indicateur : {code_indicateur}\n"
+            f"Pays analyses : {', '.join(pays)}\n"
+            f"Classification : {classif1} | Sexe : {sexe_db}",
         )
         pdf.ln(4)
 
