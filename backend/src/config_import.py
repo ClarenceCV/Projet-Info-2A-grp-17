@@ -1,5 +1,7 @@
-# Configuration de l'import ILOSTAT : le seul endroit à modifier pour suivre
-# un nouvel indicateur ou un nouveau pays.
+"""
+Configuration de l'import ILOSTAT : le seul endroit à modifier pour suivre
+un nouvel indicateur ou un nouveau pays.
+"""
 
 from business_object.indicateur import Indicateur
 
