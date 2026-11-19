@@ -1,5 +1,7 @@
-# Outils de nettoyage des libellés ILOSTAT, utilisés par DataProcessing.parse_data
-# (le nettoyage complet du DataFrame brut est fait dans fetcher/data_processing.py)
+"""
+Outils de nettoyage des libellés ILOSTAT, utilisés par DataProcessing.parse_data
+(le nettoyage complet du DataFrame brut est fait dans fetcher/data_processing.py)
+"""
 
 import pandas as pd
 

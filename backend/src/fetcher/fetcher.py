@@ -1,3 +1,10 @@
+"""
+Ce fichier permet de créer l'URL ilostat correspondant à un indicateur et
+permet de récuperer les données qui sont sur cette API pour les mettre sous forme
+de dataframe
+"""
+
+
 from io import StringIO
 
 import pandas as pd
@@ -103,8 +110,8 @@ def filter_columns(data, colonnes_a_garder, renommage=None):
 
 
 if __name__ == "__main__":
-    data = load_data(url=construire_url("EMP_5EMP_SEX_OC2_NB_Q"))
-    get_columns_info(data)
+    data_df = load_data(url=construire_url("EMP_5EMP_SEX_OC2_NB_Q"))
+    get_columns_info(data_df)
     # On choisit les colonnes que l'on veut et leurs noms
     colonnes_keep = [
         "ref_area.label",
@@ -116,5 +123,5 @@ if __name__ == "__main__":
     ]
     rename = ["area", "source", "sex", "profession", "date", "value"]
     # On filtre
-    data = filter_columns(data=data, colonnes_a_garder=colonnes_keep, renommage=rename)
-    print(data)
+    data_df = filter_columns(data=data_df, colonnes_a_garder=colonnes_keep, renommage=rename)
+    print(data_df)

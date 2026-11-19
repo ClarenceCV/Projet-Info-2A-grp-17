@@ -1,14 +1,17 @@
-# DataProcessing regroupe tout l'import des données ILOSTAT (F1 + F2) :
-#   1. fetch_data : télécharger un indicateur depuis l'API ILOSTAT (DataFrame brut)
-#   2. parse_data : nettoyer le DataFrame brut (DataFrame propre, prêt pour la base)
-#   3. save_data  : enregistrer le DataFrame propre dans la base (via les DAO)
-#   charger      : enchaîner 1, 2 et 3 pour une liste d'indicateurs
-# Le téléchargement réutilise les fonctions de fetcher.py (construire_url, load_data).
-# Les requêtes SQL restent dans le dossier dao.
+"""
+DataProcessing regroupe tout l'import des données ILOSTAT (F1 + F2) :
+   1. fetch_data : télécharger un indicateur depuis l'API ILOSTAT (DataFrame brut)
+   2. parse_data : nettoyer le DataFrame brut (DataFrame propre, prêt pour la base)
+   3. save_data  : enregistrer le DataFrame propre dans la base (via les DAO)
+   charger      : enchaîner 1, 2 et 3 pour une liste d'indicateurs
+Le téléchargement réutilise les fonctions de fetcher.py (construire_url, load_data).
+Les requêtes SQL restent dans le dossier dao.
+"""
 
 import time
 
 import pandas as pd
+import requests
 
 from business_object.indicateur import Indicateur
 from config_import import ANNEE_DEBUT, PAYS_SUIVIS
@@ -47,13 +50,13 @@ class DataProcessing:
     Récupère, nettoie et enregistre en base les données des indicateurs ILOSTAT.
 
     Attributes:
-        url_API (str): adresse de l'API ILOSTAT (celle utilisée par construire_url)
+        url_api (str): adresse de l'API ILOSTAT (celle utilisée par construire_url)
     """
 
     @log
     def __init__(self):
         """Constructor"""
-        self.url_API = URL_ILOSTAT
+        self.url_api = URL_ILOSTAT
 
     @log
     def fetch_data(self, indicator: str) -> pd.DataFrame:
@@ -78,16 +81,16 @@ class DataProcessing:
                 try:
                     df_pays = load_data(url)
                     break                                 # si succès on sort de la boucle d'essaie
-                except Exception as e:  # noqa: BLE001
-                    logger.info(f"  Essai {essaie}/{nb_try} échoué pour {code_iso} : {e}")
+                except (requests.RequestException, ValueError) as e:
+                    logger.info("  Essai %d/%d échoué pour %s : %s", essaie, nb_try, code_iso, e)
                     if essaie < nb_try:
                         time.sleep(sleep)                     # on attend avant de réessayer
 
             if df_pays is None:
-                logger.warning(f"  AVERTISSEMENT : {code_iso} ignoré pour {indicator}")
+                logger.warning("  AVERTISSEMENT : %s ignoré pour %s", code_iso, indicator)
                 continue                       # on passe au pays suivant
 
-            logger.info(f"  {indicator} - {code_iso} : {len(df_pays)} lignes")
+            logger.info("  %s - %s : %d lignes", indicator, code_iso, len(df_pays))
             if not df_pays.empty:                     # pays sans données : on passe au suivant
                 morceaux.append(df_pays)
 
@@ -141,8 +144,8 @@ class DataProcessing:
         nb_doublons = df.duplicated(CLE).sum()
         if nb_doublons:
             logger.warning(
-                f"  Attention : {nb_doublons} doublons sur la clé, "
-                "seule la première ligne est gardée"
+                "  Attention : %d doublons sur la clé, "
+                "seule la première ligne est gardée", nb_doublons
             )
             df = df.drop_duplicates(CLE, keep="first")
 
@@ -183,16 +186,16 @@ class DataProcessing:
         """
         total = 0
         for indicateur in indicateurs:
-            logger.info(f"\n[{indicateur.code}] {indicateur}")
+            logger.info("\n[%s] %s", indicateur.code, indicateur)
             try:
                 brut = self.fetch_data(indicateur.code)
                 propre = self.parse_data(brut)
-                logger.info(f"  {len(brut)} lignes brutes -> {len(propre)} lignes propres")
+                logger.info("  %d lignes brutes -> %d lignes propres", len(brut), len(propre))
                 nb = self.save_data(indicateur, propre)
-                logger.info(f"  {nb} observations enregistrées en base")
+                logger.info("  %d observations enregistrées en base", nb)
                 total += nb
-            except Exception as e:  # noqa: BLE001
-                logger.error(f"  ERREUR : {e}")
+            except (requests.RequestException, ValueError) as e:
+                logger.error("  ERREUR : %s", e)
 
-        logger.info(f"\nTerminé : {total} observations enregistrées au total.")
+        logger.info("\nTerminé : %d observations enregistrées au total.", total)
         return total
