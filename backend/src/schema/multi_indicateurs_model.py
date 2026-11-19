@@ -4,23 +4,18 @@ from pydantic import BaseModel, Field
 
 
 class SelectionModel(BaseModel):
-    code_indicateur: str
-    code_iso: str
+    """Une série à comparer (indicateur, pays, filtres)."""
+
+    indicateur: str = Field(..., alias="code_indicateur")
+    pays: str = Field(..., alias="code_iso")
     classif1: str | None = None
     sexe: str = "Total"
 
-
-class PointSerieModel(BaseModel):
-    """Point de donnée renvoyé dans la réponse JSON de l'API."""
-
-    serie: str = Field(..., description="Libellé complet de la série")
-    indicateur: str = Field(..., description="Code de l'indicateur")
-    periode: str = Field(..., description="Période (ex: '2024Q4')")
-    valeur: float = Field(..., description="Valeur brute")
-    unite: str = Field(..., description="Unité d'origine")
-    valeur_base100: float | None = None
+    model_config = {"populate_by_name": True}
 
 
 class MultiIndicateursRequest(BaseModel):
-    selections: list[SelectionModel]
+    """Requête de comparaison : 1 à 4 séries."""
+
+    selections: list[SelectionModel] = Field(..., min_length=1, max_length=4)
     base_100: bool = True
