@@ -15,14 +15,20 @@ client = TestClient(app)
 def payload_valide() -> list[dict[str, str]]:
     """Payload HTTP avec 2 sélections valides."""
     return [
-        {"indicateur": "EMP_5EMP_SEX_OC2_NB_Q", "pays": "FRA", "classif1": "Total", "sexe": "Total"},
+        {"indicateur": "EMP_5EMP_SEX_OC2_NB_Q",
+            "pays": "FRA",
+            "classif1": "Total",
+            "sexe": "Total"},
         {"indicateur": "EMP_5WAP_SEX_AGE_RT_Q", "pays": "FRA", "classif1": "15+", "sexe": "Total"},
     ]
 
 
 def test_route_moins_de_deux_selections_renvoie_400():
     """Vérifie le rejet HTTP 400 si moins de 2 sélections sont fournies."""
-    payload = [{"indicateur": "EMP_5EMP_SEX_OC2_NB_Q", "pays": "FRA", "classif1": "Total", "sexe": "Total"}]
+    payload = [{"indicateur": "EMP_5EMP_SEX_OC2_NB_Q",
+                "pays": "FRA",
+                "classif1": "Total",
+                "sexe": "Total"}]
     response = client.post("/analyses/multi-indicateurs", json=payload)
 
     assert response.status_code == 400
@@ -52,7 +58,9 @@ def test_route_succes_retourne_200_et_donnees(payload_valide):
         ]
     )
 
-    with patch("service.multi_indicateurs_service.MultiIndicateursService.comparer", return_value=df_simule):
+    with patch(
+        "service.multi_indicateurs_service.MultiIndicateursService.comparer", return_value=df_simule
+    ):
         response = client.post("/analyses/multi-indicateurs", json=payload_valide)
 
     assert response.status_code == 200
