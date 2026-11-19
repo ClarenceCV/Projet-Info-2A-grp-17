@@ -1,4 +1,4 @@
-# Format JSON des indicateurs échangé entre le backend et ses clients (navigateur, frontend).
+""" Format JSON des indicateurs échangé entre le backend et ses clients (navigateur, frontend). """
 
 from pydantic import BaseModel
 
