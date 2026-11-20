@@ -4,7 +4,6 @@
 des selections par l'utilisateur et previsualisation avant telechargement.
 """
 
-import base64
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -31,9 +30,10 @@ def charger_metadonnees() -> tuple[dict[str, str], list[str]]:
     if res_ind.get("status_code") == 200 and isinstance(res_ind.get("data"), list):
         for ind in res_ind["data"]:
             code = ind.get("code", ind.get("code_indicateur"))
-            libelle = ind.get("libelle", code)
+            libelle = ind.get("libelle") or ind.get("nom") or code
+            unite = ind.get("unite")
             if code:
-                dict_ind[code] = libelle
+                dict_ind[code] = f"{libelle} ({unite})" if unite else libelle
 
     if not dict_ind:
         dict_ind = {
@@ -104,7 +104,7 @@ with st.container(border=True):
                 options=codes_dispo,
                 index=idx_defaut_ind,
                 key=f"f5_ind_{i}",
-                format_func=lambda x: f"{x} - {dict_indicateurs.get(x, x)}",
+                format_func=lambda x: f"{dict_indicateurs.get(x, x)} [{x}]",
                 disabled=not active,
             )
 
@@ -167,6 +167,14 @@ else:
         df = pd.DataFrame(reponse["data"])
 
         if not df.empty:
+            if "indicateur" in df.columns:
+                df["indicateur"] = df["indicateur"].map(
+                    lambda c: f"{dict_indicateurs[c]} [{c}]" if c in dict_indicateurs else c
+                )
+            if "serie" in df.columns:
+                for code_ind, lib_ind in dict_indicateurs.items():
+                    df["serie"] = df["serie"].str.replace(code_ind, lib_ind, regex=False)
+
             colonne_y = "valeur_base100" if base_100 else "valeur"
 
             fig = px.line(

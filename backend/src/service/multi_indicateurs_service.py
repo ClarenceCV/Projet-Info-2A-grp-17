@@ -44,8 +44,7 @@ class MultiIndicateursService:
             df = df.drop_duplicates(subset=["periode"]).copy()
             libelle = ind.libelle or sel.indicateur
             df["serie"] = f"{libelle} — {sel.pays} — {sel.sexe} — {sel.classif1}"
-            df["indicateur"] = sel.indicateur
-            dfs.append(df)
+            df["indicateur"] = f"{libelle} [{sel.indicateur}]" if ind.libelle else sel.indicateur
 
         if not dfs:
             return pd.DataFrame(

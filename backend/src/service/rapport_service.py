@@ -1,6 +1,7 @@
 """Service de génération de rapports PDF (FO3)."""
 
 import io
+import unicodedata
 from typing import Any
 
 import matplotlib
@@ -8,12 +9,13 @@ import matplotlib
 # "Agg" : dessine directement en image, sans fenêtre. Indispensable dans une API, où le graphique
 # est créé hors du fil principal (sous Windows, le moteur par défaut Tk refuse et plante).
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402  (doit venir APRÈS matplotlib.use)
+import matplotlib.pyplot as plt
 import pandas as pd
 from fpdf import FPDF
 
 from service.comparaison_pays_service import ComparaisonPaysService
 from service.evolution_service import EvolutionService
+from service.indicateur_service import IndicateurService
 
 MAPPING_SEXE = {
     "F": "Female",
@@ -24,11 +26,21 @@ MAPPING_SEXE = {
 }
 
 
+def _nettoyer_texte_pdf(texte: str) -> str:
+    """Garantit la compatibilité latin-1 pour la police standard Helvetica de FPDF."""
+    try:
+        texte.encode("latin-1")
+        return texte
+    except UnicodeEncodeError:
+        normalise = unicodedata.normalize("NFKD", texte)
+        return normalise.encode("latin-1", "ignore").decode("latin-1")
+
+
 class LaborScopePDF(FPDF):
     """Classe FPDF personnalisée pour l'en-tête et le pied de page du rapport."""
 
     def header(self) -> None:
-        """ Méthode pour formater haut de page"""
+        """Méthode pour formater haut de page."""
         self.set_font("Helvetica", "B", 14)
         self.cell(
             0,
@@ -42,7 +54,7 @@ class LaborScopePDF(FPDF):
         self.ln(5)
 
     def footer(self) -> None:
-        """Méthode pour formater le pied de page """
+        """Méthode pour formater le pied de page."""
         self.set_y(-15)
         self.set_font("Helvetica", "I", 9)
         self.cell(0, 10, f"Page {self.page_no()}", align="C")
@@ -50,6 +62,19 @@ class LaborScopePDF(FPDF):
 
 class RapportService:
     """Service d'assemblage et de génération de rapports PDF synthétiques."""
+
+    def _infos_indicateur(self, code_indicateur: str) -> tuple[str, str]:
+        """Retourne (intitulé_complet, unité) à partir du code ILOSTAT."""
+        try:
+            indicateur = IndicateurService().trouver_par_code(code_indicateur)
+        except (KeyError, OSError, ValueError, RuntimeError):
+            indicateur = None
+
+        if indicateur is not None and isinstance(getattr(indicateur, "libelle", None), str):
+            intitule = f"{indicateur.libelle} ({indicateur.unite}) [{indicateur.code}]"
+            return intitule, indicateur.unite
+
+        return code_indicateur, ""
 
     def resume_statistique(self, df_evolution: pd.DataFrame) -> dict[str, dict[str, Any]]:
         """Calcule min, max, moyenne et évolution globale par pays."""
@@ -138,7 +163,12 @@ class RapportService:
 
         return " ".join(phrases)
 
-    def _generer_graphique_bytes(self, df_evolution: pd.DataFrame) -> io.BytesIO:
+    def _generer_graphique_bytes(
+        self,
+        df_evolution: pd.DataFrame,
+        titre_indicateur: str = "Evolution Temporelle de l'Indicateur",
+        unite: str = "",
+    ) -> io.BytesIO:
         """Génère un graphique d'évolution Matplotlib en mémoire (sans sauvegarde disque)."""
         fig, ax = plt.subplots(figsize=(7, 3.5))
 
@@ -146,9 +176,9 @@ class RapportService:
             group_sorted = group.sort_values("periode")
             ax.plot(group_sorted["periode"], group_sorted["valeur"], marker="o", label=nom_pays)
 
-        ax.set_title("Evolution Temporelle de l'Indicateur", fontsize=11, fontweight="bold")
+        ax.set_title(titre_indicateur, fontsize=10, fontweight="bold")
         ax.set_xlabel("Periode")
-        ax.set_ylabel("Valeur")
+        ax.set_ylabel(f"Valeur ({unite})" if unite else "Valeur")
         ax.legend(loc="best")
         ax.grid(True, linestyle="--", alpha=0.5)
         plt.xticks(rotation=45)
@@ -170,17 +200,18 @@ class RapportService:
     ) -> bytes:
         """Renvoie le contenu binaire du fichier PDF généré."""
         sexe_db = MAPPING_SEXE.get(sexe.upper(), sexe)
+        intitule_indicateur, unite_indicateur = self._infos_indicateur(code_indicateur)
 
         # 1. Appel des services backend
         evolution = EvolutionService().evolution(
             code_indicateur, pays, classif1, sexe_db, n_periodes
-            )
+        )
 
         if evolution.empty and classif1.lower() == "total":
             for alternative in ["15+", "OC2_SKILL_TOTAL", "AGE_AGGREGATE_TOTAL"]:
                 evolution_alt = EvolutionService().evolution(
                     code_indicateur, pays, alternative, sexe_db, n_periodes
-                    )
+                )
                 if not evolution_alt.empty:
                     evolution = evolution_alt
                     classif1 = alternative
@@ -188,7 +219,7 @@ class RapportService:
 
         comparaison = ComparaisonPaysService().comparer_pays(
             code_indicateur, classif1, pays, sexe_db
-            )
+        )
 
         # 2. Calculs statistiques et conclusion
         stats = self.resume_statistique(evolution)
@@ -205,14 +236,25 @@ class RapportService:
         pdf.multi_cell(
             0,
             6,
-            f"Indicateur : {code_indicateur}\n"
-            f"Pays analyses : {', '.join(pays)}\n"
-            f"Classification : {classif1} | Sexe : {sexe_db}",
+            _nettoyer_texte_pdf(
+                f"Indicateur : {intitule_indicateur}\n"
+                f"Pays analyses : {', '.join(pays)}\n"
+                f"Classification : {classif1} | Sexe : {sexe_db}"
+            ),
         )
         pdf.ln(4)
 
         if not evolution.empty:
-            img_buf = self._generer_graphique_bytes(evolution)
+            titre_graph = (
+                intitule_indicateur.split(" [")[0]
+                if " [" in intitule_indicateur
+                else "Evolution Temporelle de l'Indicateur"
+            )
+            img_buf = self._generer_graphique_bytes(
+                evolution,
+                titre_indicateur=titre_graph,
+                unite=unite_indicateur,
+            )
             pdf.set_font("Helvetica", "B", 12)
             pdf.cell(0, 8, "2. Graphique d'Evolution", new_x="LMARGIN", new_y="NEXT")
             pdf.image(img_buf, w=170)
@@ -231,7 +273,12 @@ class RapportService:
 
         pdf.set_font("Helvetica", "", 9)
         for st_data in stats.values():
-            pdf.cell(col_widths[0], 6, str(st_data["nom_pays"])[:18], border=1)
+            pdf.cell(
+                col_widths[0],
+                6,
+                _nettoyer_texte_pdf(str(st_data["nom_pays"])[:18]),
+                border=1,
+            )
             pdf.cell(col_widths[1], 6, f"{st_data['min']:.2f}", border=1)
             pdf.cell(col_widths[2], 6, f"{st_data['max']:.2f}", border=1)
             pdf.cell(col_widths[3], 6, f"{st_data['moyenne']:.2f}", border=1)
@@ -249,6 +296,6 @@ class RapportService:
         pdf.set_font("Helvetica", "B", 12)
         pdf.cell(0, 8, "4. Analyse & Conclusion Automatique", new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("Helvetica", "", 10)
-        pdf.multi_cell(0, 6, conclusion_texte)
+        pdf.multi_cell(0, 6, _nettoyer_texte_pdf(conclusion_texte))
 
         return bytes(pdf.output())
