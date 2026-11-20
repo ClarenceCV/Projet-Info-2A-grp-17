@@ -116,6 +116,74 @@ def test_deux_sources_pour_une_meme_periode():
     assert list(res["classement"]["valeur"]) == [51.0]
 
 
+def test_periode_choisie():
+    # GIVEN
+    with patch.object(ObservationDAO, "lire", return_value=faux_df()):
+        # WHEN : on choisit 2024Q3
+        res = ComparaisonPaysService().comparer_pays("X", classif1="15+", periode="2024Q3")
+    # THEN : tous les pays à 2024Q3 (FRA → 50.0 et plus 52.0)
+    classement = res["classement"]
+    assert list(classement["code_iso"]) == ["DEU", "FRA", "ESP"]
+    assert list(classement["valeur"]) == [60.0, 50.0, 45.0]
+    assert res["periode_reference"] == "2024Q3"
+
+
+def test_periode_choisie_absente_pour_un_pays():
+    # GIVEN : l'Espagne n'a pas 2024Q4
+    with patch.object(ObservationDAO, "lire", return_value=faux_df()):
+        # WHEN
+        res = ComparaisonPaysService().comparer_pays("X", classif1="15+", periode="2024Q4")
+    # THEN : l'Espagne garde sa dernière période avant 2024Q4
+    classement = res["classement"]
+    espagne = classement[classement["code_iso"] == "ESP"]
+    assert list(espagne["periode"]) == ["2024Q3"]
+
+
+def test_periode_choisie_avant_toutes_les_donnees():
+    # GIVEN
+    with patch.object(ObservationDAO, "lire", return_value=faux_df()):
+        # WHEN : aucune donnée avant 2020Q1
+        res = ComparaisonPaysService().comparer_pays("X", classif1="15+", periode="2020Q1")
+    # THEN : pas d'erreur, classement vide
+    assert res["classement"].empty
+    assert res["periode_reference"] is None
+
+
+def test_periodes_disponibles():
+    # GIVEN
+    with patch.object(ObservationDAO, "lire", return_value=faux_df()):
+        # WHEN : même avec une période choisie, la liste contient toutes les périodes
+        res = ComparaisonPaysService().comparer_pays("X", classif1="15+", periode="2024Q3")
+    # THEN
+    assert res["periodes_disponibles"] == ["2024Q3", "2024Q4"]
+
+
+def test_periode_commune():
+    # GIVEN : FRA et DEU ont 2024Q3 et 2024Q4, ESP seulement 2024Q3
+    with patch.object(ObservationDAO, "lire", return_value=faux_df()):
+        # WHEN
+        res = ComparaisonPaysService().comparer_pays("X", classif1="15+")
+    # THEN : la seule période où les 3 pays ont une donnée est 2024Q3
+    assert res["periode_commune"] == "2024Q3"
+
+
+def test_aucune_periode_commune():
+    # GIVEN : la France n'a que 2024Q4, l'Espagne que 2024Q3
+    df = pd.DataFrame({
+        "code_iso": ["FRA", "ESP"],
+        "nom_pays": ["France", "Spain"],
+        "source": ["LFS", "LFS"],
+        "periode": ["2024Q4", "2024Q3"],
+        "valeur": [52.0, 45.0],
+        "unite": ["%", "%"],
+    })
+    with patch.object(ObservationDAO, "lire", return_value=df):
+        # WHEN
+        res = ComparaisonPaysService().comparer_pays("X", classif1="15+")
+    # THEN : pas d'erreur, pas de période commune
+    assert res["periode_commune"] is None
+
+
 def test_dao_vide():
     """
     Vérifie que, lorsque le DAO ne renvoie aucune donnée, le service ne
