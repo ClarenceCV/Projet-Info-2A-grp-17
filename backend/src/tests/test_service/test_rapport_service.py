@@ -131,13 +131,15 @@ def test_generer_pdf_retourne_octets_valides(sample_evolution_df, sample_compara
     """
     service = RapportService()
 
+    # le libellé de l'indicateur est lu en base (_infos_indicateur) : on le remplace aussi
     with patch(
         "service.evolution_service.EvolutionService.evolution", return_value=sample_evolution_df
-        ), \
-            patch(
-            "service.comparaison_pays_service.ComparaisonPaysService.comparer_pays", 
-            return_value=sample_comparaison_df
-            ):
+    ), patch(
+        "service.comparaison_pays_service.ComparaisonPaysService.comparer_pays",
+        return_value=sample_comparaison_df,
+    ), patch.object(
+        RapportService, "_infos_indicateur", return_value=("Indicateur de test (%) [IND_TEST]", "%")
+    ):
 
         pdf_bytes = service.generer(
             code_indicateur="IND_TEST",

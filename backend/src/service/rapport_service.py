@@ -5,13 +5,6 @@ import unicodedata
 from typing import Any
 
 import matplotlib
-<<<<<<< HEAD
-
-# "Agg" : dessine directement en image, sans fenêtre. Indispensable dans une API, où le graphique
-# est créé hors du fil principal (sous Windows, le moteur par défaut Tk refuse et plante).
-matplotlib.use("Agg")
-=======
->>>>>>> 5e37809ba84c83073654bd9879fcc06a37b1194e
 import matplotlib.pyplot as plt
 import pandas as pd
 from fpdf import FPDF
@@ -144,6 +137,56 @@ class RapportService:
 
         return " ".join(phrases)
 
+    @staticmethod
+    def _normaliser_comparaison(comparaison: Any) -> tuple[pd.DataFrame, str | None]:
+        """
+        Met le résultat de la comparaison entre pays sous une forme unique.
+
+        Args:
+            comparaison (Any): dict (clé 'classement', 'observations' ou 'data') ou DataFrame
+
+        Returns:
+            tuple[pd.DataFrame, str | None]: le classement et la période de référence (si connue)
+        """
+        if isinstance(comparaison, pd.DataFrame):
+            return comparaison, None
+        if isinstance(comparaison, dict):
+            # "classement" est un DataFrame : on ne peut pas écrire `a or b` (pandas refuse
+            # de dire si un DataFrame est « vrai »), on prend la première clé présente.
+            for cle in ("classement", "observations", "data"):
+                if comparaison.get(cle) is not None:
+                    return pd.DataFrame(comparaison[cle]), comparaison.get("periode_reference")
+            return pd.DataFrame(), comparaison.get("periode_reference")
+        return pd.DataFrame(), None
+
+    @staticmethod
+    def _nom_pays(ligne: pd.Series) -> str:
+        """Nom du pays d'une ligne du classement (à défaut, son code ISO)."""
+        return ligne.get("nom_pays") or ligne.get("pays") or ligne.get("code_iso", "N/A")
+
+    @staticmethod
+    def _ecrire_tableau_stats(pdf: FPDF, stats: dict[str, dict[str, Any]]) -> None:
+        """Écrit la partie « 3. Resume Statistique » : tableau min / max / moyenne / évolution."""
+        pdf.set_font("Helvetica", "B", 12)
+        pdf.cell(0, 8, "3. Resume Statistique", new_x="LMARGIN", new_y="NEXT")
+
+        largeurs = [35, 25, 25, 25, 30]
+        pdf.set_font("Helvetica", "B", 9)
+        for largeur, titre in zip(largeurs[:-1], ["Pays", "Min", "Max", "Moyenne"]):
+            pdf.cell(largeur, 7, titre, border=1)
+        pdf.cell(largeurs[-1], 7, "Evolution", border=1, new_x="LMARGIN", new_y="NEXT")
+
+        pdf.set_font("Helvetica", "", 9)
+        for s in stats.values():
+            # nom nettoyé : la police Helvetica du PDF ne connaît que les caractères latin-1
+            pdf.cell(largeurs[0], 6, _nettoyer_texte_pdf(str(s["nom_pays"])[:18]), border=1)
+            pdf.cell(largeurs[1], 6, f"{s['min']:.2f}", border=1)
+            pdf.cell(largeurs[2], 6, f"{s['max']:.2f}", border=1)
+            pdf.cell(largeurs[3], 6, f"{s['moyenne']:.2f}", border=1)
+            pdf.cell(
+                largeurs[4], 6, f"{s['evolution']:+.2f}", border=1, new_x="LMARGIN", new_y="NEXT"
+            )
+
     def _generer_graphique_bytes(
         self,
         df_evolution: pd.DataFrame,
@@ -241,41 +284,7 @@ class RapportService:
             pdf.image(img_buf, w=170)
             pdf.ln(5)
 
-<<<<<<< HEAD
-        pdf.set_font("Helvetica", "B", 12)
-        pdf.cell(0, 8, "3. Resume Statistique", new_x="LMARGIN", new_y="NEXT")
-        pdf.set_font("Helvetica", "B", 9)
-
-        col_widths = [35, 25, 25, 25, 30]
-        pdf.cell(col_widths[0], 7, "Pays", border=1)
-        pdf.cell(col_widths[1], 7, "Min", border=1)
-        pdf.cell(col_widths[2], 7, "Max", border=1)
-        pdf.cell(col_widths[3], 7, "Moyenne", border=1)
-        pdf.cell(col_widths[4], 7, "Evolution", border=1, new_x="LMARGIN", new_y="NEXT")
-
-        pdf.set_font("Helvetica", "", 9)
-        for st_data in stats.values():
-            pdf.cell(
-                col_widths[0],
-                6,
-                _nettoyer_texte_pdf(str(st_data["nom_pays"])[:18]),
-                border=1,
-            )
-            pdf.cell(col_widths[1], 6, f"{st_data['min']:.2f}", border=1)
-            pdf.cell(col_widths[2], 6, f"{st_data['max']:.2f}", border=1)
-            pdf.cell(col_widths[3], 6, f"{st_data['moyenne']:.2f}", border=1)
-            pdf.cell(
-                col_widths[4],
-                6,
-                f"{st_data['evolution']:+.2f}",
-                border=1,
-                new_x="LMARGIN",
-                new_y="NEXT",
-            )
-
-=======
         self._ecrire_tableau_stats(pdf, stats)
->>>>>>> 5e37809ba84c83073654bd9879fcc06a37b1194e
         pdf.ln(6)
 
         pdf.set_font("Helvetica", "B", 12)

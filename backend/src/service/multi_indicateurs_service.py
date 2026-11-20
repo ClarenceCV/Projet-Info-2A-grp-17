@@ -58,6 +58,7 @@ class MultiIndicateursService:
             libelle = ind.libelle or sel.indicateur
             df["serie"] = f"{libelle} — {sel.pays} — {sel.sexe} — {sel.classif1}"
             df["indicateur"] = f"{libelle} [{sel.indicateur}]" if ind.libelle else sel.indicateur
+            dfs.append(df)
 
         if not dfs:
             return pd.DataFrame(

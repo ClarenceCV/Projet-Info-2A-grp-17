@@ -94,7 +94,10 @@ def test_calcul_base100_et_alignement_periode_commune(
     assert list(donnees_communes["valeur_base100"]) == [100.0, 100.0]
 
     # THEN 3 : L'évolution relative en 2024Q3 est exacte (Série A : 30.0 / 20.0 * 100 = 150.0)
-    serie_a_q3 = resultat[(resultat["indicateur"] == "A") & (resultat["periode"] == "2024Q3")]
+    # la colonne indicateur contient « libellé [code] », ex : 'Emploi [A]'
+    serie_a_q3 = resultat[
+        (resultat["indicateur"] == "Emploi [A]") & (resultat["periode"] == "2024Q3")
+    ]
     assert serie_a_q3["valeur_base100"].iloc[0] == pytest.approx(150.0)
 
 
