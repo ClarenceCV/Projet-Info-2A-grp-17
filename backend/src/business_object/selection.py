@@ -1,3 +1,5 @@
+"""Objet métier Selection : un indicateur et ses filtres, soit une courbe du graphique F5."""
+
 from dataclasses import dataclass
 
 
@@ -9,4 +11,3 @@ class Selection:
     pays: str
     classif1: str
     sexe: str = "Total"
-

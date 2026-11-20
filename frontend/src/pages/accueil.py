@@ -1,5 +1,6 @@
-# Page d'accueil : présentation de l'application, visible par tout le monde.
-# Responsable : B
+"""Page d'accueil : présentation de l'application, visible par tout le monde.
+Responsable : B
+"""
 
 import streamlit as st
 
@@ -23,4 +24,6 @@ if role is None:
     if colonne_droite.button("Créer un compte", width="stretch"):
         st.switch_page("pages/creer_compte.py")
 else:
-    st.success(f"Bonjour {st.session_state['pseudo']} ! Choisissez une analyse dans le menu à gauche.")
+    st.success(
+        f"Bonjour {st.session_state['pseudo']} ! Choisissez une analyse dans le menu à gauche."
+    )

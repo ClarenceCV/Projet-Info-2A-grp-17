@@ -1,8 +1,8 @@
+"""Tests du nettoyage des données ILOSTAT (fetcher/parser.py)."""
+
 import pandas as pd
-import pytest
 
 from fetcher.parser import retirer_prefixe
-
 
 # ============================================================
 # TESTS DE RETIRER_PREFIXE

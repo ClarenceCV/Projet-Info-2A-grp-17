@@ -1,7 +1,9 @@
-# Tests de PaysDAO sur la vraie base (données de test 'ZZZ', supprimées après chaque test : c.f. conftest.py)
-#
-# Lancement (depuis le dossier backend) :
-#     uv run pytest src/tests/test_dao
+"""Tests de PaysDAO sur la vraie base (données de test 'ZZZ', supprimées après chaque test : c.f.
+conftest.py)
+
+Lancement (depuis le dossier backend) :
+    uv run pytest src/tests/test_dao
+"""
 
 import pandas as pd
 

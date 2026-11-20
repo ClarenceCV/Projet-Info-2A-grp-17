@@ -1,15 +1,17 @@
-# Page « Gestion des données » (administrateurs) : import ILOSTAT, modification et suppression d'observations.
-# Endpoints utilisés : POST /admin/import,
-#                      GET /observations,
-#                      PUT / DELETE /admin/observations (corps JSON = la clé de l'observation)
-# Backend : responsable A ; page : B (même structure que admin_utilisateurs.py et explorer.py)
+"""Page « Gestion des données » (administrateurs) : import ILOSTAT, modification et suppression
+d'observations.
+Endpoints utilisés : POST /admin/import,
+                     GET /observations,
+                     PUT / DELETE /admin/observations (corps JSON = la clé de l'observation)
+Backend : responsable A ; page : B (même structure que admin_utilisateurs.py et explorer.py)
+"""
 
 import pandas as pd
 import streamlit as st
 
 from utils.api_client import api_client
 from utils.auth_guard import exiger_admin
-from utils.selecteurs import choisir_classif1, choisir_indicateur, choisir_pays, choisir_sexe
+from utils.selecteurs import choisir_filtres
 from utils.session import message_erreur
 
 exiger_admin()  # protège la page (c.f. utils/auth_guard.py)
@@ -20,14 +22,15 @@ LIMITE = 1000  # nombre maximum d'observations affichées
 
 st.title("Gestion des données")
 
-# Message laissé par l'action précédente (import, modification, suppression), affiché après le st.rerun()
+# Message laissé par l'action précédente (import, modification, suppression), affiché après le
+# st.rerun()
 if "message_donnees" in st.session_state:
     st.success(st.session_state.pop("message_donnees"))  # pop : affiché une seule fois
 
 
-def afficher_erreur(reponse: dict):
+def afficher_erreur(reponse_api: dict):
     """Affiche l'erreur d'une réponse de api_client (backend injoignable ou réponse en erreur)."""
-    st.error(message_erreur(reponse) if reponse["status_code"] else reponse["data"])
+    st.error(message_erreur(reponse_api))
 
 
 # --- 1. Import depuis ILOSTAT ------------------------------------------------------------
@@ -42,7 +45,8 @@ st.warning("Les modifications manuelles faites ci-dessous seront écrasées par 
 confirme_import = st.checkbox("Je confirme vouloir relancer l'import")
 if st.button("Forcer l'import", type="primary", disabled=not confirme_import):
     with st.spinner("Import en cours (cela peut prendre plusieurs minutes)..."):
-        # timeout long : l'import télécharge chaque pays un par un (les 10 s par défaut ne suffisent pas)
+        # timeout long : l'import télécharge chaque pays un par un (les 10 s par défaut ne suffisent
+        # pas)
         reponse = api_client.post("/admin/import", timeout=900)
     if reponse["status_code"] == 200:
         st.cache_data.clear()  # les menus (pays, classif1...) sont en cache : on les relira
@@ -58,22 +62,8 @@ st.divider()
 
 st.subheader("Modifier ou supprimer une observation")
 
-colonne_gauche, colonne_droite = st.columns(2)
-with colonne_gauche:
-    indicateur = choisir_indicateur(cle="admin")
-    pays = choisir_pays(cle="admin")
-with colonne_droite:
-    classif1 = choisir_classif1(indicateur, cle="admin")
-    sexe = choisir_sexe(cle="admin")
-
-if not (indicateur and pays and classif1):
-    st.info("Choisissez un indicateur, au moins un pays et une modalité.")
-    st.stop()
-
-reponse = api_client.get(
-    "/observations",
-    params={"indicateur": indicateur, "pays": pays, "classif1": classif1, "sexe": sexe, "limite": LIMITE},
-)
+filtres = choisir_filtres(cle="admin")  # la page s'arrête si un choix manque
+reponse = api_client.get("/observations", params={**filtres, "limite": LIMITE})
 if reponse["status_code"] != 200:
     afficher_erreur(reponse)
     st.stop()
@@ -126,10 +116,13 @@ with colonne_modifier:
         reponse = api_client.put(
             "/admin/observations",
             json=cle,                                   # la clé : dans le corps de la requête
-            params={"nouvelle_valeur": nouvelle_valeur},  # la valeur : dans l'URL (?nouvelle_valeur=...)
+            # la valeur : dans l'URL (?nouvelle_valeur=...)
+            params={"nouvelle_valeur": nouvelle_valeur},
         )
         if reponse["status_code"] == 200:
-            apres_action(f"Observation modifiée ({description}) : {ligne['valeur']} → {nouvelle_valeur}.")
+            apres_action(
+                f"Observation modifiée ({description}) : {ligne['valeur']} → {nouvelle_valeur}."
+            )
         else:
             afficher_erreur(reponse)
 

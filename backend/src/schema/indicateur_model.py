@@ -2,6 +2,10 @@
 
 from pydantic import BaseModel
 
+# IndicateurModel reprend volontairement les champs de business_object.Indicateur : l'un est le
+# format de l'API, l'autre l'objet métier (couches séparées). Ce n'est pas du code copié-collé.
+# pylint: disable=duplicate-code
+
 
 class IndicateurModel(BaseModel):
     """

@@ -1,7 +1,9 @@
-# Endpoints d'administration des données (préfixe /admin, c.f. main.py) :
-# import ILOSTAT, modification et suppression d'observations, lecture des logs techniques.
-# Tous réservés aux administrateurs : Depends(admin_requis) → 401 si pas connecté, 403 si pas admin.
-# Chaque action réussie est notée au journal (le journal ne fait jamais échouer l'action, c.f. JournalService).
+"""Endpoints d'administration des données (préfixe /admin, c.f. main.py) :
+import ILOSTAT, modification et suppression d'observations, lecture des logs techniques.
+Tous réservés aux administrateurs : Depends(admin_requis) → 401 si pas connecté, 403 si pas admin.
+Chaque action réussie est notée au journal (le journal ne fait jamais échouer l'action, c.f.
+JournalService).
+"""
 
 from collections import deque
 
@@ -20,7 +22,8 @@ router = APIRouter()
 
 
 def decrire(cle: CleObservationModel) -> str:
-    """Résumé lisible d'une observation pour le journal, ex : 'EMP_5WAP_SEX_AGE_RT_Q, FRA, 2024Q4, ...'."""
+    """Résumé lisible d'une observation pour le journal, ex : 'EMP_5WAP_SEX_AGE_RT_Q, FRA, 2024Q4,
+    ...'."""
     return ", ".join(str(valeur) for valeur in cle.model_dump().values())
 
 
@@ -28,7 +31,8 @@ def decrire(cle: CleObservationModel) -> str:
 def forcer_import(admin: Utilisateur = Depends(admin_requis)):
     """
     Relance l'import ILOSTAT de tous les indicateurs suivis (c.f. config_import.py).
-    Peut prendre plusieurs minutes. Les observations déjà présentes sont mises à jour, pas dupliquées.
+    Peut prendre plusieurs minutes. Les observations déjà présentes sont mises à jour, pas
+    dupliquées.
     """
     nb_obs = DataProcessing().charger(INDICATEURS)
     JournalService().enregistrer(admin, "import_donnees", f"{nb_obs} observations enregistrées")
@@ -48,7 +52,9 @@ def modifier_observation(
     if not ObservationService().modifier(cle, nouvelle_valeur):
         raise HTTPException(status_code=404, detail="Observation introuvable.")
 
-    JournalService().enregistrer(admin, "modification_donnee", f"{decrire(cle)} → {nouvelle_valeur}")
+    JournalService().enregistrer(
+        admin, "modification_donnee", f"{decrire(cle)} → {nouvelle_valeur}"
+    )
     return {"message": "Observation modifiée avec succès."}
 
 
@@ -65,9 +71,9 @@ def supprimer_observation(cle: CleObservationModel, admin: Utilisateur = Depends
     return {"message": "Observation supprimée avec succès."}
 
 
-@router.get("/logs")
+# dependencies=[...] : la garde est exécutée, mais la route n'a pas besoin de l'admin lui-même
+@router.get("/logs", dependencies=[Depends(admin_requis)])
 def lire_logs(
-    admin: Utilisateur = Depends(admin_requis),
     lignes: int = Query(default=100, ge=1, le=5000, description="Nombre de lignes à renvoyer"),
 ):
     """Renvoie les dernières lignes du fichier de logs techniques du backend."""
@@ -76,6 +82,7 @@ def lire_logs(
         raise HTTPException(status_code=404, detail="Fichier de logs introuvable.")
 
     with fichier_log.open("r", encoding="utf-8") as fichier:
-        dernieres_lignes = list(deque(fichier, maxlen=lignes))  # deque : garde seulement les n dernières
+        # deque : garde seulement les n dernières
+        dernieres_lignes = list(deque(fichier, maxlen=lignes))
 
     return {"nombre_lignes": len(dernieres_lignes), "logs": dernieres_lignes}

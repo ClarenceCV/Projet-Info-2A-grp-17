@@ -1,16 +1,10 @@
-# Point d'entrée du webservice FastAPI LaborScope.
-#
-# Lancement (depuis backend/src) :
-#     uv run python main.py
-# Puis ouvrir la documentation interactive : <url du service>/docs
-# (sur Onyxia : Mes services > VSCode > Ouvrir > lien du port 5000)
+"""Point d'entrée du webservice FastAPI LaborScope.
 
-# Point d'entrée du webservice FastAPI LaborScope.
-#
-# Lancement (depuis backend/src) :
-#     uv run python main.py
-# Puis ouvrir la documentation interactive : <url du service>/docs
-# (sur Onyxia : Mes services > VSCode > Ouvrir > lien du port 5000)
+Lancement (depuis backend/src) :
+    uv run python main.py
+Puis ouvrir la documentation interactive : <url du service>/docs
+(sur Onyxia : Mes services > VSCode > Ouvrir > lien du port 5000)
+"""
 
 import os
 
@@ -55,7 +49,9 @@ app.include_router(pays_controller.router, prefix="/pays", tags=["Pays"])
 app.include_router(multi_indicateurs_controller.router, prefix="/analyses", tags=["Analyses"])
 app.include_router(login_controller.router, tags=["Connexion"])
 app.include_router(utilisateur_controller.router, prefix="/utilisateurs", tags=["Utilisateurs"])
-app.include_router(admin_utilisateur_controller.router, prefix="/admin/utilisateurs", tags=["Administration"])
+app.include_router(
+    admin_utilisateur_controller.router, prefix="/admin/utilisateurs", tags=["Administration"]
+)
 app.include_router(journal_controller.router, prefix="/admin/journal", tags=["Administration"])
 app.include_router(admin_donnees_controller.router, prefix="/admin", tags=["Administration"])
 app.include_router(comparaison_pays_controller.router, prefix="/analyses", tags=["Analyses"])

@@ -25,6 +25,7 @@ dependencies = [
 # outils de développement, installés aussi par `uv sync`
 dev = [
     "httpx>=0.28.1",             # requis par le TestClient de FastAPI
+    "pylint>=4.1.4",
     "pytest>=9.1.1",
     "ruff>=0.17.3",
 ]
@@ -33,3 +34,29 @@ dev = [
 pythonpath = ["src"]         # pour écrire `from dao...` dans les tests, comme dans le code
 testpaths = ["src/tests"]    # `uv run pytest` sans argument lance tous les tests
 addopts = "-rs"              # affiche la raison des tests ignorés (ex : base injoignable)
+
+[tool.ruff]
+line-length = 100            # même limite que pylint
+
+[tool.pylint.main]
+# psycopg2.errors est créé à l'exécution (module écrit en C) : pylint ne peut pas en lire le contenu
+# et croirait à tort que psycopg2.errors.UniqueViolation n'existe pas
+ignored-modules = ["psycopg2.errors"]
+
+[tool.pylint.format]
+max-line-length = 100
+
+[tool.pylint.basic]
+# les fonctions de test n'ont pas besoin de docstring : leur nom décrit déjà le cas testé
+# (ex : test_creer_compte_mot_de_passe_trop_court) ; les modules et fixtures en ont une
+no-docstring-rgx = "^(_|test_)"
+
+[tool.pylint.design]
+# routes de filtrage (indicateur, pays, période min/max, sexe, classif1, limite) : 7 paramètres
+max-args = 8
+max-positional-arguments = 8
+
+[tool.pylint."messages control"]
+disable = [
+    "too-few-public-methods",  # un service = une classe, même s'il n'a qu'une méthode (architecture en couches)
+]

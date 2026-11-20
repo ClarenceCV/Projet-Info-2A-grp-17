@@ -1,12 +1,13 @@
-# Client HTTP du backend : TOUS les appels du frontend vers l'API FastAPI passent par ici.
-# (repris du template)
-#
-# Utilisation dans une page :
-#     from utils.api_client import api_client
-#
-#     reponse = api_client.get("/indicateurs")
-#     if reponse["status_code"] == 200:
-#         indicateurs = reponse["data"]
+"""Client HTTP du backend : TOUS les appels du frontend vers l'API FastAPI passent par ici.
+(repris du template)
+
+Utilisation dans une page :
+    from utils.api_client import api_client
+
+    reponse = api_client.get("/indicateurs")
+    if reponse["status_code"] == 200:
+        indicateurs = reponse["data"]
+"""
 
 import os
 
@@ -14,13 +15,17 @@ import dotenv
 import requests
 import streamlit as st
 
-# charge le .env (cherché en remontant les dossiers depuis ce fichier : on trouve celui de la racine)
+# charge le .env (cherché en remontant les dossiers depuis ce fichier : on trouve celui de la
+# racine)
 dotenv.load_dotenv()
 
-# Adresse du backend. Streamlit et l'API tournent sur la même machine (le service VSCode Onyxia pour nous) :
-# c'est le serveur Streamlit, et non le navigateur, qui appelle l'API, donc localhost fonctionne (on fait pas une vrai app en ligne).
+# Adresse du backend. Streamlit et l'API tournent sur la même machine (le service VSCode Onyxia pour
+# nous) :
+# c'est le serveur Streamlit, et non le navigateur, qui appelle l'API, donc localhost fonctionne (on
+# fait pas une vrai app en ligne).
 API_URL = os.getenv("BACKEND_URL", "http://localhost:5000")
-DEFAULT_TIMEOUT = int(os.getenv("BACKEND_TIMEOUT") or 10)  # 10 secondes d.v. si ce n'est pas rensigné dans le .env
+# 10 secondes d.v. si ce n'est pas rensigné dans le .env
+DEFAULT_TIMEOUT = int(os.getenv("BACKEND_TIMEOUT") or 10)
 
 
 class APIClient:
@@ -86,12 +91,16 @@ class APIClient:
         except requests.exceptions.Timeout:
             return {"status_code": 0, "data": "Le backend ne répond pas (délai dépassé)."}
         except requests.exceptions.ConnectionError:
-            return {"status_code": 0, "data": f"Impossible de joindre le backend ({self.base_url}). Est-il lancé ?"}
+            return {
+                "status_code": 0,
+                "data": f"Impossible de joindre le backend ({self.base_url}). Est-il lancé ?",
+            }
         except requests.exceptions.RequestException as e:
             return {"status_code": 0, "data": str(e)}
 
     def get(self, path: str, params: dict | None = None, **kwargs) -> dict:
-        """Envoie une requête GET (lecture). params : paramètres d'URL, ex {'pays': ['FRA', 'ESP']}"""
+        """Envoie une requête GET (lecture). params : paramètres d'URL, ex {'pays': ['FRA',
+        'ESP']}"""
         return self._request("GET", path, params=params, **kwargs)
 
     def post(self, path: str, json=None, **kwargs) -> dict:
@@ -143,7 +152,10 @@ class APIClient:
         except requests.exceptions.Timeout:
             return {"status_code": 0, "data": "Le backend ne répond pas (délai dépassé)."}
         except requests.exceptions.ConnectionError:
-            return {"status_code": 0, "data": f"Impossible de joindre le backend ({self.base_url})."}
+            return {
+                "status_code": 0,
+                "data": f"Impossible de joindre le backend ({self.base_url}).",
+            }
         except requests.exceptions.RequestException as e:
             return {"status_code": 0, "data": str(e)}
 

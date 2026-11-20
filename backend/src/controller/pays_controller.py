@@ -1,3 +1,4 @@
+"""Endpoint de la liste des pays disponibles, préfixe /pays (c.f. main.py)."""
 
 from fastapi import APIRouter
 

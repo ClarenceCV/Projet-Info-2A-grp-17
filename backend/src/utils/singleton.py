@@ -1,5 +1,6 @@
-# utile pour créer une instance unique dans le dao.db_connection
-# c.f. tp3
+"""utile pour créer une instance unique dans le dao.db_connection
+c.f. tp3
+"""
 
 class Singleton(type):
     """

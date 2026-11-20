@@ -1,6 +1,7 @@
-# Page « Gestion des utilisateurs » (administrateurs) : liste, création, suppression des comptes.
-# Endpoints utilisés : GET / POST /admin/utilisateurs, DELETE /admin/utilisateurs/{id}
-# Responsable : B
+"""Page « Gestion des utilisateurs » (administrateurs) : liste, création, suppression des comptes.
+Endpoints utilisés : GET / POST /admin/utilisateurs, DELETE /admin/utilisateurs/{id}
+Responsable : B
+"""
 
 import pandas as pd
 import streamlit as st
@@ -21,7 +22,7 @@ if "message_admin" in st.session_state:
 
 reponse = api_client.get("/admin/utilisateurs")
 if reponse["status_code"] != 200:
-    st.error(message_erreur(reponse) if reponse["status_code"] else reponse["data"])
+    st.error(message_erreur(reponse))
     st.stop()
 utilisateurs = reponse["data"]  # liste de dict : id, pseudo, role, date_creation
 
@@ -45,13 +46,14 @@ with colonne_gauche:
 
     if ajouter:
         reponse = api_client.post(
-            "/admin/utilisateurs", json={"pseudo": pseudo, "mot_de_passe": mot_de_passe, "role": role}
+            "/admin/utilisateurs",
+            json={"pseudo": pseudo, "mot_de_passe": mot_de_passe, "role": role},
         )
         if reponse["status_code"] == 201:
             st.session_state["message_admin"] = f"Compte « {pseudo} » créé ({role})."
             st.rerun()  # relance la page : le tableau ci-dessus inclura le nouveau compte
         else:
-            st.error(message_erreur(reponse) if reponse["status_code"] else reponse["data"])
+            st.error(message_erreur(reponse))
 
 # --- Supprimer un compte ------------------------------------------------------------------
 
@@ -72,4 +74,4 @@ with colonne_droite:
                 st.session_state["message_admin"] = f"Compte « {a_supprimer['pseudo']} » supprimé."
                 st.rerun()
             else:
-                st.error(message_erreur(reponse) if reponse["status_code"] else reponse["data"])
+                st.error(message_erreur(reponse))

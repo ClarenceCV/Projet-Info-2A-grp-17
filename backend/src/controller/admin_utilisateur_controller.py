@@ -1,6 +1,7 @@
-# Endpoints d'administration des comptes (préfixe /admin/utilisateurs, c.f. main.py)
-# (les données et les logs sont dans admin_donnees_controller.py)
-# Tous réservés aux administrateurs : Depends(admin_requis) → 401 si pas connecté, 403 si pas admin.
+"""Endpoints d'administration des comptes (préfixe /admin/utilisateurs, c.f. main.py)
+(les données et les logs sont dans admin_donnees_controller.py)
+Tous réservés aux administrateurs : Depends(admin_requis) → 401 si pas connecté, 403 si pas admin.
+"""
 
 from dataclasses import asdict
 
@@ -8,34 +9,31 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from business_object.utilisateur import Utilisateur
 from controller.auth import admin_requis
+from controller.utilisateur_controller import creer_compte_ou_erreur_400
 from schema.utilisateur_model import CreationUtilisateurModel, UtilisateurModel
 from service.utilisateur_service import UtilisateurService
 
 router = APIRouter()
 
 
-@router.get("", response_model=list[UtilisateurModel])
-def lister_utilisateurs(admin: Utilisateur = Depends(admin_requis)):
+@router.get("", response_model=list[UtilisateurModel], dependencies=[Depends(admin_requis)])
+def lister_utilisateurs():
     """Liste tous les comptes (utilisateurs et administrateurs)."""
     return [UtilisateurModel(**asdict(u)) for u in UtilisateurService().lister()]
 
 
 @router.post("", response_model=UtilisateurModel, status_code=status.HTTP_201_CREATED)
-def creer_utilisateur(nouveau: CreationUtilisateurModel, admin: Utilisateur = Depends(admin_requis)):
+def creer_utilisateur(
+    nouveau: CreationUtilisateurModel, admin: Utilisateur = Depends(admin_requis)
+):
     """
     Crée un compte, utilisateur ou administrateur.
     Erreur 400 si le pseudo ou le mot de passe est invalide, ou si le pseudo est déjà pris.
     """
-    try:
-        utilisateur = UtilisateurService().creer_compte(
-            nouveau.pseudo, nouveau.mot_de_passe, nouveau.role, auteur=admin  # l'admin est noté au journal
-        )
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e)) from e
-
-    if utilisateur is None:
-        raise HTTPException(status_code=400, detail="Ce pseudo est déjà utilisé.")
-    return UtilisateurModel(**asdict(utilisateur))
+    # auteur=admin : c'est l'admin qui est noté au journal
+    return creer_compte_ou_erreur_400(
+        nouveau.pseudo, nouveau.mot_de_passe, nouveau.role, auteur=admin
+    )
 
 
 @router.delete("/{id_utilisateur}")

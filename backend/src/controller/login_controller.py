@@ -1,5 +1,6 @@
-# Endpoints de connexion (sans préfixe, c.f. main.py) : POST /login, POST /logout
-# (repris du template ENSAI : backend/src/controller/login_controller.py)
+"""Endpoints de connexion (sans préfixe, c.f. main.py) : POST /login, POST /logout
+(repris du template ENSAI : backend/src/controller/login_controller.py)
+"""
 
 from dataclasses import asdict
 

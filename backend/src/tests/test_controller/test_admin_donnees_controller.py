@@ -11,18 +11,12 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from business_object.utilisateur import Utilisateur
 from controller import admin_donnees_controller
 from fetcher.data_processing import DataProcessing
 from service.journal_service import JournalService
 from service.observation_service import ObservationService
 from service.utilisateur_service import UtilisateurService
-
-JDUPONT = Utilisateur(pseudo="jdupont", role="utilisateur", id=1)
-ADMIN = Utilisateur(pseudo="admin", role="admin", id=2)
-EN_TETE_USER = {"X-Auth-Token": "token-user"}
-EN_TETE_ADMIN = {"X-Auth-Token": "token-admin"}
-TOKENS = {"token-user": JDUPONT, "token-admin": ADMIN}
+from tests.test_controller.faux_comptes import ADMIN, EN_TETE_ADMIN, EN_TETE_USER, TOKENS
 
 # Une observation, identifiée par sa clé (corps des requêtes PUT et DELETE)
 CLE = {
@@ -36,8 +30,8 @@ app.include_router(admin_donnees_controller.router, prefix="/admin")
 client = TestClient(app)
 
 
-@pytest.fixture(autouse=True)
-def faux_journal():
+@pytest.fixture(name="faux_journal", autouse=True)
+def fixture_faux_journal():
     """Avant chaque test : faux tokens (c.f. TOKENS) et faux journal, que le test peut inspecter."""
     with patch.object(UtilisateurService, "trouver_par_token", side_effect=TOKENS.get), \
          patch.object(JournalService, "enregistrer", return_value=True) as faux:
@@ -120,7 +114,9 @@ def test_journal_indisponible_ne_bloque_pas_la_suppression(faux_journal):
 
 def test_logs_renvoie_les_dernieres_lignes(tmp_path):
     # GIVEN : un faux fichier de logs de 10 lignes (tmp_path : dossier temporaire fourni par pytest)
-    (tmp_path / "laborscope.log").write_text("".join(f"ligne {i}\n" for i in range(10)), encoding="utf-8")
+    (tmp_path / "laborscope.log").write_text(
+        "".join(f"ligne {i}\n" for i in range(10)), encoding="utf-8"
+    )
     with patch.object(admin_donnees_controller, "LOG_DIR", tmp_path):
         reponse = client.get("/admin/logs", params={"lignes": 3}, headers=EN_TETE_ADMIN)
     # THEN : seulement les 3 dernières

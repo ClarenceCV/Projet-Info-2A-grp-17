@@ -1,7 +1,10 @@
+"""Objet métier Utilisateur : un compte de l'application et son rôle (F6)."""
+
 from dataclasses import dataclass
 from datetime import datetime
 
-# rôles possibles (même liste que la contrainte CHECK de la table utilisateur, c.f. data/init_db.sql)
+# rôles possibles (même liste que la contrainte CHECK de la table utilisateur, c.f.
+# data/init_db.sql)
 ROLES = ("utilisateur", "admin")
 
 

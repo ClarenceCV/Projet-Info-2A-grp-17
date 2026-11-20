@@ -1,19 +1,20 @@
-# Ce fichier centralise tout ce qui concerne les autorisations de connexion (admin/user)
-#
-# Il y a donc toutes les fonctions exécutées par FastAPI AVANT un endpoint (avec Depends)
-# pour savoir qui fait la requête et s'il en a le droit.
-#
-# Utilisation dans un controller :
-#     from fastapi import Depends
-#     from controller.auth import utilisateur_connecte, admin_requis
-#
-#     @router.get("/...")
-#     def mon_endpoint(..., utilisateur=Depends(utilisateur_connecte)):   # connecté (sinon 401)
-#     def mon_endpoint(..., utilisateur=Depends(admin_requis)):           # admin (sinon 401 / 403)
-#
-# Le client envoie son token (obtenu avec POST /login) dans l'en-tête HTTP 'X-Auth-Token'.
-# Dans /docs : bouton « Authorize » en haut à droite, coller le token une fois pour toutes.
-# (inspiré du template ENSAI : verify_token dans backend/src/utils/security.py)
+"""Ce fichier centralise tout ce qui concerne les autorisations de connexion (admin/user)
+
+Il y a donc toutes les fonctions exécutées par FastAPI AVANT un endpoint (avec Depends)
+pour savoir qui fait la requête et s'il en a le droit.
+
+Utilisation dans un controller :
+    from fastapi import Depends
+    from controller.auth import utilisateur_connecte, admin_requis
+
+    @router.get("/...")
+    def mon_endpoint(..., utilisateur=Depends(utilisateur_connecte)):   # connecté (sinon 401)
+    def mon_endpoint(..., utilisateur=Depends(admin_requis)):           # admin (sinon 401 / 403)
+
+Le client envoie son token (obtenu avec POST /login) dans l'en-tête HTTP 'X-Auth-Token'.
+Dans /docs : bouton « Authorize » en haut à droite, coller le token une fois pour toutes.
+(inspiré du template ENSAI : verify_token dans backend/src/utils/security.py)
+"""
 
 from fastapi import Depends, HTTPException, Security
 from fastapi.security import APIKeyHeader

@@ -1,8 +1,9 @@
-# Hachage des mots de passe avec bcrypt (sujet : « Sécurité : bcrypt, sessions/tokens »)
-# (inspiré du template ENSAI : backend/src/utils/security.py, qui utilise SHA-256)
-#
-# On ne stocke JAMAIS un mot de passe : seulement son hash, calculé à sens unique.
-# Pour vérifier une connexion, on recalcule et on compare avec bcrypt.checkpw.
+"""Hachage des mots de passe avec bcrypt (sujet : « Sécurité : bcrypt, sessions/tokens »)
+(inspiré du template ENSAI : backend/src/utils/security.py, qui utilise SHA-256)
+
+On ne stocke JAMAIS un mot de passe : seulement son hash, calculé à sens unique.
+Pour vérifier une connexion, on recalcule et on compare avec bcrypt.checkpw.
+"""
 
 import bcrypt
 

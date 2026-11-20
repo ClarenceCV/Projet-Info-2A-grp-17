@@ -1,16 +1,20 @@
-# Menus déroulants communs à toutes les pages d'analyse (évolution, comparaison, carte, multi-indicateurs...).
-# Chaque fonction affiche un menu et renvoie le choix de l'utilisateur.
-#
-# Utilisation dans une page :
-#     from utils.selecteurs import choisir_indicateur, choisir_pays, choisir_sexe, choisir_classif1
-#
-#     indicateur = choisir_indicateur()               # ex : 'EMP_5WAP_SEX_AGE_RT_Q'
-#     pays = choisir_pays()                           # ex : ['FRA', 'ESP']
-#     classif1 = choisir_classif1(indicateur)         # ex : '15+'
-#     sexe = choisir_sexe()                           # ex : 'Total'
-#
-# Si une page affiche deux fois le même menu (ex : multi-indicateurs), donner un paramètre `cle`
-# différent à chaque fois (ex : cle="serie1", cle="serie2").
+"""Menus déroulants communs à toutes les pages d'analyse (évolution, comparaison, carte, multi-
+indicateurs...).
+Chaque fonction affiche un menu et renvoie le choix de l'utilisateur.
+
+Utilisation dans une page :
+    from utils.selecteurs import choisir_indicateur, choisir_pays, choisir_sexe, choisir_classif1
+
+    indicateur = choisir_indicateur()               # ex : 'EMP_5WAP_SEX_AGE_RT_Q'
+    pays = choisir_pays()                           # ex : ['FRA', 'ESP']
+    classif1 = choisir_classif1(indicateur)         # ex : '15+'
+    sexe = choisir_sexe()                           # ex : 'Total'
+
+Si une page affiche deux fois le même menu (ex : multi-indicateurs), donner un paramètre `cle`
+différent à chaque fois (ex : cle="serie1", cle="serie2").
+
+Pour les 4 filtres d'un coup, sur deux colonnes : filtres = choisir_filtres()
+"""
 
 import streamlit as st
 
@@ -137,5 +141,30 @@ def choisir_classif1(code_indicateur: str | None, cle: str = "") -> str | None:
     index = next((modalites.index(v) for v in CLASSIF1_PAR_DEFAUT if v in modalites), 0)
     return st.selectbox(
         "Profession / tranche d'âge", options=modalites, index=index,
-        key=f"classif1_{cle}_{code_indicateur}",  # nouvel indicateur → nouveau menu (liste différente)
+        # nouvel indicateur → nouveau menu (liste différente)
+        key=f"classif1_{cle}_{code_indicateur}",
     )
+
+
+def choisir_filtres(cle: str = "") -> dict:
+    """
+    Les 4 menus (indicateur, pays, modalité, sexe) côte à côte sur deux colonnes.
+    Si un choix manque, affiche un message et arrête la page (st.stop()).
+
+    Returns:
+        dict: les filtres, prêts à envoyer à l'API, ex :
+            {"indicateur": "EMP_5WAP_SEX_AGE_RT_Q", "pays": ["FRA"],
+             "classif1": "15+", "sexe": "Total"}
+    """
+    colonne_gauche, colonne_droite = st.columns(2)
+    with colonne_gauche:
+        indicateur = choisir_indicateur(cle=cle)
+        pays = choisir_pays(cle=cle)
+    with colonne_droite:
+        classif1 = choisir_classif1(indicateur, cle=cle)
+        sexe = choisir_sexe(cle=cle)
+
+    if not (indicateur and pays and classif1):
+        st.info("Choisissez un indicateur, au moins un pays et une modalité.")
+        st.stop()  # arrête l'exécution de la page ici (rien ne s'affiche en dessous)
+    return {"indicateur": indicateur, "pays": pays, "classif1": classif1, "sexe": sexe}

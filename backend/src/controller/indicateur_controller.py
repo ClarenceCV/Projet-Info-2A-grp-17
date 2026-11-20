@@ -1,4 +1,4 @@
-# Endpoints de l'API concernant les indicateurs (préfixe /indicateurs, c.f. main.py)
+"""Endpoints de l'API concernant les indicateurs (préfixe /indicateurs, c.f. main.py)"""
 
 from dataclasses import asdict
 
@@ -33,6 +33,10 @@ async def indicateur_par_code(code: str):
 
 @router.get("/{code}/classif1", response_model=IndicateurClassif1Model)
 async def liste_classif1(code: str):
+    """
+    Liste les modalités de classif1 présentes en base pour un indicateur
+    (professions ou tranches d'âge selon l'indicateur). Erreur 404 si l'indicateur est inconnu.
+    """
     indicateur = IndicateurService().trouver_par_code(code)
     if indicateur is None:
         raise HTTPException(status_code=404, detail=f"Indicateur {code} introuvable.")

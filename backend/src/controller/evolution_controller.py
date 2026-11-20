@@ -1,3 +1,5 @@
+"""Endpoint de l'évolution d'un indicateur dans le temps (F3), préfixe /analyses (c.f. main.py)."""
+
 from typing import Literal
 
 from fastapi import APIRouter, HTTPException, Query

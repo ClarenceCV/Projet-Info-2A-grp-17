@@ -1,19 +1,23 @@
-# Point d'entrée de l'interface Streamlit LaborScope : construit le menu selon le rôle de l'utilisateur
-# (c.f. diagrammes d'activité du rapport : visiteur → connexion → menu utilisateur / menu administrateur).
-#
-# Lancement (depuis le dossier frontend, avec l'API lancée dans un autre terminal) :
-#     uv run streamlit run src/app.py
-# Puis ouvrir le lien du port 8000 (sur Onyxia : Mes services > VSCode > Ouvrir)
-#
-# Ce fichier est exécuté à CHAQUE clic, puis il exécute la page choisie (pg.run()).
-# Pour ajouter une page : créer le fichier dans pages/ puis l'ajouter dans la bonne liste ci-dessous.
+"""Point d'entrée de l'interface Streamlit LaborScope : construit le menu selon le rôle de
+l'utilisateur
+(c.f. diagrammes d'activité du rapport : visiteur → connexion → menu utilisateur / menu
+administrateur).
+
+Lancement (depuis le dossier frontend, avec l'API lancée dans un autre terminal) :
+    uv run streamlit run src/app.py
+Puis ouvrir le lien du port 8000 (sur Onyxia : Mes services > VSCode > Ouvrir)
+
+Ce fichier est exécuté à CHAQUE clic, puis il exécute la page choisie (pg.run()).
+Pour ajouter une page : créer le fichier dans pages/ puis l'ajouter dans la bonne liste ci-dessous.
+"""
 
 import streamlit as st
 
 from utils.auth_guard import verifier_session
 from utils.session import deconnecter
 
-# Réglages de l'onglet du navigateur : doit être la première commande Streamlit (une seule fois, ici)
+# Réglages de l'onglet du navigateur : doit être la première commande Streamlit (une seule fois,
+# ici)
 st.set_page_config(page_title="LaborScope", page_icon="📊", layout="wide")
 
 # --- Les pages (fichier, titre dans le menu, icône) -------------------------------------
@@ -29,9 +33,15 @@ pages_visiteur = [
 pages_analyses = [
     st.Page("pages/explorer.py", title="Explorer les données", icon=":material/table:"),
     st.Page("pages/evolution.py", title="Évolution (F3)", icon=":material/show_chart:"),
-    st.Page("pages/comparaison_pays.py", title="Comparaison pays (F4)", icon=":material/bar_chart:"),
+    st.Page(
+        "pages/comparaison_pays.py", title="Comparaison pays (F4)", icon=":material/bar_chart:"
+    ),
     st.Page("pages/carte.py", title="Carte du monde (FO2)", icon=":material/public:"),
-    st.Page("pages/multi_indicateurs.py", title="Multi-indicateurs (F5)", icon=":material/stacked_line_chart:"),
+    st.Page(
+        "pages/multi_indicateurs.py",
+        title="Multi-indicateurs (F5)",
+        icon=":material/stacked_line_chart:",
+    ),
     st.Page("pages/rapport.py", title="Rapport PDF (FO3)", icon=":material/picture_as_pdf:"),
 ]
 
@@ -44,7 +54,8 @@ pages_admin = [
 # --- Le menu, selon le rôle ----------------------------------------------------------------
 
 verifier_session()  # le token est-il toujours valable ? (sinon : retour au menu du visiteur)
-role = st.session_state.get("role")  # None (pas connecté), 'utilisateur' ou 'admin' (c.f. utils/session.py)
+# None (pas connecté), 'utilisateur' ou 'admin' (c.f. utils/session.py)
+role = st.session_state.get("role")
 
 if role is None:
     menu = {"": [accueil] + pages_visiteur}

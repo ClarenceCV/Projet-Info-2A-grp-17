@@ -4,10 +4,10 @@
 des selections par l'utilisateur et previsualisation avant telechargement.
 """
 
-import base64
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+
 from utils.api_client import api_client
 from utils.auth_guard import exiger_connexion
 
@@ -24,6 +24,12 @@ st.markdown(
 # ------------------------------------------------------------------------------
 @st.cache_data(ttl=3600)
 def charger_metadonnees() -> tuple[dict[str, str], list[str]]:
+    """
+    Indicateurs et pays disponibles, lus dans l'API (mis en cache une heure).
+
+    Returns:
+        tuple[dict[str, str], list[str]]: {code: libellé} des indicateurs, et codes ISO des pays
+    """
     res_ind = api_client.get("/indicateurs")
     res_pays = api_client.get("/pays")
 
@@ -43,12 +49,12 @@ def charger_metadonnees() -> tuple[dict[str, str], list[str]]:
             "EMP_5EMP_SEX_OC2_NB_Q": "Emploi total par profession",
         }
 
-    liste_pays = (
+    codes_pays = (
         [p.get("code_iso", p) for p in res_pays["data"] if isinstance(p, dict)]
         if res_pays.get("status_code") == 200 and isinstance(res_pays.get("data"), list)
         else ["FRA", "DEU", "ESP", "ITA", "USA"]
     )
-    return dict_ind, liste_pays
+    return dict_ind, codes_pays
 
 
 @st.cache_data(ttl=3600)
@@ -183,7 +189,8 @@ else:
                 },
             )
             fig.update_layout(
-                legend=dict(orientation="h", yanchor="bottom", y=-0.35, xanchor="center", x=0.5)
+                legend={"orientation": "h", "yanchor": "bottom", "y": -0.35,
+                        "xanchor": "center", "x": 0.5}
             )
             st.plotly_chart(fig, width="stretch")
 
