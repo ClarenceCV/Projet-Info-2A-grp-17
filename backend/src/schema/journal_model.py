@@ -1,4 +1,4 @@
-# Format JSON du journal des actions renvoyé par l'API (GET /admin/journal).
+""" Format JSON du journal des actions renvoyé par l'API (GET /admin/journal). """
 
 from datetime import datetime
 

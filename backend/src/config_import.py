@@ -1,5 +1,7 @@
-# Configuration de l'import ILOSTAT : le seul endroit à modifier pour suivre
-# un nouvel indicateur ou un nouveau pays.
+"""
+Configuration de l'import ILOSTAT : le seul endroit à modifier pour suivre
+un nouvel indicateur ou un nouveau pays.
+"""
 
 from business_object.indicateur import Indicateur
 
@@ -18,11 +20,26 @@ INDICATEURS = [
         frequence="Q",
         nom_classif1="tranche_age",
     ),
+    Indicateur(
+        code="UNE_5EAP_SEX_AGE_RT_Q",
+        libelle="Taux de chômage par sexe et par âge",
+        unite="%",
+        frequence="Q",
+        nom_classif1="tranche_age"
+    )
 ]
 
-# Pour tester, ensuite on importe tout
 # Codes ISO des pays importés (les noms des pays arrivent avec les données de l'API)
-PAYS_SUIVIS = ["FRA", "DEU", "ESP", "ITA"]
+PAYS_SUIVIS = [
+    "AGO", "ARM", "AUS", "AUT", "BHS", "BGD", "BRB", "BEL", "BLZ", "BIH",
+    "BWA", "BRA", "BGR", "CAN", "CHL", "CRI", "HRV", "CYP", "CZE", "DNK",
+    "DJI", "ECU", "EGY", "EST", "FIN", "FRA", "GMB", "GEO", "DEU", "GHA",
+    "GRC", "GTM", "GUY", "HUN", "ISL", "IDN", "IRL", "ISR", "ITA", "JAM",
+    "JPN", "JOR", "KEN", "XKX", "LVA", "LTU", "LUX", "MLT", "MNG", "NLD",
+    "NGA", "NOR", "PAK", "POL", "PRT", "KOR", "MDA", "ROU", "RUS", "RWA",
+    "SAU", "SRB", "SYC", "SGP", "SVK", "SVN", "ZAF", "ESP", "SWE", "CHE",
+    "TZA", "THA", "TTO", "TUN", "GBR", "USA", "URY", "VNM", "ZMB", "ZWE",
+]
 
 # Première année importée
 ANNEE_DEBUT = 2020

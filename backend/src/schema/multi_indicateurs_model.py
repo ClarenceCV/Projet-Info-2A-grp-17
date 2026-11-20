@@ -1,29 +1,21 @@
 """Schémas Pydantic pour la fonctionnalité F5 (Comparaison Multi-Indicateurs)."""
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 class SelectionModel(BaseModel):
-    """Filtres d'une courbe envoyés par le client (Streamlit / Client HTTP)."""
+    """Une série à comparer (indicateur, pays, filtres)."""
 
-    model_config = ConfigDict(populate_by_name=True)
+    indicateur: str = Field(..., alias="code_indicateur")
+    pays: str = Field(..., alias="code_iso")
+    classif1: str | None = None
+    sexe: str = "Total"
 
-    indicateur: str = Field(
-        ...,
-        alias="code",
-        description="Code de l'indicateur (ex: 'EMP_5EMP_SEX_OC2_NB_Q')",
-    )
-    pays: str = Field(..., description="Code ISO3 du pays (ex: 'FRA')")
-    classif1: str = Field(..., description="Classification (ex: 'Total')")
-    sexe: str = Field("Total", description="Filtre sexe")
+    model_config = {"populate_by_name": True}
 
 
-class PointSerieModel(BaseModel):
-    """Point de donnée renvoyé dans la réponse JSON de l'API."""
+class MultiIndicateursRequest(BaseModel):
+    """Requête de comparaison : 1 à 4 séries."""
 
-    serie: str = Field(..., description="Libellé complet de la série")
-    indicateur: str = Field(..., description="Code de l'indicateur")
-    periode: str = Field(..., description="Période (ex: '2024Q4')")
-    valeur: float = Field(..., description="Valeur brute")
-    unite: str = Field(..., description="Unité d'origine")
-    valeur_base100: float = Field(..., description="Valeur calculée en base 100")
+    selections: list[SelectionModel] = Field(..., min_length=1, max_length=4)
+    base_100: bool = True

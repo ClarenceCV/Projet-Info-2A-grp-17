@@ -1,4 +1,4 @@
-# Format JSON des observations échangé entre le backend et ses clients (navigateur, frontend).
+"""Format JSON des observations échangé entre le backend et ses clients (navigateur, frontend)."""
 
 from pydantic import BaseModel
 
@@ -22,11 +22,14 @@ class ObservationModel(BaseModel):
     unite: str
     statut: str | None = None
 
+
 class CleObservationModel(BaseModel):
     """
     Clé complète d'une observation (les 6 colonnes de sa clé primaire).
-    L'indicateur est donné par son CODE (comme dans ObservationModel) : le frontend ne connaît pas les id.
-    ex : {"indicateur": "EMP_5WAP_SEX_AGE_RT_Q", "code_iso": "FRA", "source": "LFS - Employment Survey",
+    L'indicateur est donné par son CODE (comme dans ObservationModel) :
+    le frontend ne connaît pas les id.
+    ex : {"indicateur": "EMP_5WAP_SEX_AGE_RT_Q", "code_iso": "FRA",
+          "source": "LFS - Employment Survey",
           "periode": "2024Q4", "sexe": "Female", "classif1": "15-24"}
     """
     indicateur: str

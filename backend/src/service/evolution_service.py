@@ -1,5 +1,7 @@
-# Logique métier de la fonctionnalité F3 : évolution d'un indicateur sur les N dernières périodes.
-# Le controller appelle le service, le service appelle le DAO (et fait les calculs avec pandas).
+"""
+Logique métier de la fonctionnalité F3 : évolution d'un indicateur sur les N dernières périodes.
+Le controller appelle le service, le service appelle le DAO (et fait les calculs avec pandas).
+"""
 
 import numpy as np
 import pandas as pd
@@ -20,7 +22,7 @@ class EvolutionService:
     def evolution(
         self,
         code_indicateur: str,
-        pays: list[str],            
+        pays: list[str],
         classif1: str,
         sexe: str = "Total",
         n_periodes: int = 8
@@ -64,7 +66,8 @@ class EvolutionService:
         precedente = df.groupby("code_iso")["valeur"].shift(1)
         df["variation_abs"] = df["valeur"] - precedente
         # variation en % ; si la valeur précédente vaut 0 le % n'est pas défini -> NaN (pas inf)
-        df["variation_pct"] = (df["variation_abs"] / precedente * 100).replace([np.inf, -np.inf], np.nan)
+        variation = df["variation_abs"] / precedente * 100
+        df["variation_pct"] = variation.replace([np.inf, -np.inf], np.nan)
 
         # 4. on ne garde que les n dernières périodes de chaque pays
         df = df.groupby("code_iso").tail(n_periodes)

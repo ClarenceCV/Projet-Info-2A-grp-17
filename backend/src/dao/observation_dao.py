@@ -1,9 +1,12 @@
-# Accès à la table observation. Entrée : DataFrame ; sortie : sql (et inversement pour les lectures)
+""" Accès à la table observation. Entrée : DataFrame ; 
+sortie : sql (et inversement pour les lectures)"""
 
 import pandas as pd
-from dao.db_connection import DBConnection
 from psycopg2.extras import execute_values
 from schema.observation_model import CleObservationModel
+from utils.log_utils import log
+
+from dao.db_connection import DBConnection
 
 # Colonnes du DataFrame propre envoyées dans la table observation (même nom des deux côtés)
 COLONNES_OBSERVATION = ["code_iso", "source", "periode", "sexe", "classif1", "valeur", "statut"]
@@ -38,7 +41,10 @@ class ObservationDAO:
             return 0
 
         # une ligne du DataFrame -> un tuple (indicateur_id, code_iso, source, ..., statut)
-        lignes = [(indicateur_id, *ligne) for ligne in df[COLONNES_OBSERVATION].itertuples(index=False)]
+        lignes = [
+            (indicateur_id, *ligne)
+            for ligne in df[COLONNES_OBSERVATION].itertuples(index=False)
+        ]
 
         with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
@@ -156,6 +162,7 @@ class ObservationDAO:
                 lignes = cursor.fetchall()
         return [ligne["classif1"] for ligne in lignes]
 
+    @log
     def modifier(
         self,
         cle: CleObservationModel,
@@ -189,6 +196,7 @@ class ObservationDAO:
                 cursor.execute(requete, parametres)
                 return cursor.rowcount == 1
 
+    @log
     def supprimer(self, cle: CleObservationModel) -> bool:
         """
         Supprime une observation identifiée par sa clé primaire.

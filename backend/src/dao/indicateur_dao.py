@@ -1,4 +1,4 @@
-# Accès à la table indicateur. Entrée : objet Indicateur ; sortie : sql
+""" Accès à la table indicateur. Entrée : objet Indicateur ; sortie : sql """
 
 from dataclasses import asdict
 
@@ -23,7 +23,8 @@ class IndicateurDAO:
         with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO laborscope.indicateur (code, libelle, unite, frequence, nom_classif1) "
+                    "INSERT INTO laborscope.indicateur "
+                    "(code, libelle, unite, frequence, nom_classif1) "
                     "VALUES (%(code)s, %(libelle)s, %(unite)s, %(frequence)s, %(nom_classif1)s) "
                     "ON CONFLICT (code) DO UPDATE SET "
                     "    libelle = EXCLUDED.libelle, "
@@ -50,7 +51,8 @@ class IndicateurDAO:
                 )
                 lignes = cursor.fetchall()
 
-        # chaque ligne est un dict {'code': ..., 'libelle': ...} : ** le transforme en arguments nommés
+        # chaque ligne est un dict {'code': ..., 'libelle': ...} :
+        # ** le transforme en arguments nommés
         return [Indicateur(**ligne) for ligne in lignes]
 
     def trouver_par_code(self, code: str) -> Indicateur | None:

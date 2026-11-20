@@ -1,4 +1,12 @@
-"""Tests unitaires pour la fonctionnalité FO3 (RapportService)."""
+"""
+Tests du service de rapport (FO3).
+Les services d'évolution et de comparaison sont remplacés par des faux (patch)
+qui renvoient de petits DataFrames écrits à la main : les tests ne dépendent
+ni de la base ni d'ILOSTAT, et on connaît le résultat attendu.
+
+Lancement (depuis la racine du projet) :
+     uv run pytest backend/src/tests
+"""
 
 from unittest.mock import patch
 
@@ -38,6 +46,12 @@ def sample_comparaison_df() -> dict:
 
 
 def test_resume_statistique(sample_evolution_df):
+    """
+    Vérifie que `resume_statistique` calcule, pour chaque pays, le minimum,
+    le maximum, la moyenne et l'évolution entre la première et la dernière
+    période : la France (100 -> 105) a une évolution de +5.0 et une moyenne
+    de 102.5, l'Allemagne (200 -> 195) une évolution de -5.0.
+    """
     service = RapportService()
     stats = service.resume_statistique(sample_evolution_df)
 
@@ -52,6 +66,11 @@ def test_resume_statistique(sample_evolution_df):
 
 
 def test_conclusion(sample_evolution_df, sample_comparaison_df):
+    """
+    Vérifie que le texte de conclusion généré à partir des statistiques et
+    de la comparaison mentionne les deux pays (France et Allemagne) ainsi
+    que l'expression "valeur la plus elevee".
+    """
     service = RapportService()
     stats = service.resume_statistique(sample_evolution_df)
     conclusion_txt = service.conclusion(stats, sample_comparaison_df)
@@ -79,10 +98,20 @@ def test_conclusion_sans_donnees():
 
 
 def test_generer_pdf_retourne_octets_valides(sample_evolution_df, sample_comparaison_df):
+    """
+    Vérifie que `generer` produit un rapport PDF sans erreur, les services
+    d'évolution et de comparaison étant remplacés par des faux qui renvoient
+    des DataFrames synthétiques (pas de base de données).
+    """
     service = RapportService()
 
-    with patch("service.evolution_service.EvolutionService.evolution", return_value=sample_evolution_df), \
-         patch("service.comparaison_pays_service.ComparaisonPaysService.comparer_pays", return_value=sample_comparaison_df):
+    with patch(
+        "service.evolution_service.EvolutionService.evolution", return_value=sample_evolution_df
+        ), \
+            patch(
+            "service.comparaison_pays_service.ComparaisonPaysService.comparer_pays", 
+            return_value=sample_comparaison_df
+            ):
 
         pdf_bytes = service.generer(
             code_indicateur="IND_TEST",

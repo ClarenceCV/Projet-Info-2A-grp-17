@@ -1,86 +1,87 @@
 """Page Streamlit - Rapport PDF (FO3).
 
-Selecteurs -> api_client -> Telechargement direct du PDF.
+Filtres centres, previsualisation integree du PDF et telechargement optionnel.
 """
 
+import base64
 import streamlit as st
 from utils.api_client import api_client
 from utils.auth_guard import exiger_connexion
 
-# Protege l'acces a la page (redirection vers /login si non connecte)
 exiger_connexion()
 
-st.title("Rapport PDF (FO3)")
+st.title("Rapport d'Analyse PDF (FO3)")
 st.markdown(
-    "Generez et telechargez une synthese d'analyse au format PDF combinant "
-    "evolutions temporelles, comparaisons entre pays et conclusions statistiques automatiques."
+    "Configurez vos filtres ci-dessous, previsualisez le rapport genere directement a l'ecran, "
+    "puis telechargez-le uniquement s'il vous convient."
 )
 
 # ------------------------------------------------------------------------------
-# 1. Chargement des metadonnees pour les selecteurs
+# 1. Chargement des metadonnees
 # ------------------------------------------------------------------------------
 @st.cache_data(ttl=3600)
-def charger_filtres() -> tuple[list[dict], list[dict]]:
-    """Recupere la liste des indicateurs et des pays via l'API client."""
+def charger_filtres() -> tuple[dict[str, str], list[str]]:
     res_ind = api_client.get("/indicateurs")
     res_pays = api_client.get("/pays")
 
-    indicateurs = res_ind["data"] if res_ind.get("status_code") == 200 and isinstance(res_ind.get("data"), list) else []
-    pays = res_pays["data"] if res_pays.get("status_code") == 200 and isinstance(res_pays.get("data"), list) else []
-    return indicateurs, pays
+    dict_ind = {}
+    if res_ind.get("status_code") == 200 and isinstance(res_ind.get("data"), list):
+        for ind in res_ind["data"]:
+            code = ind.get("code", ind.get("code_indicateur"))
+            if code:
+                dict_ind[code] = ind.get("libelle", code)
+
+    if not dict_ind:
+        dict_ind = {"EMP_5EMP_SEX_OC2_NB_Q": "Emploi total par profession"}
+
+    liste_pays = (
+        [p.get("code_iso", p) for p in res_pays["data"] if isinstance(p, dict)]
+        if res_pays.get("status_code") == 200 and isinstance(res_pays.get("data"), list)
+        else ["FRA", "DEU", "ESP", "ITA"]
+    )
+    return dict_ind, liste_pays
 
 
-indicateurs_dispo, pays_dispo = charger_filtres()
-
-# Dictionnaire pour formater le menu deroulant des indicateurs
-dict_indicateurs = (
-    {
-        ind.get("code", ind.get("code_indicateur")): ind.get("libelle", ind.get("code"))
-        for ind in indicateurs_dispo
-    }
-    if indicateurs_dispo
-    else {"EMP_5EMP_SEX_OC2_NB_Q": "Emploi total par profession"}
-)
-
-# Liste des codes ISO pour la selection des pays
-liste_pays = (
-    [p.get("code_iso", p) for p in pays_dispo if isinstance(p, dict)]
-    if pays_dispo
-    else ["FRA", "DEU", "ESP", "ITA"]
-)
+dict_indicateurs, liste_pays = charger_filtres()
 
 # ------------------------------------------------------------------------------
-# 2. Formulaire de selection dans la barre laterale
+# 2. Filtres centres dans le corps principal
 # ------------------------------------------------------------------------------
-st.sidebar.header("Configuration du Rapport")
+with st.container(border=True):
+    st.subheader("Configuration du Rapport")
 
-code_indicateur = st.sidebar.selectbox(
-    "Indicateur",
-    options=list(dict_indicateurs.keys()),
-    format_func=lambda x: f"{x} - {dict_indicateurs.get(x, x)}",
-)
+    col_top1, col_top2 = st.columns([2, 2])
+    with col_top1:
+        code_indicateur = st.selectbox(
+            "Indicateur principal",
+            options=list(dict_indicateurs.keys()),
+            format_func=lambda x: f"{x} - {dict_indicateurs.get(x, x)}",
+        )
+    with col_top2:
+        pays_selectionnes = st.multiselect(
+            "Pays a comparer",
+            options=liste_pays,
+            default=["FRA", "DEU"] if len(liste_pays) >= 2 else liste_pays[:1],
+        )
 
-pays_selectionnes = st.sidebar.multiselect(
-    "Pays a comparer",
-    options=liste_pays,
-    default=["FRA", "DEU"] if len(liste_pays) >= 2 else liste_pays[:1],
-)
+    col_bot1, col_bot2, col_bot3 = st.columns(3)
+    with col_bot1:
+        classif1 = st.text_input("Classification (classif1)", value="15+")
+    with col_bot2:
+        sexe = st.selectbox("Sexe", options=["Total", "Female", "Male"], index=0)
+    with col_bot3:
+        n_periodes = st.slider("Nombre de periodes", min_value=2, max_value=20, value=8)
 
-classif1 = st.sidebar.text_input("Classification (classif1)", value="Total")
-sexe = st.sidebar.selectbox("Sexe", options=["Total", "Female", "Male"], index=0)
-n_periodes = st.sidebar.slider("Nombre de periodes", min_value=2, max_value=20, value=8)
+    generer_clic = st.button("Generer l'apercu du rapport", type="primary", width="stretch")
 
 # ------------------------------------------------------------------------------
-# 3. Generation & Telechargement du PDF via l'API Client
+# 3. Generation, Previsualisation et Telechargement
 # ------------------------------------------------------------------------------
-st.subheader("Generation du document")
-
-if st.button("Generer le rapport PDF", type="primary"):
+if generer_clic:
     if not pays_selectionnes:
         st.error("Veuillez selectionner au moins un pays.")
     else:
-        with st.spinner("Generation du document PDF par le serveur..."):
-            # Appel HTTP vers le backend via l'API Client
+        with st.spinner("Generation de l'apercu du rapport PDF..."):
             reponse = api_client.telecharger_rapport(
                 code_indicateur=code_indicateur,
                 pays=pays_selectionnes,
@@ -90,12 +91,31 @@ if st.button("Generer le rapport PDF", type="primary"):
             )
 
             if reponse.get("status_code") == 200:
-                st.success("Rapport PDF genere avec succes !")
-                st.download_button(
-                    label="Telecharger le rapport (PDF)",
-                    data=reponse["data"],
-                    file_name=f"rapport_{code_indicateur}.pdf",
-                    mime="application/pdf",
-                )
+                st.session_state["fo3_pdf_bytes"] = reponse["data"]
+                st.session_state["fo3_pdf_filename"] = f"rapport_{code_indicateur}.pdf"
             else:
                 st.error(f"Erreur backend ({reponse.get('status_code')}) : {reponse.get('data')}")
+
+# Affichage persistant de la previsualisation et du bouton de telechargement
+if "fo3_pdf_bytes" in st.session_state:
+    st.divider()
+    col_titre, col_dl = st.columns([3, 1])
+    with col_titre:
+        st.subheader("Previsualisation du document")
+    with col_dl:
+        st.download_button(
+            label="Telecharger ce PDF",
+            data=st.session_state["fo3_pdf_bytes"],
+            file_name=st.session_state["fo3_pdf_filename"],
+            mime="application/pdf",
+            type="primary",
+            width="stretch",
+        )
+
+    # Encodage Base64 pour l'affichage integre dans le navigateur
+    base64_pdf = base64.b64encode(st.session_state["fo3_pdf_bytes"]).decode("utf-8")
+    pdf_display = (
+        f'<iframe src="data:application/pdf;base64,{base64_pdf}" '
+        f'width="100%" height="750" type="application/pdf"></iframe>'
+    )
+    st.markdown(pdf_display, unsafe_allow_html=True)

@@ -1,9 +1,11 @@
-# Journal des actions (F6 : « suivi des activités » par l'administrateur).
-#
-# Utilisation par les autres services (ex : A pour les actions sur les données) :
-#     from service.journal_service import JournalService
-#     JournalService().enregistrer(utilisateur, "suppression_donnee", "FRA, 2024Q4, Female, 15-24")
-# (l'action doit faire partie de ACTIONS, c.f. business_object/action_journal.py)
+"""
+Journal des actions (F6 : « suivi des activités » par l'administrateur).
+
+Utilisation par les autres services (ex : A pour les actions sur les données) :
+     from service.journal_service import JournalService
+     JournalService().enregistrer(utilisateur, "suppression_donnee", "FRA, 2024Q4, Female, 15-24")
+(l'action doit faire partie de ACTIONS, c.f. business_object/action_journal.py)
+"""
 
 from business_object.action_journal import ActionJournal
 from business_object.utilisateur import Utilisateur
@@ -44,7 +46,8 @@ class JournalService:
                 utilisateur_id=utilisateur.id if utilisateur else None,
             )
             return JournalDAO().enregistrer(entree)
-        except Exception as e:  # journal indisponible : on le signale, sans bloquer l'utilisateur
+        except Exception as e:  # pylint: disable=broad-exception-caught
+            # journal indisponible : on le signale, sans bloquer l'utilisateur
             print(f"Attention : action '{action}' non enregistrée dans le journal ({e})")
             return False
 

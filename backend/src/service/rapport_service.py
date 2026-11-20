@@ -10,11 +10,20 @@ from fpdf import FPDF
 from service.comparaison_pays_service import ComparaisonPaysService
 from service.evolution_service import EvolutionService
 
+MAPPING_SEXE = {
+    "F": "Female",
+    "M": "Male",
+    "FEMALE": "Female",
+    "MALE": "Male",
+    "TOTAL": "Total",
+}
+
 
 class LaborScopePDF(FPDF):
     """Classe FPDF personnalisée pour l'en-tête et le pied de page du rapport."""
 
     def header(self) -> None:
+        """ Méthode pour formater haut de page"""
         self.set_font("Helvetica", "B", 14)
         self.cell(
             0,
@@ -28,6 +37,7 @@ class LaborScopePDF(FPDF):
         self.ln(5)
 
     def footer(self) -> None:
+        """Méthode pour formater le pied de page """
         self.set_y(-15)
         self.set_font("Helvetica", "I", 9)
         self.cell(0, 10, f"Page {self.page_no()}", align="C")
@@ -61,13 +71,8 @@ class RapportService:
             }
         return stats
 
-    def conclusion(
-        self,
-        stats: dict[str, dict[str, Any]],
-        comparaison: dict
-    ) -> str:
+    def conclusion(self, stats: dict[str, dict[str, Any]], comparaison: Any) -> str:
         """Génère des phrases automatiques d'analyse à partir des chiffres calculés."""
-
         if not stats:
             return "Aucune donnee disponible pour etablir une conclusion."
 
@@ -77,38 +82,51 @@ class RapportService:
         for pays, s in stats.items():
             sens = "augmente" if s["evolution"] >= 0 else "diminue"
             diff_abs = abs(s["evolution"])
-
+            debut, fin = s["periode_debut"], s["periode_fin"]
             phrases.append(
-                f"Entre {s['periode_debut']} et {s['periode_fin']}, "
-                f"le marche dans le pays {s['nom_pays']} ({pays}) "
-                f"a {sens} de {diff_abs:.2f} points "
+                f"Entre {debut} et {fin}, le marche dans le pays "
+                f"{s['nom_pays']} ({pays}) a {sens} de {diff_abs:.2f} points "
                 f"(passant de {s['val_debut']:.2f} a {s['val_fin']:.2f})."
             )
 
-        # 2. Classement issu de la comparaison
-        classement = comparaison.get("classement", pd.DataFrame())
+        # 2. Normalisation de 'comparaison' (accepte dict avec
+        # 'classement'/'observations'/'data' ou DataFrame)
+        df_comparaison = pd.DataFrame()
+        if isinstance(comparaison, dict):
+            data_list = (
+                comparaison.get("classement")
+                or comparaison.get("observations")
+                or comparaison.get("data")
+                or []
+            )
+            if data_list:
+                df_comparaison = pd.DataFrame(data_list)
+        elif isinstance(comparaison, pd.DataFrame):
+            df_comparaison = comparaison
 
-        if not classement.empty and "valeur" in classement.columns:
-            df_sorted = classement.sort_values("valeur", ascending=False)
-
+        # 3. Classement issu de la comparaison
+        if not df_comparaison.empty and "valeur" in df_comparaison.columns:
+            df_sorted = df_comparaison.sort_values("valeur", ascending=False)
             top_row = df_sorted.iloc[0]
             bottom_row = df_sorted.iloc[-1]
-
-            nom_top = top_row.get("nom_pays") or top_row["code_iso"]
-            nom_bottom = bottom_row.get("nom_pays") or bottom_row["code_iso"]
-
-            periode = comparaison.get("periode_reference")
-
+            top_nom = (
+                top_row.get("nom_pays")
+                or top_row.get("pays")
+                or top_row.get("code_iso", "N/A")
+            )
+            bottom_nom = (
+                bottom_row.get("nom_pays")
+                or bottom_row.get("pays")
+                or bottom_row.get("code_iso", "N/A")
+            )
             phrases.append(
-                f"Pour la periode de reference {periode}, "
-                f"{nom_top} presente la valeur la plus elevee "
-                f"({top_row['valeur']:.2f}), tandis que "
-                f"{nom_bottom} enregistre la valeur la plus basse "
-                f"({bottom_row['valeur']:.2f})."
+                f"Sur la periode la plus recente, {top_nom} presente "
+                f"la valeur la plus elevee ({top_row['valeur']:.2f}), "
+                f"tandis que {bottom_nom} enregistre "
+                f"la valeur la plus basse ({bottom_row['valeur']:.2f})."
             )
 
         return " ".join(phrases)
-
 
     def _generer_graphique_bytes(self, df_evolution: pd.DataFrame) -> io.BytesIO:
         """Génère un graphique d'évolution Matplotlib en mémoire (sans sauvegarde disque)."""
@@ -141,35 +159,48 @@ class RapportService:
         n_periodes: int = 8,
     ) -> bytes:
         """Renvoie le contenu binaire du fichier PDF généré."""
-        # 1. Appel des services
-        evolution = EvolutionService().evolution(code_indicateur, pays, classif1, sexe, n_periodes)
-        comparaison = ComparaisonPaysService().comparer_pays(code_indicateur, classif1, pays, sexe)
+        sexe_db = MAPPING_SEXE.get(sexe.upper(), sexe)
+
+        # 1. Appel des services backend
+        evolution = EvolutionService().evolution(
+            code_indicateur, pays, classif1, sexe_db, n_periodes
+            )
+
+        if evolution.empty and classif1.lower() == "total":
+            for alternative in ["15+", "OC2_SKILL_TOTAL", "AGE_AGGREGATE_TOTAL"]:
+                evolution_alt = EvolutionService().evolution(
+                    code_indicateur, pays, alternative, sexe_db, n_periodes
+                    )
+                if not evolution_alt.empty:
+                    evolution = evolution_alt
+                    classif1 = alternative
+                    break
+
+        comparaison = ComparaisonPaysService().comparer_pays(
+            code_indicateur, classif1, pays, sexe_db
+            )
 
         # 2. Calculs statistiques et conclusion
         stats = self.resume_statistique(evolution)
         conclusion_texte = self.conclusion(stats, comparaison)
-
-        print("Données évolution :", len(evolution))
-        print("Données classement :", len(comparaison["classement"]))
-        print("Statistiques :", stats)
 
         # 3. Assemblage FPDF2
         pdf = LaborScopePDF()
         pdf.add_page()
         pdf.set_font("Helvetica", "", 11)
 
-        # Section Métadonnées
         pdf.set_font("Helvetica", "B", 12)
         pdf.cell(0, 8, "1. Parametres de la Synthese", new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("Helvetica", "", 10)
         pdf.multi_cell(
             0,
             6,
-            f"Indicateur : {code_indicateur}\nPays analyses : {', '.join(pays)}\nClassification : {classif1} | Sexe : {sexe}",
+            f"Indicateur : {code_indicateur}\n"
+            f"Pays analyses : {', '.join(pays)}\n"
+            f"Classification : {classif1} | Sexe : {sexe_db}",
         )
         pdf.ln(4)
 
-        # Section Graphique
         if not evolution.empty:
             img_buf = self._generer_graphique_bytes(evolution)
             pdf.set_font("Helvetica", "B", 12)
@@ -177,12 +208,10 @@ class RapportService:
             pdf.image(img_buf, w=170)
             pdf.ln(5)
 
-        # Section Résumé Statistique (Tableau)
         pdf.set_font("Helvetica", "B", 12)
         pdf.cell(0, 8, "3. Resume Statistique", new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("Helvetica", "B", 9)
 
-        # En-tête Tableau
         col_widths = [35, 25, 25, 25, 30]
         pdf.cell(col_widths[0], 7, "Pays", border=1)
         pdf.cell(col_widths[1], 7, "Min", border=1)
@@ -207,7 +236,6 @@ class RapportService:
 
         pdf.ln(6)
 
-        # Section Conclusion Automatique
         pdf.set_font("Helvetica", "B", 12)
         pdf.cell(0, 8, "4. Analyse & Conclusion Automatique", new_x="LMARGIN", new_y="NEXT")
         pdf.set_font("Helvetica", "", 10)

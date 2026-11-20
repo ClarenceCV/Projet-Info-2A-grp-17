@@ -1,4 +1,6 @@
-# Logique métier de F5 : comparaison de plusieurs indicateurs sur un même même graphique
+"""
+Logique métier de F5 : comparaison de plusieurs indicateurs sur un même même graphique
+"""
 
 import pandas as pd
 
@@ -14,7 +16,7 @@ class MultiIndicateursService:
         self.indicateur_dao = IndicateurDAO()
         self.observation_dao = ObservationDAO()
 
-    def comparer(self, selections: list[Selection]) -> pd.DataFrame:
+    def comparer(self, selections: list[Selection],  base_100: bool = True) -> pd.DataFrame:
         # 1. Vérification préalable des indicateurs et de leurs fréquences
         frequences = set()
         indicateurs_valides = []
@@ -59,9 +61,12 @@ class MultiIndicateursService:
 
         # 3. Concaténation et traitement de la base 100
         df_concat = pd.concat(dfs, ignore_index=True)
+        if not base_100:
+            cols = ["serie", "indicateur", "periode", "valeur", "unite"]
+            return df_concat.sort_values(by=["serie", "periode"])[cols]
+
         debut = df_concat.groupby("serie")["periode"].min().max()
         df_filtered = df_concat[df_concat["periode"] >= debut].copy()
-
         df_filtered = df_filtered.sort_values(by=["serie", "periode"])
         premiere_valeur = df_filtered.groupby("serie")["valeur"].transform("first")
         df_filtered["valeur_base100"] = (df_filtered["valeur"] / premiere_valeur) * 100
