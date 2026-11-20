@@ -31,5 +31,6 @@ dev = [
 
 
 [tool.pytest.ini_options]
-pythonpath = ["backend/src"]
-testpaths = ["backend/tests"]
+pythonpath = ["backend/src"]       # pour écrire `from dao...` dans les tests, comme dans le code
+testpaths = ["backend/src/tests"]  # `uv run pytest` sans argument lance tous les tests
+addopts = "-rs"                    # affiche la raison des tests ignorés (ex : base injoignable)

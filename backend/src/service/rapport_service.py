@@ -92,15 +92,15 @@ class RapportService:
         # 2. Normalisation de 'comparaison' (accepte dict avec
         # 'classement'/'observations'/'data' ou DataFrame)
         df_comparaison = pd.DataFrame()
+        periode_reference = None
         if isinstance(comparaison, dict):
-            data_list = (
-                comparaison.get("classement")
-                or comparaison.get("observations")
-                or comparaison.get("data")
-                or []
-            )
-            if data_list:
-                df_comparaison = pd.DataFrame(data_list)
+            periode_reference = comparaison.get("periode_reference")
+            # "classement" est un DataFrame : on ne peut pas écrire `a or b` (pandas refuse
+            # de dire si un DataFrame est « vrai »), on prend la première clé présente.
+            for cle in ("classement", "observations", "data"):
+                if comparaison.get(cle) is not None:
+                    df_comparaison = pd.DataFrame(comparaison[cle])
+                    break
         elif isinstance(comparaison, pd.DataFrame):
             df_comparaison = comparaison
 
@@ -119,8 +119,13 @@ class RapportService:
                 or bottom_row.get("pays")
                 or bottom_row.get("code_iso", "N/A")
             )
+            debut_phrase = (
+                f"Pour la periode de reference {periode_reference}"
+                if periode_reference
+                else "Sur la periode la plus recente"
+            )
             phrases.append(
-                f"Sur la periode la plus recente, {top_nom} presente "
+                f"{debut_phrase}, {top_nom} presente "
                 f"la valeur la plus elevee ({top_row['valeur']:.2f}), "
                 f"tandis que {bottom_nom} enregistre "
                 f"la valeur la plus basse ({bottom_row['valeur']:.2f})."

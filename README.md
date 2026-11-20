@@ -103,8 +103,11 @@ Retourner sur vos services Onyxia. Cliquer sur "Ouvrir" puis Onyxia affiche un l
 ---
 
 ## Tests
+Depuis la racine du projet :
 ```bash
-uv run pytest backend/src/tests
+uv run pytest
 ```
+Les tests DAO utilisent la vraie base : sur Onyxia ils sont lancés, ailleurs (base injoignable)
+ils sont ignorés et la raison est affichée.
 
 ---

@@ -19,3 +19,14 @@ class MultiIndicateursRequest(BaseModel):
 
     selections: list[SelectionModel] = Field(..., min_length=1, max_length=4)
     base_100: bool = True
+
+
+class PointSerieModel(BaseModel):
+    """Un point d'une courbe du graphique multi-indicateurs (une ligne de la réponse)."""
+
+    serie: str
+    indicateur: str
+    periode: str
+    valeur: float | None
+    unite: str | None = None
+    valeur_base100: float | None = None  # absente si base_100 = False

@@ -152,7 +152,7 @@ class ObservationDAO:
         with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT DISTINCT o.classif1 "
+                    "SELECT DISTINCT o.classif1 COLLATE \"C\" AS classif1 "  # tri octet par octet : même ordre partout
                     "FROM laborscope.observation o "
                     "JOIN laborscope.indicateur i ON i.id = o.indicateur_id "
                     "WHERE i.code = %(code)s AND o.classif1 IS NOT NULL "
