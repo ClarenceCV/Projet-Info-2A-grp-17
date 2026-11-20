@@ -1,9 +1,11 @@
-# Tests du service F4 (comparaison entre pays).
-# Le DAO est remplacé par un faux (patch.object) qui renvoie un petit DataFrame écrit à la main :
-# les tests ne dépendent ni de la base ni d'ILOSTAT, et on connaît le résultat attendu.
-#
-# Lancement (depuis backend/src) :
-#     uv run python -m pytest
+"""
+Tests du service F4 (comparaison entre pays).
+Le DAO est remplacé par un faux (patch.object) qui renvoie un petit DataFrame écrit à la main :
+les tests ne dépendent ni de la base ni d'ILOSTAT, et on connaît le résultat attendu.
+
+Lancement (depuis backend/src) :
+     uv run python -m pytest
+"""
 
 from unittest.mock import patch
 
@@ -26,6 +28,11 @@ def faux_df():
 
 
 def test_classement_par_valeur_decroissante():
+    """
+    Vérifie que le classement est trié par valeur décroissante
+    et que les rangs sont attribués de 1 à n dans cet ordre
+    (Allemagne 61.0, France 52.0, Espagne 45.0).
+    """
     # GIVEN
     with patch.object(ObservationDAO, "lire", return_value=faux_df()):
         # WHEN
@@ -36,6 +43,12 @@ def test_classement_par_valeur_decroissante():
 
 
 def test_garde_la_derniere_periode_de_chaque_pays():
+    """
+    Vérifie que seule la dernière période disponible de chaque pays est
+    conservée dans le classement : la France garde 2024Q4 (et non 2024Q3),
+    l'Espagne garde sa propre dernière période (2024Q3), et la période de
+    référence retournée est la plus récente de toutes (2024Q4).
+    """
     # GIVEN
     with patch.object(ObservationDAO, "lire", return_value=faux_df()):
         # WHEN
@@ -51,6 +64,11 @@ def test_garde_la_derniere_periode_de_chaque_pays():
 
 
 def test_plus_hauts_et_plus_bas():
+    """
+    Vérifie que, avec top=1, `plus_hauts` contient uniquement le pays à la
+    valeur la plus élevée (Allemagne) et `plus_bas` uniquement celui à la
+    valeur la plus faible (Espagne).
+    """
     # GIVEN
     with patch.object(ObservationDAO, "lire", return_value=faux_df()):
         # WHEN
@@ -61,6 +79,11 @@ def test_plus_hauts_et_plus_bas():
 
 
 def test_top_plus_grand_que_le_nombre_de_pays():
+    """
+    Vérifie que si `top` dépasse le nombre de pays disponibles (10 > 3),
+    aucune erreur n'est levée et `plus_hauts` comme `plus_bas` contiennent
+    simplement tous les pays.
+    """
     # GIVEN
     with patch.object(ObservationDAO, "lire", return_value=faux_df()):
         # WHEN
@@ -71,6 +94,11 @@ def test_top_plus_grand_que_le_nombre_de_pays():
 
 
 def test_deux_sources_pour_une_meme_periode():
+    """
+    Vérifie que, lorsqu'un pays a plusieurs sources pour la même période,
+    une seule ligne est conservée : celle de la première source par ordre
+    alphabétique ("A - Enquête"), ce qui rend le résultat déterministe.
+    """
     # GIVEN : la France a deux sources pour 2024Q4
     df = pd.DataFrame({
         "code_iso": ["FRA", "FRA"],
@@ -89,6 +117,11 @@ def test_deux_sources_pour_une_meme_periode():
 
 
 def test_dao_vide():
+    """
+    Vérifie que, lorsque le DAO ne renvoie aucune donnée, le service ne
+    plante pas : la période de référence vaut None et le classement,
+    `plus_hauts` et `plus_bas` sont des DataFrames vides.
+    """
     # GIVEN : aucune donnée
     df_vide = pd.DataFrame(columns=["code_iso", "nom_pays", "source", "periode", "valeur", "unite"])
     with patch.object(ObservationDAO, "lire", return_value=df_vide):

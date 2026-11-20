@@ -1,13 +1,23 @@
+"""
+Ce fichier permet de créer l'URL ilostat correspondant à un indicateur et
+permet de récuperer les données qui sont sur cette API pour les mettre sous forme
+de dataframe
+"""
+
+
 from io import StringIO
 
 import pandas as pd
 import requests
+
+from utils.log_utils import log
 
 # lien pour le code : https://rtavenar.github.io/poly_python/content/api.html
 
 URL_ILOSTAT = "https://rplumber.ilo.org/data/indicator"
 
 
+@log
 def construire_url(code_indicateur, annee_debut=2020):
     '''
     Construit l'url de l'API ILOSTAT pour un indicateur.
@@ -22,9 +32,11 @@ def construire_url(code_indicateur, annee_debut=2020):
     return f"{URL_ILOSTAT}?id={code_indicateur}&timefrom={annee_debut}&type=both&format=.csv"
 
 
+@log
 def load_data(url):
     '''
-    permet de récupérer des fichiers de données venant de ILOSTAT pour les mettre sous forme de dataframe
+    permet de récupérer des fichiers de données venant de ILOSTAT
+    pour les mettre sous forme de dataframe
 
     params:
         url: chr
@@ -93,13 +105,23 @@ def filter_columns(data, colonnes_a_garder, renommage=None):
 
     return data_filtree
 
+
 # Exemple d'utilisation (seulement si on lance ce fichier directement, pas lors d'un import) :
+
+
 if __name__ == "__main__":
-    data = load_data(url=construire_url("EMP_5EMP_SEX_OC2_NB_Q"))
-    get_columns_info(data)
+    data_df = load_data(url=construire_url("EMP_5EMP_SEX_OC2_NB_Q"))
+    get_columns_info(data_df)
     # On choisit les colonnes que l'on veut et leurs noms
-    colonnes_keep = ["ref_area.label", "source.label", "sex.label", "classif1.label", "time", "obs_value"]
+    colonnes_keep = [
+        "ref_area.label",
+        "source.label",
+        "sex.label",
+        "classif1.label",
+        "time",
+        "obs_value",
+    ]
     rename = ["area", "source", "sex", "profession", "date", "value"]
     # On filtre
-    data = filter_columns(data=data, colonnes_a_garder=colonnes_keep, renommage=rename)
-    print(data)
+    data_df = filter_columns(data=data_df, colonnes_a_garder=colonnes_keep, renommage=rename)
+    print(data_df)

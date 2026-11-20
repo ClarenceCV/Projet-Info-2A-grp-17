@@ -1,8 +1,8 @@
 # Tests d'ObservationDAO sur la vraie base
 # (pays 'ZZZ' et indicateur 'TEST_DAO', supprimés après chaque test avec leurs observations : c.f. conftest.py)
 #
-# Lancement (depuis la racine du projet) :
-#     uv run pytest backend/src/tests/test_dao
+# Lancement (depuis le dossier backend) :
+#     uv run pytest src/tests/test_dao
 
 import pandas as pd
 

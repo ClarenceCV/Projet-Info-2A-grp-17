@@ -199,8 +199,10 @@ Pour faciliter la lecture de notre code, et permettre à d’autres développeur
 
 ```{=latex}
 \mychapter{Modelisation de l'application}
-
 ```
+=======
+Pour bien comprendre l’application **Laborscope**, nous allons expliquer ici l’ensemble des possibilités qu’elle offre à un utilisateur. Pour une meilleure conceptualisation, nous utiliserons des diagrammes UML. \newline Tout d’abord, il est nécessaire de créer un compte. En effet notre application est utilisable par plusieurs utilisateurs(administrateurs et utilisateurs). Avant la première connexion, l’utilisateur est obligé de créer un compte à l’aide d’un pseudo et d’un mot de passe. Deux utilisateurs ne peuvent avoir le même identifiant, ce dernier se doit d’être unique.
+
 
 Pour bien comprendre l’application **Laborscope**, nous allons expliquer ici l’ensemble des possibilités qu’elle offre à un utilisateur. Pour une meilleure conceptualisation, nous utiliserons des diagrammes UML. \newline Tout d’abord, il est nécessaire de créer un compte. En effet notre application est utilisable par plusieurs utilisateurs(administrateurs et utilisateurs). Avant la première connexion, l’utilisateur est obligé de créer un compte à l’aide d’un pseudo et d’un mot de passe. Deux utilisateurs ne peuvent avoir le même identifiant, ce dernier se doit d’être unique.
 
@@ -214,7 +216,6 @@ Si son compte existe déjà, l’utilisateur se connecte grâce à son pseudo et
 
 ```{=latex}
 \mychapter{Implémentation}
-
 ```
 
 (obtention des données et fonctionnement du DAO)
@@ -258,3 +259,4 @@ Si son compte existe déjà, l’utilisateur se connecte grâce à son pseudo et
 ```{=latex}
 \mychapterstar{CONCLUSION}
 ```
+

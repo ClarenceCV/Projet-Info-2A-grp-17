@@ -1,7 +1,7 @@
 # Tests d'IndicateurDAO sur la vraie base (indicateur de test 'TEST_DAO', supprimé après chaque test : c.f. conftest.py)
 #
-# Lancement (depuis la racine du projet) :
-#     uv run pytest backend/src/tests/test_dao
+# Lancement (depuis le dossier backend) :
+#     uv run pytest src/tests/test_dao
 
 from business_object.indicateur import Indicateur
 from dao.indicateur_dao import IndicateurDAO

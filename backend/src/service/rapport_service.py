@@ -3,7 +3,12 @@
 import io
 from typing import Any
 
-import matplotlib.pyplot as plt
+import matplotlib
+
+# "Agg" : dessine directement en image, sans fenêtre. Indispensable dans une API, où le graphique
+# est créé hors du fil principal (sous Windows, le moteur par défaut Tk refuse et plante).
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402  (doit venir APRÈS matplotlib.use)
 import pandas as pd
 from fpdf import FPDF
 
@@ -23,6 +28,7 @@ class LaborScopePDF(FPDF):
     """Classe FPDF personnalisée pour l'en-tête et le pied de page du rapport."""
 
     def header(self) -> None:
+        """ Méthode pour formater haut de page"""
         self.set_font("Helvetica", "B", 14)
         self.cell(
             0,
@@ -36,6 +42,7 @@ class LaborScopePDF(FPDF):
         self.ln(5)
 
     def footer(self) -> None:
+        """Méthode pour formater le pied de page """
         self.set_y(-15)
         self.set_font("Helvetica", "I", 9)
         self.cell(0, 10, f"Page {self.page_no()}", align="C")
@@ -80,22 +87,25 @@ class RapportService:
         for pays, s in stats.items():
             sens = "augmente" if s["evolution"] >= 0 else "diminue"
             diff_abs = abs(s["evolution"])
+            debut, fin = s["periode_debut"], s["periode_fin"]
             phrases.append(
-                f"Entre {s['periode_debut']} et {s['periode_fin']}, le marche dans le pays {s['nom_pays']} ({pays}) "
-                f"a {sens} de {diff_abs:.2f} points (passant de {s['val_debut']:.2f} a {s['val_fin']:.2f})."
+                f"Entre {debut} et {fin}, le marche dans le pays "
+                f"{s['nom_pays']} ({pays}) a {sens} de {diff_abs:.2f} points "
+                f"(passant de {s['val_debut']:.2f} a {s['val_fin']:.2f})."
             )
 
-        # 2. Normalisation de 'comparaison' (accepte dict avec 'classement'/'observations'/'data' ou DataFrame)
+        # 2. Normalisation de 'comparaison' (accepte dict avec
+        # 'classement'/'observations'/'data' ou DataFrame)
         df_comparaison = pd.DataFrame()
+        periode_reference = None
         if isinstance(comparaison, dict):
-            data_list = (
-                comparaison.get("classement")
-                or comparaison.get("observations")
-                or comparaison.get("data")
-                or []
-            )
-            if data_list:
-                df_comparaison = pd.DataFrame(data_list)
+            periode_reference = comparaison.get("periode_reference")
+            # "classement" est un DataFrame : on ne peut pas écrire `a or b` (pandas refuse
+            # de dire si un DataFrame est « vrai »), on prend la première clé présente.
+            for cle in ("classement", "observations", "data"):
+                if comparaison.get(cle) is not None:
+                    df_comparaison = pd.DataFrame(comparaison[cle])
+                    break
         elif isinstance(comparaison, pd.DataFrame):
             df_comparaison = comparaison
 
@@ -104,11 +114,26 @@ class RapportService:
             df_sorted = df_comparaison.sort_values("valeur", ascending=False)
             top_row = df_sorted.iloc[0]
             bottom_row = df_sorted.iloc[-1]
-            top_nom = top_row.get("nom_pays") or top_row.get("pays") or top_row.get("code_iso", "N/A")
-            bottom_nom = bottom_row.get("nom_pays") or bottom_row.get("pays") or bottom_row.get("code_iso", "N/A")
+            top_nom = (
+                top_row.get("nom_pays")
+                or top_row.get("pays")
+                or top_row.get("code_iso", "N/A")
+            )
+            bottom_nom = (
+                bottom_row.get("nom_pays")
+                or bottom_row.get("pays")
+                or bottom_row.get("code_iso", "N/A")
+            )
+            debut_phrase = (
+                f"Pour la periode de reference {periode_reference}"
+                if periode_reference
+                else "Sur la periode la plus recente"
+            )
             phrases.append(
-                f"Sur la periode la plus recente, {top_nom} presente la valeur la plus elevee "
-                f"({top_row['valeur']:.2f}), tandis que {bottom_nom} enregistre la valeur la plus basse ({bottom_row['valeur']:.2f})."
+                f"{debut_phrase}, {top_nom} presente "
+                f"la valeur la plus elevee ({top_row['valeur']:.2f}), "
+                f"tandis que {bottom_nom} enregistre "
+                f"la valeur la plus basse ({bottom_row['valeur']:.2f})."
             )
 
         return " ".join(phrases)
@@ -147,17 +172,23 @@ class RapportService:
         sexe_db = MAPPING_SEXE.get(sexe.upper(), sexe)
 
         # 1. Appel des services backend
-        evolution = EvolutionService().evolution(code_indicateur, pays, classif1, sexe_db, n_periodes)
+        evolution = EvolutionService().evolution(
+            code_indicateur, pays, classif1, sexe_db, n_periodes
+            )
 
         if evolution.empty and classif1.lower() == "total":
             for alternative in ["15+", "OC2_SKILL_TOTAL", "AGE_AGGREGATE_TOTAL"]:
-                evolution_alt = EvolutionService().evolution(code_indicateur, pays, alternative, sexe_db, n_periodes)
+                evolution_alt = EvolutionService().evolution(
+                    code_indicateur, pays, alternative, sexe_db, n_periodes
+                    )
                 if not evolution_alt.empty:
                     evolution = evolution_alt
                     classif1 = alternative
                     break
 
-        comparaison = ComparaisonPaysService().comparer_pays(code_indicateur, classif1, pays, sexe_db)
+        comparaison = ComparaisonPaysService().comparer_pays(
+            code_indicateur, classif1, pays, sexe_db
+            )
 
         # 2. Calculs statistiques et conclusion
         stats = self.resume_statistique(evolution)
@@ -174,7 +205,9 @@ class RapportService:
         pdf.multi_cell(
             0,
             6,
-            f"Indicateur : {code_indicateur}\nPays analyses : {', '.join(pays)}\nClassification : {classif1} | Sexe : {sexe_db}",
+            f"Indicateur : {code_indicateur}\n"
+            f"Pays analyses : {', '.join(pays)}\n"
+            f"Classification : {classif1} | Sexe : {sexe_db}",
         )
         pdf.ln(4)
 

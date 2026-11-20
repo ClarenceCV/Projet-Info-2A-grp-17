@@ -1,9 +1,14 @@
-# Récupère les données ILOSTAT et les enregistre dans la base (F1 + F2)
-# Peut être relancé autant de fois que voulu : les observations existantes sont mises à jour, pas dupliquées
+"""
+Récupère les données ILOSTAT et les enregistre dans la base (F1 + F2)
+
+# Peut être relancé autant de fois que voulu :
+# les observations existantes sont mises à jour, pas dupliquées
+
 # Les indicateurs et pays importés se choisissent dans config_import.py
 #
 # Lancement (depuis backend/src, après utils.reset_database) :
 #     uv run python -m fetcher.charger_donnees
+"""
 
 import dotenv
 

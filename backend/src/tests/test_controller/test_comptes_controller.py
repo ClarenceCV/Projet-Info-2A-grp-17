@@ -6,8 +6,8 @@
 # On n'importe PAS main.py : il se connecte à la base dès l'import. On construit à la place une petite
 # application avec les mêmes routeurs et les mêmes préfixes que dans main.py.
 #
-# Lancement (depuis la racine du projet) :
-#     uv run pytest backend/src/tests/test_controller/test_comptes_controller.py
+# Lancement (depuis le dossier backend) :
+#     uv run pytest src/tests/test_controller/test_comptes_controller.py
 
 from datetime import datetime
 from unittest.mock import patch

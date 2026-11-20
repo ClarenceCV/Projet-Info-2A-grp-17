@@ -1,21 +1,8 @@
-# Format JSON de la comparaison entre pays (F4) échangé entre le backend et ses clients.
+""" Format JSON de la comparaison entre pays (F4) échangé entre le backend et ses clients. """
 
 from pydantic import BaseModel
 
-
-class PaysClasseModel(BaseModel):
-    """
-    Un pays du classement.
-    ex : {"rang": 1, "code_iso": "DEU", "nom_pays": "Germany", "periode": "2024Q4",
-          "valeur": 61.2, "unite": "%"}
-    """
-
-    rang: int
-    code_iso: str
-    nom_pays: str
-    periode: str
-    valeur: float
-    unite: str
+from schema.pays_model import PaysClasseModel
 
 
 class ComparaisonPaysModel(BaseModel):

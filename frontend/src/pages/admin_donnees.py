@@ -1,7 +1,7 @@
 # Page « Gestion des données » (administrateurs) : import ILOSTAT, modification et suppression d'observations.
-# Endpoints utilisés : POST /admin/utilisateurs/import,
+# Endpoints utilisés : POST /admin/import,
 #                      GET /observations,
-#                      PUT / DELETE /admin/utilisateurs/observations (corps JSON = la clé de l'observation)
+#                      PUT / DELETE /admin/observations (corps JSON = la clé de l'observation)
 # Backend : responsable A ; page : B (même structure que admin_utilisateurs.py et explorer.py)
 
 import pandas as pd
@@ -43,7 +43,7 @@ confirme_import = st.checkbox("Je confirme vouloir relancer l'import")
 if st.button("Forcer l'import", type="primary", disabled=not confirme_import):
     with st.spinner("Import en cours (cela peut prendre plusieurs minutes)..."):
         # timeout long : l'import télécharge chaque pays un par un (les 10 s par défaut ne suffisent pas)
-        reponse = api_client.post("/admin/utilisateurs/import", timeout=900)
+        reponse = api_client.post("/admin/import", timeout=900)
     if reponse["status_code"] == 200:
         st.cache_data.clear()  # les menus (pays, classif1...) sont en cache : on les relira
         nb = reponse["data"]["observations_enregistrees"]
@@ -124,7 +124,7 @@ with colonne_modifier:
     )
     if st.button("Modifier", type="primary"):
         reponse = api_client.put(
-            "/admin/utilisateurs/observations",
+            "/admin/observations",
             json=cle,                                   # la clé : dans le corps de la requête
             params={"nouvelle_valeur": nouvelle_valeur},  # la valeur : dans l'URL (?nouvelle_valeur=...)
         )
@@ -138,7 +138,7 @@ with colonne_modifier:
 with colonne_supprimer:
     confirme = st.checkbox("Je confirme la suppression de cette observation")
     if st.button("Supprimer", type="primary", disabled=not confirme, key="bouton_supprimer"):
-        reponse = api_client.delete("/admin/utilisateurs/observations", json=cle)
+        reponse = api_client.delete("/admin/observations", json=cle)
         if reponse["status_code"] == 200:
             apres_action(f"Observation supprimée ({description}).")
         else:

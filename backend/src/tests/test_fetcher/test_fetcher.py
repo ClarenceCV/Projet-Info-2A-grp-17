@@ -1,5 +1,6 @@
 import pandas as pd
 import pytest
+import requests
 from unittest.mock import patch, Mock
 
 from fetcher.fetcher import (
@@ -73,13 +74,11 @@ def test_load_data_erreur_http(mock_get):
     """Vérifie qu'une erreur HTTP est correctement remontée."""
 
     mock_response = Mock()
-    mock_response.raise_for_status.side_effect = (
-        Exception("Erreur HTTP")
-    )
+    mock_response.raise_for_status.side_effect = requests.HTTPError("Erreur HTTP")
 
     mock_get.return_value = mock_response
 
-    with pytest.raises(Exception, match="Erreur HTTP"):
+    with pytest.raises(requests.HTTPError, match="Erreur HTTP"):
         load_data("https://test.fr/data.csv")
 
 

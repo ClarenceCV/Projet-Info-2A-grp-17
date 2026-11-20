@@ -1,6 +1,8 @@
-# Logique métier des comptes utilisateurs (F6) : création, connexion, déconnexion.
-# Le controller appelle le service, le service appelle le DAO.
-# Chaque action est notée dans le journal (c.f. service/journal_service.py).
+"""
+Logique métier des comptes utilisateurs (F6) : création, connexion, déconnexion.
+Le controller appelle le service, le service appelle le DAO.
+Chaque action est notée dans le journal (c.f. service/journal_service.py).
+"""
 
 import secrets
 
@@ -20,7 +22,10 @@ class UtilisateurService:
     """
 
     def creer_compte(
-        self, pseudo: str, mot_de_passe: str, role: str = "utilisateur", auteur: Utilisateur | None = None
+        self, pseudo: str,
+        mot_de_passe: str,
+        role: str = "utilisateur",
+        auteur: Utilisateur | None = None
     ) -> Utilisateur | None:
         """
         Crée un compte : vérifie le pseudo et le mot de passe, hache le mot de passe, enregistre.
@@ -39,9 +44,13 @@ class UtilisateurService:
         """
         pseudo = pseudo.strip()
         if not pseudo or len(pseudo) > LONGUEUR_MAX_PSEUDO:
-            raise ValueError(f"Le pseudo doit contenir entre 1 et {LONGUEUR_MAX_PSEUDO} caractères.")
+            raise ValueError(
+                f"Le pseudo doit contenir entre 1 et {LONGUEUR_MAX_PSEUDO} caractères."
+                )
         if len(mot_de_passe) < LONGUEUR_MIN_MDP:
-            raise ValueError(f"Le mot de passe doit contenir au moins {LONGUEUR_MIN_MDP} caractères.")
+            raise ValueError(
+                f"Le mot de passe doit contenir au moins {LONGUEUR_MIN_MDP} caractères."
+                )
         if len(mot_de_passe.encode("utf-8")) > LONGUEUR_MAX_MDP:
             raise ValueError("Le mot de passe est trop long (72 octets maximum).")
 
@@ -50,7 +59,9 @@ class UtilisateurService:
             if auteur is None:  # inscription : c'est le nouveau compte qui fait l'action
                 JournalService().enregistrer(utilisateur, "creation_compte", f"rôle {role}")
             else:  # création par un administrateur
-                JournalService().enregistrer(auteur, "creation_compte", f"compte « {pseudo} », rôle {role}")
+                JournalService().enregistrer(
+                    auteur, "creation_compte", f"compte « {pseudo} », rôle {role}"
+                    )
         return utilisateur
 
     def se_connecter(self, pseudo: str, mot_de_passe: str) -> tuple[Utilisateur, str] | None:
@@ -70,7 +81,7 @@ class UtilisateurService:
             return None
 
         utilisateur = dao.trouver_par_pseudo(pseudo.strip())
-        token = secrets.token_urlsafe(32)  # 32 octets aléatoires → ~43 caractères, impossible à deviner
+        token = secrets.token_urlsafe(32)  # 32 oct aléatoires→ ~43 caractères, impossible à deviner
         dao.enregistrer_token(utilisateur.id, token)
         JournalService().enregistrer(utilisateur, "connexion")
         return utilisateur, token
@@ -87,7 +98,8 @@ class UtilisateurService:
 
     def trouver_par_token(self, token: str | None) -> Utilisateur | None:
         """
-        Retrouve l'utilisateur connecté à partir de son token (utilisé par les gardes de controller/auth.py).
+        Retrouve l'utilisateur connecté à partir de son token
+        utilisé par les gardes de controller/auth.py).
 
         Returns:
             Utilisateur | None: None si le token est absent, inconnu ou effacé (déconnexion)

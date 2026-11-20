@@ -4,29 +4,42 @@ from unittest.mock import patch
 
 import pandas as pd
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from main import app
+from controller import multi_indicateurs_controller
 
+# On n'importe pas main.py : il interroge la base dès l'import (UtilisateurService().initialiser_admin()).
+# Petite application avec seulement le routeur testé, au même préfixe que dans main.py.
+app = FastAPI()
+app.include_router(multi_indicateurs_controller.router, prefix="/analyses")
 client = TestClient(app)
 
 
 @pytest.fixture
-def payload_valide() -> list[dict[str, str]]:
-    """Payload HTTP avec 2 sélections valides."""
-    return [
-        {"indicateur": "EMP_5EMP_SEX_OC2_NB_Q", "pays": "FRA", "classif1": "Total", "sexe": "Total"},
-        {"indicateur": "EMP_5WAP_SEX_AGE_RT_Q", "pays": "FRA", "classif1": "15+", "sexe": "Total"},
-    ]
+def payload_valide() -> dict:
+    """Corps de requête valide, au format envoyé par la page Streamlit : 2 sélections + base 100."""
+    return {
+        "selections": [
+            {"indicateur": "EMP_5EMP_SEX_OC2_NB_Q", "pays": "FRA", "classif1": "Total", "sexe": "Total"},
+            {"indicateur": "EMP_5WAP_SEX_AGE_RT_Q", "pays": "FRA", "classif1": "15+", "sexe": "Total"},
+        ],
+        "base_100": True,
+    }
 
 
-def test_route_moins_de_deux_selections_renvoie_400():
-    """Vérifie le rejet HTTP 400 si moins de 2 sélections sont fournies."""
-    payload = [{"indicateur": "EMP_5EMP_SEX_OC2_NB_Q", "pays": "FRA", "classif1": "Total", "sexe": "Total"}]
-    response = client.post("/analyses/multi-indicateurs", json=payload)
+SELECTION = {"indicateur": "EMP_5WAP_SEX_AGE_RT_Q", "pays": "FRA", "classif1": "15+", "sexe": "Total"}
 
-    assert response.status_code == 400
-    assert "Au moins 2 sélections" in response.json()["detail"]
+
+@pytest.mark.parametrize("nb_selections", [0, 5])
+def test_route_nombre_de_selections_invalide_renvoie_422(nb_selections):
+    """Le schéma impose 1 à 4 sélections : FastAPI rejette la requête lui-même (422)."""
+    payload = {"selections": [SELECTION] * nb_selections, "base_100": True}
+    with patch("service.multi_indicateurs_service.MultiIndicateursService.comparer") as faux_comparer:
+        response = client.post("/analyses/multi-indicateurs", json=payload)
+
+    assert response.status_code == 422
+    faux_comparer.assert_not_called()  # le service n'est jamais appelé
 
 
 def test_route_succes_retourne_200_et_donnees(payload_valide):
@@ -52,7 +65,9 @@ def test_route_succes_retourne_200_et_donnees(payload_valide):
         ]
     )
 
-    with patch("service.multi_indicateurs_service.MultiIndicateursService.comparer", return_value=df_simule):
+    with patch(
+        "service.multi_indicateurs_service.MultiIndicateursService.comparer", return_value=df_simule
+    ):
         response = client.post("/analyses/multi-indicateurs", json=payload_valide)
 
     assert response.status_code == 200

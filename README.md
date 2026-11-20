@@ -62,18 +62,23 @@ D'autres dossier son utiliser comme .github qui contient la configuration d'une 
 
 ---
 
-4. Mettre à jour le code et les dépendances
+4. Mettre à jour le code et les dépendances (le backend et le frontend ont chacun les leurs)
 ```bash
 git pull
-uv sync
+cd backend && uv sync && cd ..
+cd frontend && uv sync && cd ..
 ```
 
 5. Préparer la base de donnée : une seule fois au début ou si vous voulez reset les données (observations et utilisateurs)
 ```bash
 cd backend/src
-uv run python -m utils.reset_database      # supprime et recrée toutes les tables, puis les comptes par défaut
-uv run python -m fetcher.charger_donnees   # importe les données ILOSTAT 
+uv run python -m utils.reset_database      # recrée les tables (vides) et les comptes par défaut
+uv run python -m fetcher.charger_donnees   # importe les données depuis l'API ILOSTAT
 ```
+Dépannage (API ILOSTAT injoignable) : `uv run python -m utils.reset_database --exemple` charge en plus
+`data/pop_db.sql`, un petit extrait de vraies données ILOSTAT (3 indicateurs, 6 pays, depuis 2023).
+Un import ILOSTAT lancé ensuite le complète, sans créer de doublons.
+
 Comptes créés à chaque reset, pour se connecter tout de suite :
 
 | Pseudo | Mot de passe | Rôle |
@@ -104,7 +109,10 @@ Retourner sur vos services Onyxia. Cliquer sur "Ouvrir" puis Onyxia affiche un l
 
 ## Tests
 ```bash
-uv run pytest backend/src/tests
+cd backend
+uv run pytest
 ```
+Les tests DAO utilisent la vraie base : sur Onyxia ils sont lancés, ailleurs (base injoignable)
+ils sont ignorés et la raison est affichée.
 
 ---

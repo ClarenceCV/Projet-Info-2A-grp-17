@@ -1,9 +1,11 @@
-# Tests du service des utilisateurs (F6) et du hachage des mots de passe.
-# Le DAO est remplacé par un faux (patch.object) : les tests ne dépendent pas de la base.
-# Avec un faux DAO, on peut aussi vérifier COMMENT le service l'a appelé (assert_called_once_with).
-#
-# Lancement (depuis la racine du projet) :
-#     uv run pytest backend/src/tests
+"""
+Tests du service des utilisateurs (F6) et du hachage des mots de passe.
+Le DAO est remplacé par un faux (patch.object) : les tests ne dépendent pas de la base.
+Avec un faux DAO, on peut aussi vérifier COMMENT le service l'a appelé (assert_called_once_with).
+
+Lancement (depuis le dossier backend) :
+     uv run pytest src/tests
+"""
 
 from unittest.mock import patch
 
@@ -81,10 +83,10 @@ def test_creer_compte_pseudo_deja_pris():
 @pytest.mark.parametrize(
     "pseudo, mot_de_passe",
     [
-        ("jdupont", "court"),        # mot de passe < 8 caractères
-        ("jdupont", "x" * 73),       # mot de passe > 72 octets
-        ("   ", "motdepasse123"),    # pseudo vide
-        ("x" * 31, "motdepasse123"), # pseudo trop long
+        ("jdupont", "court"),         # mot de passe < 8 caractères
+        ("jdupont", "x" * 73),        # mot de passe > 72 octets
+        ("   ", "motdepasse123"),     # pseudo vide
+        ("x" * 31, "motdepasse123"),  # pseudo trop long
     ],
 )
 def test_creer_compte_refuse_les_valeurs_invalides(pseudo, mot_de_passe):

@@ -1,7 +1,16 @@
 
+"""
+Tests de DataProcessing (import ILOSTAT : fetch_data, parse_data, save_data, charger).
+L'API ILOSTAT et la base sont remplacées par des faux (patch) : aucun appel réseau.
+Les pannes sont simulées avec les erreurs que lève vraiment requests
+(HTTPError pour un 502, ConnectionError pour une coupure réseau).
+"""
+
+from unittest.mock import MagicMock, patch
+
 import pandas as pd
 import pytest
-from unittest.mock import patch, MagicMock
+import requests
 
 from business_object.indicateur import Indicateur
 from fetcher.data_processing import DataProcessing
@@ -40,7 +49,7 @@ def df_brut():
 # ---------------------------------------------------------
 
 def test_init(processing):
-    assert processing.url_API == "https://rplumber.ilo.org/data/indicator"
+    assert processing.url_api == "https://rplumber.ilo.org/data/indicator"
 
 
 # ---------------------------------------------------------
@@ -74,7 +83,7 @@ def test_fetch_data_reessaye_apres_echec(
     df_france = pd.DataFrame({"ref_area": ["FRA"], "obs_value": [10]})
 
     mock_load_data.side_effect = [
-        Exception("Erreur API"),
+        requests.HTTPError("502 Bad Gateway"),
         df_france
     ]
 
@@ -92,7 +101,7 @@ def test_fetch_data_ignore_pays_apres_deux_echecs(
     mock_sleep, mock_load_data, processing
 ):
     """Un pays est ignoré si les deux tentatives échouent."""
-    mock_load_data.side_effect = Exception("API indisponible")
+    mock_load_data.side_effect = requests.ConnectionError("API indisponible")
 
     with patch("fetcher.data_processing.PAYS_SUIVIS", ["FRA"]):
         resultat = processing.fetch_data("INDICATEUR_TEST")
@@ -100,6 +109,28 @@ def test_fetch_data_ignore_pays_apres_deux_echecs(
     assert resultat.empty
     assert mock_load_data.call_count == 2
     mock_sleep.assert_called_once_with(3)
+
+
+@patch("fetcher.data_processing.load_data")
+@patch("fetcher.data_processing.time.sleep")
+def test_fetch_data_un_pays_en_panne_n_empeche_pas_les_autres(
+    mock_sleep, mock_load_data, processing
+):
+    """Un pays en panne est réessayé puis ignoré ; les autres pays sont bien renvoyés."""
+    def faux_load_data(url):
+        code = url.split("ref_area=")[-1]  # ...&ref_area=FRA -> 'FRA'
+        if code == "FRA":
+            raise requests.HTTPError("502 Bad Gateway")
+        return pd.DataFrame({"ref_area": [code], "obs_value": [1.0]})
+
+    mock_load_data.side_effect = faux_load_data
+
+    with patch("fetcher.data_processing.PAYS_SUIVIS", ["FRA", "DEU", "ESP"]):
+        resultat = processing.fetch_data("INDICATEUR_TEST")
+
+    assert set(resultat["ref_area"]) == {"DEU", "ESP"}
+    assert mock_load_data.call_count == 4  # 2 essais pour FRA + 1 pour DEU + 1 pour ESP
+    mock_sleep.assert_called_once_with(3)  # une seule attente, entre les 2 essais de FRA
 
 
 @patch("fetcher.data_processing.load_data")
@@ -338,7 +369,7 @@ def test_charger_continue_si_un_indicateur_echoue(
     indicateur2.code = "INDICATEUR_2"
 
     mock_fetch.side_effect = [
-        Exception("Erreur API"),
+        requests.ConnectionError("API indisponible"),
         pd.DataFrame({"brut": [1]})
     ]
     mock_parse.return_value = pd.DataFrame({"propre": [1]})
