@@ -1,3 +1,5 @@
+"""Objet métier Pays : un pays ou une zone ILOSTAT, avec son continent et ses regroupements."""
+
 import pycountry_convert as pc
 import worldcountrygroups
 
@@ -92,5 +94,3 @@ class Pays:
             list[str]: sigles des groupes auxquels appartient le pays.
         """
         return Pays.groupes_de(self.code_iso)
-
-

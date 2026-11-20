@@ -1,15 +1,16 @@
-# Gardes du frontend : vérifier la session et protéger les pages.
-# (inspiré du template ENSAI : frontend/src/utils/auth_guard.py, check_authentification)
-#
-# - verifier_session() : appelée par app.py à chaque exécution, AVANT de construire le menu
-# - exiger_connexion() / exiger_admin() : à appeler tout en haut d'une page
-#
-# Utilisation dans une page :
-#     from utils.auth_guard import exiger_connexion   # ou exiger_admin pour une page d'administration
-#     exiger_connexion()
-#
-# Ce n'est pas la vraie sécurité : c'est l'API qui refuse les requêtes (401 / 403, c.f. backend
-# controller/auth.py). Le frontend évite seulement d'afficher une page qui ne fonctionnerait pas.
+"""Gardes du frontend : vérifier la session et protéger les pages.
+(inspiré du template ENSAI : frontend/src/utils/auth_guard.py, check_authentification)
+
+- verifier_session() : appelée par app.py à chaque exécution, AVANT de construire le menu
+- exiger_connexion() / exiger_admin() : à appeler tout en haut d'une page
+
+Utilisation dans une page :
+    from utils.auth_guard import exiger_connexion   # ou exiger_admin pour une page d'administration
+    exiger_connexion()
+
+Ce n'est pas la vraie sécurité : c'est l'API qui refuse les requêtes (401 / 403, c.f. backend
+controller/auth.py). Le frontend évite seulement d'afficher une page qui ne fonctionnerait pas.
+"""
 
 import streamlit as st
 

@@ -14,7 +14,7 @@ format:
     classoption:
       - DIV=11
       - numbers=noendperiod
-    include-in-header: header_eml.tex
+    include-in-header: header_dossier_final.tex
     keep-tex: false
     highlight-style: pygments
     listings: false
@@ -107,7 +107,10 @@ kable_ise <- function(df, caption = NULL, digits = 3,
 \listoffigures
 \newpage
 
-\##**REMERCIEMENTS**
+```{=latex}
+\mychapterstar{REMERCIEMENTS}
+
+```
 
 Nous tenons à exprimer notre sincère gratitude à toutes les personnes qui ont contribué, de près ou de loin, à la réalisation de ce projet.
 
@@ -119,7 +122,9 @@ Nous adressons également nos remerciements à l'ensemble de l'équipe pédagogi
 
 Enfin, nous félicitons les membres du groupe pour leur investissement, leur esprit d'équipe et leur bonne humeur durant ces mois de travail. \newpage
 
-\##**Résumé** {.unnumbered}
+```{=latex}
+\mychapterstar{Résumé} 
+```
 
 Le projet **LaborScope** vise à rendre accessible l'exploration des données du marché du travail mondial, issues de la base ILOSTAT de l'Organisation internationale du Travail (OIT). Cette base, très riche, rassemble de nombreux indicateurs (emploi, chômage, secteurs d'activité, inégalités entre les sexes...), mais sa taille et sa complexité en limitent l'usage par des utilisateurs non spécialistes.
 
@@ -131,7 +136,9 @@ L'application obtenue permet \[d'explorer rapidement les données ILOSTAT et d'e
 
 \newpage
 
-##INTRODUCTION
+```{=latex}
+\mychapterstar{INTRODUCTION}
+```
 
 Le marché du travail est au cœur des préoccupations économiques et sociales contemporaines. Chômage, emploi informel, inégalités entre les sexes ou encore évolution des secteurs d'activité : ces indicateurs conditionnent les politiques publiques et les décisions des organisations internationales, des entreprises et des chercheurs. L'Organisation internationale du Travail (OIT) en assure le suivi à l'échelle mondiale grâce à sa base de données ILOSTAT, qui rassemble des milliers d'indicateurs harmonisés couvrant la plupart des pays du monde.
 
@@ -141,15 +148,21 @@ C'est dans ce contexte que s'inscrit le projet **LaborScope**, réalisé dans le
 
 Dans le rapport intermédiaire, nous avons posé les bases du projet : cahier des charges, identification des utilisateurs, fonctionnalités attendues, structure de la base de données et organisation du travail en équipe. Le présent rapport final en constitue l'aboutissement. Il présente la conception détaillée de l'application, sa réalisation, les choix techniques effectués ainsi que les résultats obtenus.
 
-Ce document s'organise en \[quatre\] chapitres. Le premier rappelle l'étude préalable (contexte, cahier des charges et architecture générale). Le deuxième expose le modèle de conception à travers les diagrammes UML (cas d'utilisation, classes, activités et séquences). Le troisième décrit la réalisation de l'application : technologies employées, implémentation des fonctionnalités et analyse des résultats. Enfin, le dernier chapitre dresse le bilan du projet, en soulignant ses limites et les perspectives d'amélioration envisageables.
+Ce document s'organise en cinq (05) chapitres. Le premier rappelle l'étude préalable (contexte, cahier des charges et architecture générale). Le deuxième expose le modèle de conception à travers les diagrammes UML (cas d'utilisation, classes, activités et séquences). Le troisième décrit la réalisation de l'application : technologies employées, implémentation des fonctionnalités et analyse des résultats. Le quatrième chapitre explique en détail les différentes fonctionnalités présentes dans l'application.Enfin, le dernier chapitre évoque les retours de chaque membre du groupe par rapport au projet.
 
 \newpage
 
-\##**Chapitre1: Description du projet**
+```{=latex}
+\mychapter{Description du projet}
+```
 
-###1.1.Le cahier de charges
+```{=latex}
+\sectiontitre{Le cahier de charges}
+```
 
-####Présentation d’ensemble du projet
+```{=latex}
+\subsectiontitre{Présentation d’ensemble du projet}
+```
 
 Le “LaborScope” est une application dédiée à l’analyse des statistiques mondiales du marché du travail. C’est une application interactive alimentée par les données ouvertes de l'Organisation Internationale du Travail (ILOSTAT). L’objectif de cette application est dans un premier temps, de récupérer des données brutes (des indicateurs) comme l'emploi par sexe et profession, ou la population en âge de travailler depuis le site, de les extraire et de les stocker localement pour des fins d’analyse et de visualisation.
 
@@ -157,71 +170,92 @@ C’est une application sécurisée (avec gestion des utilisateurs et administra
 
 L'objectif final est de transformer des données statistiques brutes et complexes en un outil simple qui permet de comprendre, comment évolue l'emploi dans le monde et comment les pays se comparent entre eux.
 
-####Identification des utilisateurs
+```{=latex}
+\subsectiontitre{Identification des utilisateurs}
+```
 
-On distingue deux types d’utilisateurs dans l’accès aux fonctionnalités de l’application: les utilisateurs et les administrateurs.
+On distingue deux types de profils dans l’accès aux fonctionnalités de l’application: les utilisateurs et les administrateurs.
 
 Les utilisateurs disposent d’un compte classique leur permettant de consulter des analyses, et de visualiser les données. Ils peuvent également générer de manière automatique des rapports d’analyse au format PDF contenant les données qu’ils ont consultées. Les administrateurs sont chargés de la gestion des comptes utilisateurs classiques et peuvent modifier ou supprimer des données. Ils peuvent également faire un suivi des activités. Les utilisateurs de l’application ne peuvent pas obtenir le statut d’administrateur. Ceci permet de mieux contrôler l’accès aux modifications des données.
 
-###1.2.Organisation du travail
+```{=latex}
+\sectiontitre{Organisation du travail}
+```
 
-Pour livrer notre application à temps, nous avons réalisé un diagramme de GANTT. C’est un calendrier prévisionnel avec les différentes tâches à réaliser et leur
-durée estimée. Ce type de diagramme est indispensable pour avoir une bonne vision de
-l’avancement du projet et ne pas perdre de vue les dates de rendus.
-Dans le cadre de notre projet, nous pouvons distinguer cinq grandes étapes :\newline
-• « Diagramme UML » : il s’agit ici de modéliser l’ensemble du projet en respectant le
-cahier des charges que nous avons établi. Il y a pour cela deux phases. La première
-est la phase d’étude. Elle permet de construire le diagramme de cas d’utilisation.
-Vient ensuite la phase de conception. Il s’agit alors de créer les diagrammes d’acti￾vités correspondant aux use cases du premier diagramme, le diagramme de classes
-et celui de la base de données. Cette étape est cruciale car sans elle, l’implémen￾tation ne pourra être faite correctement.\newline
-• « Dossier d’analyse » : pour s’assurer du bon démarrage du projet, nous avons
-réalisé un dossier d’analyse qui regroupe l’ensemble de la planification et de la
-modélisation. Il était à rendre pour le 1er Octobre. Chacun d’entre nous ayant par￾ticipé à la rédaction de ce rapport, il était important de consacrer deux semaines,
-dont une exclusive, à sa conception (du 19 septembre au 30 octobre). Cela permet
-d’assurer la cohérence du contenu et d’en faire des relectures.\newline
-• « Implémentation » : c’est le temps de la réalisation du projet. Cette étape com￾porte la création de la base de données relationnelle, l’importation du fichier JSON
-et le développement du système JAVA. C’est la partie la plus longue du projet.
-Nous avions prévu d’y consacrer 29 jours du 2 au 31 octobre, or nous avons eu
-besoin de 10 jours supplémentaires pour que tout fonctionne correctement.\newline
-• « Rapport et code » : cette étape contient plusieurs dates butoirs : le rendu de ce
-rapport et du code semi-définitif le 16 novembre puis le rendu du code définitif une
-semaine plus tard. Afin de gagner du temps, nous voulions rédiger le rapport paral￾lèlement à l’étape d’implémentaion. Cette dernière plus complexe et chronophage
-que prévu, nous avons décidé de, finalement, repousser l’écriture au 4 novembre.
-Tout comme pour le dossier d’analyse, nous avons accordé deux jours à la relecture.
-Le code final étant à rendre pour le 23 novembre, nous consacrerons la semaine 47
-à finir la JavaDoc.\newline
-• « Soutenance » : pour finir, nous aurons une semaine pour créer un diaporama afin
-de présenter notre projet le 1er décembre devant un jury composé d’un professionnel
-de l’informatique, de notre encadrant et d’un représentant de l’ENSAI.\newline
+Pour livrer notre application à temps, nous avons réalisé un diagramme de GANTT. C’est un calendrier prévisionnel avec les différentes tâches à réaliser et leur durée estimée. Ce type de diagramme est indispensable pour avoir une bonne vision de l’avancement du projet et ne pas perdre de vue les dates de rendus. Dans le cadre de notre projet, nous pouvons distinguer cinq grandes étapes :\newline • « Diagramme UML » : il s’agit ici de modéliser l’ensemble du projet en respectant le cahier des charges que nous avons établi. Il y a pour cela deux phases. La première est la phase d’étude. Elle permet de construire le diagramme de cas d’utilisation. Vient ensuite la phase de conception. Il s’agit alors de créer les diagrammes d’acti￾vités correspondant aux use cases du premier diagramme, le diagramme de classes et celui de la base de données. Cette étape est cruciale car sans elle, l’implémen￾tation ne pourra être faite correctement.\newline • « Dossier d’analyse » : pour s’assurer du bon démarrage du projet, nous avons réalisé un dossier d’analyse qui regroupe l’ensemble de la planification et de la modélisation. Il était à rendre pour le 1er Octobre. Chacun d’entre nous ayant par￾ticipé à la rédaction de ce rapport, il était important de consacrer deux semaines, dont une exclusive, à sa conception (du 19 septembre au 30 octobre). Cela permet d’assurer la cohérence du contenu et d’en faire des relectures.\newline • « Implémentation » : c’est le temps de la réalisation du projet. Cette étape com￾porte la création de la base de données relationnelle, l’importation du fichier JSON et le développement du système JAVA. C’est la partie la plus longue du projet. Nous avions prévu d’y consacrer 29 jours du 2 au 31 octobre, or nous avons eu besoin de 10 jours supplémentaires pour que tout fonctionne correctement.\newline • « Rapport et code » : cette étape contient plusieurs dates butoirs : le rendu de ce rapport et du code semi-définitif le 16 novembre puis le rendu du code définitif une semaine plus tard. Afin de gagner du temps, nous voulions rédiger le rapport paral￾lèlement à l’étape d’implémentaion. Cette dernière plus complexe et chronophage que prévu, nous avons décidé de, finalement, repousser l’écriture au 4 novembre. Tout comme pour le dossier d’analyse, nous avons accordé deux jours à la relecture. Le code final étant à rendre pour le 23 novembre, nous consacrerons la semaine 47 à finir la JavaDoc.\newline • « Soutenance » : pour finir, nous aurons une semaine pour créer un diaporama afin de présenter notre projet le 1er décembre devant un jury composé d’un professionnel de l’informatique, de notre encadrant et d’un représentant de l’ENSAI.\newline
 
-###1.3.Normes de codage utilisées
+```{=latex}
+\sectiontitre{Normes de codage utilisées}
+
+```
 
 Pour que n’importe quel programme soit facilement compréhensible par tous les développeurs informatiques, il existe des conventions de nommage en python. Ainsi le projet **Laborscope**, développée en python suit les règles suivantes :\newline
 
-•Indentation : 4 espaces par niveau (jamais de tabulations mélangées avec des espaces)\newline
-•Longueur de ligne : 79 caractères maximum pour le code (72 pour les commentaires et docstrings). Certaines lignes  s'étendent à 88 ou 100.\newline
-•Lignes vides : 2 lignes entre les fonctions et classes de niveau supérieur, 1 ligne entre les méthodes\newline
-•Imports : un par ligne, en haut du fichier, regroupés dans l’ordre : bibliothèque standard, bibliothèques tierces, modules locaux\newline
-•Espaces : autour des opérateurs, pas d’espace avant les parenthèses d’un appel (f(x)), pas d’espace superflu à l’intérieur des crochets.\newline
+•Indentation : 4 espaces par niveau (jamais de tabulations mélangées avec des espaces)\newline •Longueur de ligne : 79 caractères maximum pour le code (72 pour les commentaires et docstrings). Certaines lignes s'étendent à 88 ou 100.\newline •Lignes vides : 2 lignes entre les fonctions et classes de niveau supérieur, 1 ligne entre les méthodes\newline •Imports : un par ligne, en haut du fichier, regroupés dans l’ordre : bibliothèque standard, bibliothèques tierces, modules locaux\newline •Espaces : autour des opérateurs, pas d’espace avant les parenthèses d’un appel (f(x)), pas d’espace superflu à l’intérieur des crochets.\newline
 
 Pour faciliter la lecture de notre code, et permettre à d’autres développeurs de travailler dessus par la suite, nous l’avons commenté.
 
 \newpage
 
-##Chapitre2:Modelisation de l'application
+```{=latex}
+\mychapter{Modelisation de l'application}
+```
 
-Pour bien comprendre l’application **Laborscope**, nous allons expliquer ici l’ensemble des possibilités qu’elle offre à un utilisateur. Pour une meilleure conceptualisation,
-nous utiliserons des diagrammes UML.
-\newline
-Tout d’abord, il est nécessaire de créer un compte. En effet notre application est utilisable par plusieurs utilisateurs(administrateurs et utilisateurs). Avant la première connexion, l’utilisateur est obligé de
-créer un compte à l’aide d’un pseudo et d’un mot de passe. Deux utilisateurs ne peuvent avoir le même identifiant, ce dernier se doit d’être unique.
+Pour bien comprendre l’application **Laborscope**, nous allons expliquer ici l’ensemble des possibilités qu’elle offre à un utilisateur. Pour une meilleure conceptualisation, nous utiliserons des diagrammes UML. \newline Tout d’abord, il est nécessaire de créer un compte. En effet notre application est utilisable par plusieurs utilisateurs(administrateurs et utilisateurs). Avant la première connexion, l’utilisateur est obligé de créer un compte à l’aide d’un pseudo et d’un mot de passe. Deux utilisateurs ne peuvent avoir le même identifiant, ce dernier se doit d’être unique.
 
-###2.1.Menu principal
+
+```{=latex}
+\sectiontitre{Menu principal}
+```
 
 Si son compte existe déjà, l’utilisateur se connecte grâce à son pseudo et son mot de passe. Il accède alors aux fonctions principales de l’application, à savoir:. L’utilisateur peut aussi simplement choisir de consulter.
 
-##Chapitre3: Implémentation
+\newpage
 
-##Chapitre4: Fonctionnement de l'application
+```{=latex}
+\mychapter{Implémentation}
+```
+(obtention des données et fonctionnement du DAO)
 
-\##**CONCLUSION**
+Ce chapitre décrit la manière dont LaborScope a été réalisé, depuis les données brutes d’ILOSTAT jusqu’à l’application interactive utilisée par l’utilisateur final. Il présente les choix techniques retenus, l’organisation de la base de donnée et les principaux points de fonctionnement du DAO.
+
+\newpage
+
+```{=latex}
+\mychapter{Fonctionnement de l'application}
+```
+
+(Détails sur les fonctionnalités de l'application)
+
+\newpage
+
+```{=latex}
+\mychapter{Retour sur le projet}
+```
+
+```{=latex}
+\sectiontitre{Témoignage de Christian}
+```
+
+```{=latex}
+\sectiontitre{Témoignage de Clarence}
+```
+
+```{=latex}
+\sectiontitre{Témoignage d'Antifa}
+```
+
+```{=latex}
+\sectiontitre{Témoignage de Laurent}
+```
+
+```{=latex}
+\sectiontitre{Témoignage de William}
+```
+
+\newpage
+
+```{=latex}
+\mychapterstar{CONCLUSION}
+```
+

@@ -1,8 +1,10 @@
-# Tests d'ObservationDAO sur la vraie base
-# (pays 'ZZZ' et indicateur 'TEST_DAO', supprimés après chaque test avec leurs observations : c.f. conftest.py)
-#
-# Lancement (depuis le dossier backend) :
-#     uv run pytest src/tests/test_dao
+"""Tests d'ObservationDAO sur la vraie base
+(pays 'ZZZ' et indicateur 'TEST_DAO', supprimés après chaque test avec leurs observations : c.f.
+conftest.py)
+
+Lancement (depuis le dossier backend) :
+    uv run pytest src/tests/test_dao
+"""
 
 import pandas as pd
 
@@ -127,7 +129,7 @@ def test_modifier():
 
 def test_modifier_observation_inexistante():
     # GIVEN : la base ne contient pas l'observation
-    indicateur_id = preparer_base()
+    preparer_base()
     # WHEN
     ok = ObservationDAO().modifier(cle_total(), 77.0)
     # THEN
@@ -148,7 +150,7 @@ def test_supprimer():
 
 def test_supprimer_observation_inexistante():
     # GIVEN
-    indicateur_id = preparer_base()
+    preparer_base()
     # WHEN
     ok = ObservationDAO().supprimer(cle_total())
     # THEN

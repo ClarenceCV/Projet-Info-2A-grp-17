@@ -13,3 +13,20 @@ dependencies = [
     "requests",                  # appels à l'API
     "streamlit>=1.66.1",         # interface web
 ]
+
+[dependency-groups]
+dev = [
+    "pylint>=4.1.4",
+]
+
+[tool.ruff]
+line-length = 100            # même limite que pylint
+
+[tool.pylint.format]
+max-line-length = 100
+
+[tool.pylint.basic]
+# Une page Streamlit est un script exécuté de haut en bas à chaque clic : ses variables de niveau
+# module (ex : colonne_y) sont des variables ordinaires, pas des constantes. On accepte donc aussi
+# le snake_case pour elles (les vraies constantes restent en MAJUSCULES, ex : LIMITE).
+const-rgx = "(([A-Z_][A-Z0-9_]*)|([a-z_][a-z0-9_]*))$"

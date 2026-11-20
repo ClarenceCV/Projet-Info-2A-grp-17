@@ -1,11 +1,12 @@
-# Page « Créer un compte » : formulaire, puis connexion automatique.
-# Endpoints utilisés : POST /utilisateurs, POST /login (via utils/session.py)
-# Responsable : B
+"""Page « Créer un compte » : formulaire, puis connexion automatique.
+Endpoints utilisés : POST /utilisateurs, POST /login (via utils/session.py)
+Responsable : B
+"""
 
 import streamlit as st
 
 from utils.api_client import api_client
-from utils.session import connecter, message_erreur
+from utils.session import connecter_et_ouvrir_accueil, message_erreur
 
 st.title("Créer un compte")
 
@@ -25,12 +26,7 @@ if envoye:
             "/utilisateurs", json={"pseudo": pseudo, "mot_de_passe": mot_de_passe}
         )
         if reponse["status_code"] == 201:
-            erreur = connecter(pseudo, mot_de_passe)  # on évite de lui redemander ses identifiants
-            if erreur:
-                st.error(erreur)
-            else:
-                st.switch_page("pages/accueil.py")
-        elif reponse["status_code"] == 0:  # backend injoignable
-            st.error(reponse["data"])
-        else:  # 400 : pseudo pris, mot de passe trop court...
+            # connexion automatique : on évite de lui redemander ses identifiants
+            connecter_et_ouvrir_accueil(pseudo, mot_de_passe)
+        else:  # backend injoignable, ou 400 : pseudo pris, mot de passe trop court...
             st.error(message_erreur(reponse))

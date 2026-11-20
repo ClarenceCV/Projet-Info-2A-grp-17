@@ -20,8 +20,8 @@ from utils.securite import hacher_mdp, verifier_mdp
 JDUPONT = Utilisateur(pseudo="jdupont", role="utilisateur", id=1)
 
 
-@pytest.fixture(autouse=True)
-def faux_journal():
+@pytest.fixture(name="faux_journal", autouse=True)
+def fixture_faux_journal():
     """
     Exécutée automatiquement avant CHAQUE test du fichier (autouse=True) : le journal est remplacé
     par un faux, pour ne pas écrire dans une vraie base. Le test peut le recevoir en paramètre

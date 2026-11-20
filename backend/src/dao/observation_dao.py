@@ -3,10 +3,10 @@ sortie : sql (et inversement pour les lectures)"""
 
 import pandas as pd
 from psycopg2.extras import execute_values
-from schema.observation_model import CleObservationModel
-from utils.log_utils import log
 
 from dao.db_connection import DBConnection
+from schema.observation_model import CleObservationModel
+from utils.log_utils import log
 
 # Colonnes du DataFrame propre envoyées dans la table observation (même nom des deux côtés)
 COLONNES_OBSERVATION = ["code_iso", "source", "periode", "sexe", "classif1", "valeur", "statut"]
@@ -152,7 +152,8 @@ class ObservationDAO:
         with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT DISTINCT o.classif1 COLLATE \"C\" AS classif1 "  # tri octet par octet : même ordre partout
+                    # tri octet par octet : même ordre partout
+                    "SELECT DISTINCT o.classif1 COLLATE \"C\" AS classif1 "
                     "FROM laborscope.observation o "
                     "JOIN laborscope.indicateur i ON i.id = o.indicateur_id "
                     "WHERE i.code = %(code)s AND o.classif1 IS NOT NULL "

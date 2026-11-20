@@ -6,6 +6,7 @@ Filtres centres, previsualisation integree du PDF et telechargement optionnel.
 import base64
 
 import streamlit as st
+
 from utils.api_client import api_client
 from utils.auth_guard import exiger_connexion
 from utils.selecteurs import (
@@ -52,7 +53,9 @@ with st.container(border=True):
 # ------------------------------------------------------------------------------
 if generer_clic:
     if not code_indicateur or not classif1:
-        st.error("Aucun indicateur disponible : importez d'abord les donnees (page administration).")
+        st.error(
+            "Aucun indicateur disponible : importez d'abord les donnees (page administration)."
+        )
     elif not pays_selectionnes:
         st.error("Veuillez selectionner au moins un pays.")
     else:

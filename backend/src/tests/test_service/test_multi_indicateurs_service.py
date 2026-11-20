@@ -16,14 +16,14 @@ from service.multi_indicateurs_service import MultiIndicateursService
 # ------------------------------------------------------------------------------
 
 
-@pytest.fixture
-def service() -> MultiIndicateursService:
+@pytest.fixture(name="service")
+def fixture_service() -> MultiIndicateursService:
     """Fournit une instance fraîche du service à chaque test."""
     return MultiIndicateursService()
 
 
-@pytest.fixture
-def indicateurs_mock() -> dict[str, Indicateur]:
+@pytest.fixture(name="indicateurs_mock")
+def fixture_indicateurs_mock() -> dict[str, Indicateur]:
     """Jeux d'indicateurs factices pour les tests."""
     return {
         "EMP": Indicateur(code="A", libelle="Emploi", unite="milliers", frequence="Q"),

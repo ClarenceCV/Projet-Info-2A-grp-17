@@ -1,13 +1,15 @@
-# Tests des endpoints des comptes (F6) : /login, /logout, /utilisateurs, /admin/utilisateurs, /admin/journal.
-#
-# On utilise TestClient (fourni par FastAPI) : il envoie de vraies requêtes HTTP à l'application,
-# sans lancer de serveur. Les services sont remplacés par des faux : pas de base de données.
-#
-# On n'importe PAS main.py : il se connecte à la base dès l'import. On construit à la place une petite
-# application avec les mêmes routeurs et les mêmes préfixes que dans main.py.
-#
-# Lancement (depuis le dossier backend) :
-#     uv run pytest src/tests/test_controller/test_comptes_controller.py
+"""Tests des endpoints des comptes (F6) : /login, /logout, /utilisateurs, /admin/utilisateurs,
+/admin/journal.
+
+On utilise TestClient (fourni par FastAPI) : il envoie de vraies requêtes HTTP à l'application,
+sans lancer de serveur. Les services sont remplacés par des faux : pas de base de données.
+
+On n'importe PAS main.py : il se connecte à la base dès l'import. On construit à la place une petite
+application avec les mêmes routeurs et les mêmes préfixes que dans main.py.
+
+Lancement (depuis le dossier backend) :
+    uv run pytest src/tests/test_controller/test_comptes_controller.py
+"""
 
 from datetime import datetime
 from unittest.mock import patch
@@ -18,17 +20,15 @@ from fastapi.testclient import TestClient
 
 from business_object.action_journal import ActionJournal
 from business_object.utilisateur import Utilisateur
-from controller import admin_utilisateur_controller, journal_controller, login_controller, utilisateur_controller
+from controller import (
+    admin_utilisateur_controller,
+    journal_controller,
+    login_controller,
+    utilisateur_controller,
+)
 from service.journal_service import JournalService
 from service.utilisateur_service import UtilisateurService
-
-JDUPONT = Utilisateur(pseudo="jdupont", role="utilisateur", id=1)
-ADMIN = Utilisateur(pseudo="admin", role="admin", id=2)
-
-# Faux tokens : l'en-tête X-Auth-Token à envoyer pour être « connecté » en tant que...
-EN_TETE_USER = {"X-Auth-Token": "token-user"}
-EN_TETE_ADMIN = {"X-Auth-Token": "token-admin"}
-TOKENS = {"token-user": JDUPONT, "token-admin": ADMIN}
+from tests.test_controller.faux_comptes import ADMIN, EN_TETE_ADMIN, EN_TETE_USER, JDUPONT, TOKENS
 
 app = FastAPI()
 app.include_router(login_controller.router)
@@ -104,25 +104,33 @@ def test_moi_sans_token_valide_401(en_tetes):
 
 def test_creer_compte_201():
     with patch.object(UtilisateurService, "creer_compte", return_value=JDUPONT) as faux:
-        reponse = client.post("/utilisateurs", json={"pseudo": "jdupont", "mot_de_passe": "motdepasse123"})
+        reponse = client.post(
+            "/utilisateurs", json={"pseudo": "jdupont", "mot_de_passe": "motdepasse123"}
+        )
     assert reponse.status_code == 201
     faux.assert_called_once_with("jdupont", "motdepasse123")  # aucun rôle transmis : 'utilisateur'
 
 
 def test_creer_compte_pas_de_mot_de_passe_dans_la_reponse():
     with patch.object(UtilisateurService, "creer_compte", return_value=JDUPONT):
-        reponse = client.post("/utilisateurs", json={"pseudo": "jdupont", "mot_de_passe": "motdepasse123"})
+        reponse = client.post(
+            "/utilisateurs", json={"pseudo": "jdupont", "mot_de_passe": "motdepasse123"}
+        )
     assert set(reponse.json()) == {"id", "pseudo", "role", "date_creation"}
 
 
 def test_creer_compte_pseudo_deja_pris_400():
     with patch.object(UtilisateurService, "creer_compte", return_value=None):
-        reponse = client.post("/utilisateurs", json={"pseudo": "jdupont", "mot_de_passe": "motdepasse123"})
+        reponse = client.post(
+            "/utilisateurs", json={"pseudo": "jdupont", "mot_de_passe": "motdepasse123"}
+        )
     assert reponse.status_code == 400
 
 
 def test_creer_compte_valeur_invalide_400_avec_message():
-    with patch.object(UtilisateurService, "creer_compte", side_effect=ValueError("Mot de passe trop court.")):
+    with patch.object(
+        UtilisateurService, "creer_compte", side_effect=ValueError("Mot de passe trop court.")
+    ):
         reponse = client.post("/utilisateurs", json={"pseudo": "jdupont", "mot_de_passe": "court"})
     assert reponse.status_code == 400
     assert reponse.json()["detail"] == "Mot de passe trop court."
@@ -131,7 +139,10 @@ def test_creer_compte_valeur_invalide_400_avec_message():
 def test_creer_compte_ne_permet_pas_de_devenir_admin():
     # un champ 'role' envoyé à POST /utilisateurs est ignoré : le service ne le reçoit pas
     with patch.object(UtilisateurService, "creer_compte", return_value=JDUPONT) as faux:
-        client.post("/utilisateurs", json={"pseudo": "pirate", "mot_de_passe": "motdepasse123", "role": "admin"})
+        client.post(
+            "/utilisateurs",
+            json={"pseudo": "pirate", "mot_de_passe": "motdepasse123", "role": "admin"},
+        )
     faux.assert_called_once_with("pirate", "motdepasse123")
 
 
@@ -140,8 +151,12 @@ def test_creer_compte_ne_permet_pas_de_devenir_admin():
 
 @pytest.mark.parametrize(
     "methode, chemin",
-    [("GET", "/admin/utilisateurs"), ("POST", "/admin/utilisateurs"), ("DELETE", "/admin/utilisateurs/1"),
-     ("GET", "/admin/journal")],
+    [
+        ("GET", "/admin/utilisateurs"),
+        ("POST", "/admin/utilisateurs"),
+        ("DELETE", "/admin/utilisateurs/1"),
+        ("GET", "/admin/journal"),
+    ],
 )
 def test_admin_refuse_sans_token_401_et_utilisateur_simple_403(methode, chemin):
     corps = {"pseudo": "marie", "mot_de_passe": "motdepasse123"} if methode == "POST" else None
@@ -202,15 +217,22 @@ def test_admin_supprimer_son_propre_compte_400():
 
 
 def test_journal_renvoie_les_actions_avec_leur_libelle():
-    action = ActionJournal(action="echec_connexion", pseudo="pirate", id=7, date=datetime(2026, 11, 5, 10, 0))
+    action = ActionJournal(
+        action="echec_connexion", pseudo="pirate", id=7, date=datetime(2026, 11, 5, 10, 0)
+    )
     with patch.object(JournalService, "lister", return_value=[action]) as faux:
         reponse = client.get(
-            "/admin/journal", headers=EN_TETE_ADMIN, params={"action": "echec_connexion", "limite": 10}
+            "/admin/journal",
+            headers=EN_TETE_ADMIN,
+            params={"action": "echec_connexion", "limite": 10},
         )
     assert reponse.status_code == 200
     assert reponse.json()[0]["libelle_action"] == "Échec de connexion"
-    faux.assert_called_once_with("echec_connexion", None, 10)  # les filtres sont transmis au service
+    # les filtres sont transmis au service
+    faux.assert_called_once_with("echec_connexion", None, 10)
 
 
 def test_journal_limite_hors_bornes_422():
-    assert client.get("/admin/journal", headers=EN_TETE_ADMIN, params={"limite": 0}).status_code == 422
+    assert (
+        client.get("/admin/journal", headers=EN_TETE_ADMIN, params={"limite": 0}).status_code == 422
+    )

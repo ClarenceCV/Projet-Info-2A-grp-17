@@ -1,14 +1,15 @@
-# Réinitialise la base de données : exécute data/init_db.sql (les tables, vides, c.f. tp3)
-# puis recrée les comptes par défaut (user / user et admin / admin, c.f. utils/comptes_par_defaut.py)
-# ATTENTION : supprime et recrée le schéma laborscope, toutes les données sont perdues
-#
-# Les données s'importent ensuite depuis ILOSTAT (python -m fetcher.charger_donnees).
-# En dépannage (API ILOSTAT injoignable, démo hors ligne), l'option --exemple charge aussi
-# data/pop_db.sql : un petit extrait de vraies données ILOSTAT.
-#
-# Lancement (depuis backend/src) :
-#     python -m utils.reset_database              # tables vides (cas normal)
-#     python -m utils.reset_database --exemple    # tables + jeu de données de dépannage
+"""Réinitialise la base de données : exécute data/init_db.sql (les tables, vides, c.f. tp3)
+puis recrée les comptes par défaut (user / user et admin / admin, c.f. utils/comptes_par_defaut.py)
+ATTENTION : supprime et recrée le schéma laborscope, toutes les données sont perdues
+
+Les données s'importent ensuite depuis ILOSTAT (python -m fetcher.charger_donnees).
+En dépannage (API ILOSTAT injoignable, démo hors ligne), l'option --exemple charge aussi
+data/pop_db.sql : un petit extrait de vraies données ILOSTAT.
+
+Lancement (depuis backend/src) :
+    python -m utils.reset_database              # tables vides (cas normal)
+    python -m utils.reset_database --exemple    # tables + jeu de données de dépannage
+"""
 
 import sys
 from pathlib import Path
@@ -72,10 +73,10 @@ class ResetDatabase:
 if __name__ == "__main__":
     dotenv.load_dotenv(override=True)  # charge le .env avant la connexion
 
-    avec_exemple = "--exemple" in sys.argv
+    option_exemple = "--exemple" in sys.argv
     reset = ResetDatabase()
-    reset.lancer(avec_exemple=avec_exemple)
-    if avec_exemple:
+    reset.lancer(avec_exemple=option_exemple)
+    if option_exemple:
         print("Jeu de données de dépannage chargé (data/pop_db.sql).")
     print("Comptes par défaut :")
     creer_comptes_par_defaut()

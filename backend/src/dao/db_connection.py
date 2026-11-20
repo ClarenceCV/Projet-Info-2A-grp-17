@@ -6,11 +6,29 @@ import psycopg2  # librairie essentielle pour faire le lien entre SQL et notre b
 from psycopg2.extras import (
     RealDictCursor,  # pour que le cursor puisse renvoyer un format dictionnaire propre
 )
+
 from utils.log_utils import log
 from utils.singleton import (
     Singleton,  # pour bloquer la possibiliter de créer plus d'une instance de
     # la classe DB connxion (on en veut qu'une seule)
 )
+
+
+def parametres_connexion() -> dict[str, str]:
+    """
+    Paramètres de connexion à PostgreSQL, lus dans les variables d'environnement (fichier .env).
+    Utilisée aussi par les tests DAO pour vérifier que la base répond.
+
+    Raises:
+        KeyError: si une variable POSTGRES_* est absente
+    """
+    return {
+        "host": os.environ["POSTGRES_HOST"],
+        "port": os.environ["POSTGRES_PORT"],
+        "database": os.environ["POSTGRES_DATABASE"],
+        "user": os.environ["POSTGRES_USER"],
+        "password": os.environ["POSTGRES_PASSWORD"],
+    }
 
 
 class DBConnection(metaclass=Singleton):
@@ -32,11 +50,7 @@ class DBConnection(metaclass=Singleton):
         """
 
         self.__connection = psycopg2.connect(
-            host=os.environ["POSTGRES_HOST"],
-            port=os.environ["POSTGRES_PORT"],
-            database=os.environ["POSTGRES_DATABASE"],
-            user=os.environ["POSTGRES_USER"],
-            password=os.environ["POSTGRES_PASSWORD"],
+            **parametres_connexion(),
             options=f"-c search_path={os.environ['POSTGRES_SCHEMA']}",
             cursor_factory=RealDictCursor,
         )

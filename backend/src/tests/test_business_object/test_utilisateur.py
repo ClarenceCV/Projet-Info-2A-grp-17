@@ -1,8 +1,9 @@
-# Tests de l'objet métier Utilisateur (vérifications faites à la création, propriété est_admin).
-# Pas de base, pas de faux objet : on teste seulement la classe.
-#
-# Lancement (depuis le dossier backend) :
-#     uv run pytest src/tests/test_business_object
+"""Tests de l'objet métier Utilisateur (vérifications faites à la création, propriété est_admin).
+Pas de base, pas de faux objet : on teste seulement la classe.
+
+Lancement (depuis le dossier backend) :
+    uv run pytest src/tests/test_business_object
+"""
 
 import pytest
 

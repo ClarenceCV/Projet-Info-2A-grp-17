@@ -16,7 +16,20 @@ class MultiIndicateursService:
         self.indicateur_dao = IndicateurDAO()
         self.observation_dao = ObservationDAO()
 
-    def comparer(self, selections: list[Selection],  base_100: bool = True) -> pd.DataFrame:
+    def comparer(self, selections: list[Selection], base_100: bool = True) -> pd.DataFrame:
+        """
+        Assemble les séries demandées en un seul tableau, prêt à tracer.
+
+        Args:
+            selections (list[Selection]): 1 à 4 séries (indicateur, pays, classif1, sexe)
+            base_100 (bool): True pour ajouter la colonne valeur_base100 (1re période = 100)
+
+        Returns:
+            pd.DataFrame: une ligne par point (serie, indicateur, periode, valeur, ...)
+
+        Raises:
+            ValueError: indicateur inconnu, ou indicateurs de fréquences différentes
+        """
         # 1. Vérification préalable des indicateurs et de leurs fréquences
         frequences = set()
         indicateurs_valides = []
