@@ -179,12 +179,19 @@ On distingue deux types de profils dans l’accès aux fonctionnalités de l’a
 Les utilisateurs disposent d’un compte classique leur permettant de consulter des analyses, et de visualiser les données. Ils peuvent également générer de manière automatique des rapports d’analyse au format PDF contenant les données qu’ils ont consultées. Les administrateurs sont chargés de la gestion des comptes utilisateurs classiques et peuvent modifier ou supprimer des données. Ils peuvent également faire un suivi des activités. Les utilisateurs de l’application ne peuvent pas obtenir le statut d’administrateur. Ceci permet de mieux contrôler l’accès aux modifications des données.
 
 ```{=latex}
-\sectiontitre{Organisation du travail}
+\sectiontitre{Méthodologie de travail et organisation de l'équipe}
 ```
 
+```{=latex}
+\subsectiontitre{Méthode de travail}
+```
 Pour livrer notre application à temps, nous avons réalisé un diagramme de GANTT. C’est un calendrier prévisionnel avec les différentes tâches à réaliser et leur durée estimée. Ce type de diagramme est indispensable pour avoir une bonne vision de l’avancement du projet et ne pas perdre de vue les dates de rendus. \newline
 Dans le cadre de notre projet, nous pouvons distinguer cinq grandes étapes :\newline • « Diagramme UML » : il s’agit ici de modéliser l’ensemble du projet en respectant le cahier des charges que nous avons établi. Il y a pour cela deux phases. La première est la phase d’étude. Elle permet de construire le diagramme de cas d’utilisation. Vient ensuite la phase de conception. Il s’agit alors de créer les diagrammes d’activités correspondant aux cas d'utilisation du premier diagramme, le diagramme de classes et celui de la base de données. Cette étape est cruciale car sans elle, l’implémentation ne pourra être faite correctement.\newline • « Dossier d’analyse » : pour s’assurer du bon démarrage du projet, nous avons réalisé un dossier d’analyse qui regroupe l’ensemble de la planification et de la modélisation. Chacun d’entre nous ayant participé à la rédaction de ce rapport, il était important de consacrer du temps à sa conception. Cela permet d’assurer la cohérence du contenu et d’en faire des relectures.\newline • « Implémentation » : c’est le temps de la réalisation du projet. Cette étape comporte l'importation des données à partir de l'ILOSTAT,la création de la base de données, le développement de la DAO et la mise en place des différentes fonctionnalités du projet. C’est la partie la plus longue du projet. Nous avions prévu d’y consacrer environ 1 mois après le dépot du rapport intermédiaire, or nous avons eu besoin de 10 jours supplémentaires pour que tout fonctionne correctement.\newline • « Rapport et code » : Afin de gagner du temps, nous voulions rédiger le rapport parallèlement à l’étape d’implémentaion. Cette dernière plus complexe et chronophage que prévu, nous avons décidé de, finalement, repousser l’écriture au.... Tout comme pour le dossier d’analyse, nous avons accordé deux jours à la relecture. Le code final étant à rendre pour le 25 novembre, nous consacrerons la dernière semaine au dossier final.\newline • « Soutenance » : pour finir, nous aurons une semaine pour créer un diaporama afin de présenter notre projet le 09 décembre devant un jury composé d’un professionnel de l’informatique, de notre encadrant et d’un représentant de l’ENSAI.\newline
 
+```{=latex}
+\subsectiontitre{Organisation de l'équipe}
+```
+ Pour la bonne avancée du travail, les taches ont été réparties parmis les cinq membres du groupe.
 ```{=latex}
 \sectiontitre{Réadaptation des diagrammes}
 ```
@@ -193,7 +200,7 @@ Dans le cadre de notre projet, nous pouvons distinguer cinq grandes étapes :\ne
 ```{=latex}
 \subsectiontitre{Diagramme d'architecture}
 ```
- Voila ci contre le diagramme d'architecture qui montre la structure globale de l'API:
+ Voilà ci contre le diagramme d'architecture qui montre la structure globale de l'API:
  
 ```{=latex}
 \subsectiontitre{Diagramme de classes}
