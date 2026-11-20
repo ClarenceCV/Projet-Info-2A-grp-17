@@ -1,7 +1,7 @@
 # Tests de l'objet métier ActionJournal (une ligne du journal des actions).
 #
-# Lancement (depuis la racine du projet) :
-#     uv run pytest backend/src/tests/test_business_object
+# Lancement (depuis le dossier backend) :
+#     uv run pytest src/tests/test_business_object
 
 import pytest
 

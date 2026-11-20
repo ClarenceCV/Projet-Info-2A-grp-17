@@ -8,8 +8,8 @@
 # Si la base est injoignable (ex : sur un PC personnel ou sur GitHub), les tests DAO sont
 # ignorés (SKIPPED) avec la raison affichée, au lieu d'échouer : les autres tests restent utilisables.
 #
-# Lancement (depuis la racine du projet) :
-#     uv run pytest backend/src/tests/test_dao -rs        (-rs : affiche la raison des tests ignorés)
+# Lancement (depuis le dossier backend) :
+#     uv run pytest src/tests/test_dao -rs        (-rs : affiche la raison des tests ignorés)
 
 import os
 

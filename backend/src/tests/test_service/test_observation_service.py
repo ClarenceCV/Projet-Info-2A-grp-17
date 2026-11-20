@@ -3,8 +3,8 @@ Tests du service des observations.
 Le DAO est remplacé par un faux (patch.object) qui renvoie un petit DataFrame écrit à la main :
 les tests ne dépendent pas de la base et on connaît le résultat attendu.
 
-Lancement (depuis la racine du projet) :
-     uv run pytest backend/src/tests
+Lancement (depuis le dossier backend) :
+     uv run pytest src/tests
 """
 
 from unittest.mock import patch

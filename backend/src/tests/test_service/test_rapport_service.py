@@ -4,8 +4,8 @@ Les services d'évolution et de comparaison sont remplacés par des faux (patch)
 qui renvoient de petits DataFrames écrits à la main : les tests ne dépendent
 ni de la base ni d'ILOSTAT, et on connaît le résultat attendu.
 
-Lancement (depuis la racine du projet) :
-     uv run pytest backend/src/tests
+Lancement (depuis le dossier backend) :
+     uv run pytest src/tests
 """
 
 from unittest.mock import patch

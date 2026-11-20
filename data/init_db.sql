@@ -4,7 +4,8 @@
 --   - observation      : table de faits (une ligne = une valeur ILOSTAT)
 --   Comptes (F6) :
 --   - utilisateur, journal
--- Les indicateurs ne sont pas insérés ici : l'import les crée à partir de la configuration Python.
+-- Les tables sont créées vides : elles se remplissent avec l'import ILOSTAT (fetcher.charger_donnees).
+-- En dépannage, data/pop_db.sql fournit un petit jeu de données (reset_database --exemple).
 -- ATTENTION : supprime tout le schéma existant (utilisé aussi par utils/reset_database.py)
 
 DROP SCHEMA IF EXISTS laborscope CASCADE;

@@ -3,8 +3,8 @@ Tests du service du journal des actions (F6).
 Le DAO est remplacé par un faux (patch.object) : les tests ne dépendent pas de la base
 et on peut vérifier précisément ce qui lui est transmis.
 
-Lancement (depuis la racine du projet) :
-     uv run pytest backend/src/tests
+Lancement (depuis le dossier backend) :
+     uv run pytest src/tests
 """
 
 from unittest.mock import patch

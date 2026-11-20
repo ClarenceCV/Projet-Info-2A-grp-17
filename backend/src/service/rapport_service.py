@@ -3,7 +3,12 @@
 import io
 from typing import Any
 
-import matplotlib.pyplot as plt
+import matplotlib
+
+# "Agg" : dessine directement en image, sans fenêtre. Indispensable dans une API, où le graphique
+# est créé hors du fil principal (sous Windows, le moteur par défaut Tk refuse et plante).
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402  (doit venir APRÈS matplotlib.use)
 import pandas as pd
 from fpdf import FPDF
 

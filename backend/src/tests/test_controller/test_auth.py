@@ -1,8 +1,8 @@
 # Tests des gardes de controller/auth.py, en appelant les fonctions directement (sans FastAPI).
 # Le service est remplacé par un faux (patch.object) : pas de base de données.
 #
-# Lancement (depuis la racine du projet) :
-#     uv run pytest backend/src/tests/test_controller/test_auth.py
+# Lancement (depuis le dossier backend) :
+#     uv run pytest src/tests/test_controller/test_auth.py
 
 from unittest.mock import patch
 

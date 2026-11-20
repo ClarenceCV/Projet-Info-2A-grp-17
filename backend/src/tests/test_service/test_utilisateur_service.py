@@ -3,8 +3,8 @@ Tests du service des utilisateurs (F6) et du hachage des mots de passe.
 Le DAO est remplacé par un faux (patch.object) : les tests ne dépendent pas de la base.
 Avec un faux DAO, on peut aussi vérifier COMMENT le service l'a appelé (assert_called_once_with).
 
-Lancement (depuis la racine du projet) :
-     uv run pytest backend/src/tests
+Lancement (depuis le dossier backend) :
+     uv run pytest src/tests
 """
 
 from unittest.mock import patch

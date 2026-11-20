@@ -1,0 +1,15 @@
+# Projet frontend : l'interface Streamlit, qui appelle l'API du backend.
+# Toutes les commandes `uv` du frontend se lancent depuis le dossier frontend/.
+
+[project]
+name = "laborscope-frontend"
+version = "0.1.0"
+description = "LaborScope web interface (Streamlit) - ENSAI 2A group 17"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas",                    # mise en forme des données reçues de l'API
+    "plotly>=7.1.0",             # graphiques interactifs
+    "python-dotenv",             # lecture du fichier .env (adresse de l'API)
+    "requests",                  # appels à l'API
+    "streamlit>=1.66.1",         # interface web
+]

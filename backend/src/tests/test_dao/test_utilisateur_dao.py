@@ -1,7 +1,7 @@
 # Tests d'UtilisateurDAO sur la vraie base (pseudos 'test_dao...', supprimés après chaque test : c.f. conftest.py)
 #
-# Lancement (depuis la racine du projet) :
-#     uv run pytest backend/src/tests/test_dao
+# Lancement (depuis le dossier backend) :
+#     uv run pytest src/tests/test_dao
 
 from dao.utilisateur_dao import UtilisateurDAO
 

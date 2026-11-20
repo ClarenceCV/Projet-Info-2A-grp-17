@@ -20,6 +20,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
 from controller import (
+    admin_donnees_controller,
     admin_utilisateur_controller,
     comparaison_pays_controller,
     evolution_controller,
@@ -56,6 +57,7 @@ app.include_router(login_controller.router, tags=["Connexion"])
 app.include_router(utilisateur_controller.router, prefix="/utilisateurs", tags=["Utilisateurs"])
 app.include_router(admin_utilisateur_controller.router, prefix="/admin/utilisateurs", tags=["Administration"])
 app.include_router(journal_controller.router, prefix="/admin/journal", tags=["Administration"])
+app.include_router(admin_donnees_controller.router, prefix="/admin", tags=["Administration"])
 app.include_router(comparaison_pays_controller.router, prefix="/analyses", tags=["Analyses"])
 app.include_router(rapport_controller.router, tags=["Rapport"])
 
