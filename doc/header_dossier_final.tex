@@ -1,0 +1,365 @@
+% =============================================================
+%  HEADER — Dossier_Final_groupe17 |  ENSAI 2026-2027
+%  Projet : Laborscope
+%  Les "chapitres" sont des \section redéfinies visuellement.
+% =============================================================
+
+% ---------- Langue ----------
+%\usepackage[french]{babel}
+\addto\captionsfrench{%
+  \renewcommand{\listfigurename}{Liste des figures}%
+  \renewcommand{\listtablename}{Liste des tableaux}%
+  \renewcommand{\contentsname}{Table des matières}%
+  \renewcommand{\figurename}{Figure}%
+  \renewcommand{\tablename}{Tableau}%
+}
+\AtBeginDocument{%
+  \renewcommand{\listfigurename}{Liste des figures}%
+  \renewcommand{\listtablename}{Liste des tableaux}%
+  \renewcommand{\contentsname}{Table des matières}%
+  \renewcommand{\figurename}{Figure}%
+  \renewcommand{\tablename}{Tableau}%
+  \hypersetup{linkcolor=black}%
+}
+
+% ---------- Polices ----------
+\usepackage{fontspec}
+\usepackage{unicode-math}
+%\usepackage{lmodern}
+%\setmainfont{Source Sans Pro}
+
+% ---------- Interligne ----------
+\usepackage{setspace}
+\onehalfspacing
+
+
+% ---------- Maths ----------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\everymath{\displaystyle}
+
+% ---------- Graphiques & tableaux ----------
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{threeparttable}
+\renewcommand{\arraystretch}{1.5}
+\setlength{\textfloatsep}{8pt}
+\setlength{\intextsep}{8pt}
+
+% ---------- PDF ----------
+\usepackage{pdfpages}
+
+% =============================================================
+%  PALETTE
+% =============================================================
+\usepackage{xcolor}
+\definecolor{MainColor}{HTML}{1565C0}      % bleu principal
+\definecolor{AccentColor}{HTML}{7B2FBE}    % violet du cadre titre
+\definecolor{MainLight}{HTML}{E0F4FF}      % bleu très clair fond
+\definecolor{NeutralColor}{HTML}{546E7A}   % gris-bleu neutre
+\definecolor{AccentLight}{HTML}{F3E8FF}    % violet très clair
+\definecolor{PurpleColor}{HTML}{FF6F00}    % orange accent
+\definecolor{PurpleLight}{HTML}{FFF3E0}    % orange très clair
+\definecolor{bg}{rgb}{0.96,0.96,0.96}
+
+% ---------- Tableaux ----------
+\usepackage{colortbl}
+\arrayrulecolor{white}
+
+% ---------- Minted (un seul chargement) ----------
+\usepackage{minted}
+\makeatletter\let\listoflistings\@undefined\makeatother
+\usemintedstyle{friendly}
+\setminted{
+  bgcolor=bg, fontsize=\small, linenos=true,
+  numbersep=6pt, framesep=2mm, breaklines=true, baselinestretch=1.1
+}
+\renewcommand{\theFancyVerbLine}{%
+  \textcolor{NeutralColor}{\small\arabic{FancyVerbLine}}%
+}
+
+% ---------- Hyperref ----------
+\usepackage[colorlinks=true, linkcolor=black,
+            urlcolor=AccentColor, citecolor=MainColor]{hyperref}
+\usepackage[french]{cleveref}
+
+% ---------- Mise en page ----------
+\usepackage{geometry}
+\geometry{a4paper, left=25mm, right=25mm, top=25mm, bottom=25mm}
+
+% ---------- TikZ & tcolorbox ----------
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric}
+\usepackage[most]{tcolorbox}
+
+\tcbset{
+  isebase/.style={
+    coltitle=white, fonttitle=\bfseries\small,
+    arc=3pt, boxrule=0pt,
+    left=8pt, right=8pt, top=5pt, bottom=5pt, titlerule=0pt,
+    attach boxed title to top left={yshift=-2mm, xshift=6pt},
+    boxed title style={arc=2pt, boxrule=0pt, left=4pt, right=4pt},
+    breakable
+  }
+}
+
+\newtcolorbox{definition}[1][]{isebase,enhanced,
+  title={Définition}, colback=MainLight, colframe=MainColor,
+  colbacktitle=MainColor, frame hidden,
+  borderline west={3pt}{0pt}{MainColor}, #1}
+
+\newtcolorbox{theoreme}[1][]{isebase,enhanced,
+  title={Théorème}, colback=MainLight, colframe=MainColor,
+  colbacktitle=MainColor, frame hidden,
+  borderline west={3pt}{0pt}{MainColor}, #1}
+
+\newtcolorbox{modele}[1][]{isebase,enhanced,
+  title={Modèle}, colback=MainLight, colframe=MainColor,
+  colbacktitle=MainColor, frame hidden,
+  borderline west={3pt}{0pt}{MainColor}, #1}
+
+\newtcolorbox{hypotheses}[1][]{isebase,enhanced,
+  title={Hypothèses}, colback=MainLight, colframe=MainColor,
+  colbacktitle=MainColor, frame hidden,
+  borderline west={3pt}{0pt}{MainColor}, #1}
+
+% decision = même style que hypotheses
+\newtcolorbox{decision}[1][]{isebase,enhanced,
+  title={Règle de décision}, colback=MainLight, colframe=MainColor,
+  colbacktitle=MainColor, frame hidden,
+  borderline west={3pt}{0pt}{MainColor}, #1}
+
+\newtcolorbox{remarque}[1][]{isebase,enhanced,
+  title={Remarque}, colback=AccentLight, colframe=AccentColor,
+  colbacktitle=AccentColor, frame hidden,
+  borderline west={3pt}{0pt}{AccentColor}, #1}
+
+\newtcolorbox{attention}[1][]{isebase,enhanced,
+  title={Attention}, colback=AccentLight, colframe=AccentColor,
+  colbacktitle=AccentColor, frame hidden,
+  borderline west={4pt}{0pt}{AccentColor}, #1}
+
+\newtcolorbox{resultat}[1][]{isebase,enhanced,
+  title={Résultat}, colback=PurpleLight, colframe=PurpleColor,
+  colbacktitle=PurpleColor, frame hidden,
+  borderline west={3pt}{0pt}{PurpleColor}, #1}
+
+% ---------- En-têtes & pieds ----------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+%\renewcommand{\headrule}{%
+%  \vspace{-4pt}{\color{MainColor}\rule{\headwidth}{1.5pt}}}
+
+\fancyhead[L]{}
+%\fancyhead[C]{\small\color{NeutralColor}Déterminants macroéconomiques de la croissance du PIB de la Sierra Leone}
+\fancyhead[R]{}
+\fancyfoot[C]{%
+  \begin{tikzpicture}[baseline=-0.5ex]
+    \node[circle, draw=MainColor, fill=white, text=MainColor,
+          inner sep=2pt, font=\small\bfseries, line width=0.8pt]{\thepage};
+  \end{tikzpicture}}
+\fancyfoot[L]{}
+\fancyfoot[R]{\small\color{NeutralColor}\textcopyright\ ENSAI 2026-2027}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+  \fancyfoot[L]{%
+    \begin{tikzpicture}[baseline=-0.5ex]
+      \node[circle, draw=MainColor, fill=white, text=MainColor,
+            inner sep=2pt, font=\small\bfseries, line width=0.8pt]{\thepage};
+    \end{tikzpicture}}
+  \fancyfoot[C]{\small\color{NeutralColor}\textcopyright\ ENSAI 2026-2027}
+}
+
+% =============================================================
+%  FORMATAGE DES TITRES — titlesec + compteurs indépendants
+%  Rapport : Déterminants macroéconomiques du PIB — Sierra Leone
+%
+%  CAUSE DU BUG "1.0.0" :
+%  \titleformat{\section}[block] passe le titre à \sectiontitre
+%  AVANT d'incrémenter \arabic{section}. Donc \thesection affiche
+%  \chapnum.0 au lieu de \chapnum.1 pour la première section.
+%
+%  SOLUTION : on n'utilise pas \arabic{section} du tout.
+%  On crée des compteurs indépendants (isesecnum, isesubsecnum)
+%  qu'on incrémente NOUS-MÊMES au début de \sectiontitre /
+%  \subsectiontitre — après le rendu réel de \mychapter.
+%
+%  SUPPRESSION DES DOUBLONS TDC :
+%  scrartcl ajoute automatiquement des entrées TDC pour chaque
+%  \section/\subsection/\subsubsection. Nos commandes ajoutent
+%  déjà les entrées manuellement via \addcontentsline.
+%  On désactive les entrées automatiques en mettant tocdepth à -2.
+%
+%  STRUCTURE DU RAPPORT :
+%  Introduction → Chapitre 1 (Théorie & Littérature) →
+%  Chapitre 2 (Méthodologie) → Chapitre 3 (Résultats) →
+%  Conclusion → Références → Annexe (Code R)
+% =============================================================
+\usepackage{titlesec}
+
+% Désactiver les entrées TDC automatiques de scrartcl
+% (nos \addcontentsline manuels dans \sectiontitre etc. suffisent)
+\setcounter{tocdepth}{-2}
+\setcounter{secnumdepth}{-2}
+
+% ── Compteur chapitre ─────────────────────────────────────────
+\newcounter{chapnum}
+\renewcommand{\thechapnum}{\arabic{chapnum}}
+
+% ── Compteurs sections (remis à 0 par \mychapter / \sectiontitre)
+\newcounter{isesecnum}
+\renewcommand{\theisesecnum}{\thechapnum.\arabic{isesecnum}}
+
+\newcounter{isesubsecnum}
+\renewcommand{\theisesubsecnum}{\theisesecnum.\arabic{isesubsecnum}}
+
+\newcounter{isesubsubsecnum}
+\renewcommand{\theisesubsubsecnum}{\theisesubsecnum.\arabic{isesubsubsecnum}}
+
+% ── \mychapter : badge numéroté ───────────────────────────────
+\newcommand{\mychapter}[1]{%
+  \refstepcounter{chapnum}%
+  \setcounter{isesecnum}{0}%
+  \setcounter{isesubsecnum}{0}%
+  \setcounter{isesubsubsecnum}{0}%
+  \addcontentsline{toc}{chapter}{\protect\numberline{\thechapnum}#1}%
+  \vspace{30pt}%
+  \noindent
+  \begin{tikzpicture}
+    \node[text=MainColor, font=\small\itshape, anchor=south west]
+      at (0,4.0em) {Chapitre};
+    \node[fill=MainColor, text=white,
+          font=\fontsize{48}{48}\selectfont\bfseries,
+          minimum width=1.6em, minimum height=1.6em,
+          inner sep=6pt, anchor=south west] (nb) at (0,0) {\thechapnum};
+    \node[text=MainColor, font=\Large\bfseries,
+          anchor=south west, text width=0.72\textwidth, align=left]
+      at ([xshift=12pt] nb.south east) {\MakeUppercase{#1}};
+  \end{tikzpicture}%
+  \vspace{6pt}\par
+}
+
+% ── \mychapterstar : chapitre non numéroté ────────────────────
+\newcommand{\mychapterstar}[1]{%
+  \addcontentsline{toc}{chapter}{#1}%
+  \vspace{4pt}%
+  \noindent{\Large\bfseries\color{MainColor}\MakeUppercase{#1}}\par
+  \vspace{4pt}\par%
+}
+
+% ── Sections (## dans Quarto → \subsection dans scrartcl) ────
+% Dans scrartcl : # → \section, ## → \subsection, ### → \subsubsection
+% Nos "chapitres" sont gérés manuellement via \mychapter.
+% Donc ## correspond visuellement à nos sections numérotées.
+\newcommand{\sectiontitre}[1]{%
+  \refstepcounter{isesecnum}%
+  \setcounter{isesubsecnum}{0}%
+  \setcounter{isesubsubsecnum}{0}%
+  \addcontentsline{toc}{section}{\theisesecnum\quad #1}%
+  \noindent
+  \begin{tikzpicture}
+    \node[fill=MainColor, text=white, font=\bfseries\normalsize,
+          inner sep=5pt, minimum width=2.4em, minimum height=1.6em,
+          anchor=base west] (sn) at (0,0) {\theisesecnum};
+    \node[text=MainColor, font=\bfseries\normalsize, anchor=base west]
+      at ([xshift=8pt] sn.base east) {\MakeUppercase{#1}};
+  \end{tikzpicture}%
+  \vspace{-2pt}{\color{MainColor}\hrule height 0.8pt}\vspace{2pt}%
+}
+\titleformat{\subsection}[block]{}{}{0pt}{\sectiontitre}
+\titlespacing*{\subsection}{0pt}{14pt}{2pt}
+
+% ── Sous-sections (### dans Quarto → \subsubsection dans scrartcl) ────
+\newcommand{\subsectiontitre}[1]{%
+  \refstepcounter{isesubsecnum}%
+  \setcounter{isesubsubsecnum}{0}%
+  \addcontentsline{toc}{subsection}{\theisesubsecnum\quad #1}%
+  \noindent
+  \begin{tikzpicture}
+    \node[fill=MainColor, text=white, font=\bfseries\small,
+          inner sep=4pt, minimum width=3em, minimum height=1.4em,
+          anchor=base west] (ss) at (0,0) {\theisesubsecnum};
+    \node[text=MainColor, font=\bfseries\small, anchor=base west]
+      at ([xshift=6pt] ss.base east) {#1};
+  \end{tikzpicture}%
+  \vspace{-2pt}{\color{MainColor!40}\hrule height 0.6pt}\vspace{2pt}%
+}
+\titleformat{\subsubsection}[block]{}{}{0pt}{\subsectiontitre}
+\titlespacing*{\subsubsection}{0pt}{5pt}{2pt}
+
+% ── Sous-sous-sections (#### dans Quarto → \paragraph dans scrartcl) ──
+\newcommand{\subsubsectiontitre}[1]{%
+  \refstepcounter{isesubsubsecnum}%
+  \noindent{\normalsize\itshape\color{NeutralColor}\theisesubsubsecnum\enspace #1}%
+}
+\titleformat{\paragraph}[block]{}{}{0pt}{\subsubsectiontitre}
+\titlespacing*{\paragraph}{0pt}{6pt}{2pt}
+
+% -------------------------------------------------------
+% Entrées TDM pour le niveau "chapter" manuel
+% -------------------------------------------------------
+%  TDM — chapter/section/subsection tous en mode manuel
+%  (les entrées viennent de \addcontentsline dans les
+%   commandes \mychapter, \sectiontitre, \subsectiontitre)
+% -------------------------------------------------------
+\usepackage{tocloft}
+
+\renewcommand{\cfttoctitlefont}{\Huge\bfseries\color{black}}
+\renewcommand{\cftloftitlefont}{\Huge\bfseries\color{black}}
+\renewcommand{\cftlottitlefont}{\Huge\bfseries\color{black}}
+\renewcommand{\cftdotsep}{3}
+
+\makeatletter
+% Style pour les chapitres (ajoutés via \addcontentsline{toc}{chapter})
+\def\l@chapter#1#2{%
+  \addpenalty{-\@highpenalty}%
+  \vskip 8pt \@plus\p@
+  \begingroup
+    \parindent\z@ \rightskip\@pnumwidth
+    \parfillskip-\@pnumwidth
+    {\bfseries\color{black} #1}\nobreak\hfill\nobreak
+    \hb@xt@\@pnumwidth{\hss\bfseries\color{black}#2}\par
+    \penalty\@highpenalty
+  \endgroup
+}
+% Style pour les sections (ajoutées via \addcontentsline{toc}{section})
+\def\l@section#1#2{%
+  \vskip 3pt
+  \begingroup
+    \parindent\z@ \rightskip\@pnumwidth
+    \parfillskip-\@pnumwidth
+    \hspace{1.5em}{\color{black} #1}\nobreak\dotfill\nobreak
+    \hb@xt@\@pnumwidth{\hss\color{black}#2}\par
+  \endgroup
+}
+% Style pour les sous-sections (ajoutées via \addcontentsline{toc}{subsection})
+\def\l@subsection#1#2{%
+  \vskip 2pt
+  \begingroup
+    \parindent\z@ \rightskip\@pnumwidth
+    \parfillskip-\@pnumwidth
+    \hspace{3em}{\small\color{black} #1}\nobreak\dotfill\nobreak
+    \hb@xt@\@pnumwidth{\hss\small\color{black}#2}\par
+  \endgroup
+}
+\makeatother
+
+% ---------- Listes ----------
+\usepackage{enumitem,pifont}
+\setlist[itemize,1]{label={\color{AccentColor}\textbullet}}
+\setlist[itemize,2]{label={\color{MainColor}$\circ$}}
+
+\AtBeginDocument{
+  \floatplacement{table}{H}
+  \floatplacement{figure}{H}
+}
