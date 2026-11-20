@@ -1,4 +1,4 @@
-# Endpoint de la comparaison entre pays (F4) (préfixe /analyses, c.f. main.py)
+"""Endpoint de la comparaison entre pays (F4) (préfixe /analyses, c.f. main.py)"""
 
 from fastapi import APIRouter, HTTPException, Query
 
@@ -13,7 +13,9 @@ router = APIRouter()
 async def comparer_pays(
     indicateur: str = Query(description="Code de l'indicateur, ex : EMP_5WAP_SEX_AGE_RT_Q"),
     classif1: str = Query(description="Profession ou tranche d'âge, ex : 15+"),
-    pays: list[str] | None = Query(None, description="Codes ISO, ex : FRA (répéter pour plusieurs pays ; vide = tous)"),
+    pays: list[str] | None = Query(
+        None, description="Codes ISO, ex : FRA (répéter pour plusieurs pays ; vide = tous)"
+    ),
     sexe: str = Query("Total", description="Total, Male ou Female"),
     top: int = Query(3, ge=1, le=50, description="Nombre de pays dans plus_hauts et plus_bas"),
 ):

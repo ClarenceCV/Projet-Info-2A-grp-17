@@ -16,8 +16,8 @@ import pytest
 from service.rapport_service import RapportService
 
 
-@pytest.fixture
-def sample_evolution_df() -> pd.DataFrame:
+@pytest.fixture(name="sample_evolution_df")
+def fixture_sample_evolution_df() -> pd.DataFrame:
     """Fixture d'un DataFrame d'évolution synthétique."""
     return pd.DataFrame([
         {"code_iso": "FRA", "nom_pays": "France", "periode": "2023Q1", "valeur": 100.0},
@@ -27,16 +27,32 @@ def sample_evolution_df() -> pd.DataFrame:
     ])
 
 
-@pytest.fixture
-def sample_comparaison_df() -> dict:
+@pytest.fixture(name="sample_comparaison_df")
+def fixture_sample_comparaison_df() -> dict:
     """
     Fixture d'une comparaison synthétique, au même format que ComparaisonPaysService.comparer_pays :
     un dictionnaire {"periode_reference", "classement", "plus_hauts", "plus_bas"}.
     """
-    classement = pd.DataFrame([
-        {"rang": 1, "code_iso": "DEU", "nom_pays": "Allemagne", "periode": "2023Q2", "valeur": 195.0, "unite": "%"},
-        {"rang": 2, "code_iso": "FRA", "nom_pays": "France", "periode": "2023Q2", "valeur": 105.0, "unite": "%"},
-    ])
+    classement = pd.DataFrame(
+        [
+            {
+                "rang": 1,
+                "code_iso": "DEU",
+                "nom_pays": "Allemagne",
+                "periode": "2023Q2",
+                "valeur": 195.0,
+                "unite": "%",
+            },
+            {
+                "rang": 2,
+                "code_iso": "FRA",
+                "nom_pays": "France",
+                "periode": "2023Q2",
+                "valeur": 105.0,
+                "unite": "%",
+            },
+        ]
+    )
     return {
         "periode_reference": "2023Q2",
         "classement": classement,
@@ -78,14 +94,21 @@ def test_conclusion(sample_evolution_df, sample_comparaison_df):
     assert "France" in conclusion_txt
     assert "Allemagne" in conclusion_txt
     assert "valeur la plus elevee" in conclusion_txt
-    assert "Pour la periode de reference 2023Q2, Allemagne presente la valeur la plus elevee" in conclusion_txt
+    assert (
+        "Pour la periode de reference 2023Q2, Allemagne presente la valeur la plus elevee"
+        in conclusion_txt
+    )
 
 
 def test_conclusion_classement_vide(sample_evolution_df):
-    # comparer_pays renvoie un classement vide quand il n'y a pas de données : pas de phrase de classement
+    # comparer_pays renvoie un classement vide quand il n'y a pas de données : pas de phrase de
+    # classement
     service = RapportService()
     stats = service.resume_statistique(sample_evolution_df)
-    comparaison_vide = {"periode_reference": None, "classement": pd.DataFrame(columns=["code_iso", "valeur"])}
+    comparaison_vide = {
+        "periode_reference": None,
+        "classement": pd.DataFrame(columns=["code_iso", "valeur"]),
+    }
 
     conclusion_txt = service.conclusion(stats, comparaison_vide)
 
@@ -94,7 +117,10 @@ def test_conclusion_classement_vide(sample_evolution_df):
 
 
 def test_conclusion_sans_donnees():
-    assert RapportService().conclusion({}, {}) == "Aucune donnee disponible pour etablir une conclusion."
+    assert (
+        RapportService().conclusion({}, {})
+        == "Aucune donnee disponible pour etablir une conclusion."
+    )
 
 
 def test_generer_pdf_retourne_octets_valides(sample_evolution_df, sample_comparaison_df):

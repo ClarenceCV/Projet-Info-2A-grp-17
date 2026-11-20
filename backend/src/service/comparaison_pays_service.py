@@ -8,6 +8,7 @@ comparés à la même date : la colonne periode l'indique).
 """
 
 import pandas as pd
+
 from dao.observation_dao import ObservationDAO
 
 # Colonnes renvoyées pour chaque pays du classement

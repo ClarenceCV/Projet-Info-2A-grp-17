@@ -1,3 +1,5 @@
+"""Objet métier Indicateur : un indicateur ILOSTAT suivi (dimension du schéma en étoile)."""
+
 from dataclasses import dataclass
 
 

@@ -273,9 +273,14 @@ suite can still run anywhere.
 
 ```bash
 cd backend
+uv run pylint src              # code quality score (target: 10/10), configured in pyproject.toml
 uv run ruff check src          # lint (style, imports, common bugs)
 uv run ruff check src --fix    # automatic fixes
 ```
+
+The same `uv run pylint src` command works in `frontend/`. Maximum line length: 100 characters.
+Every module, class and public function has a docstring (test functions excepted: their name
+describes the tested case).
 
 Conventions: code and docstrings in French (domain vocabulary), docstrings with `Args:` / `Returns:` /
 `Raises:` sections, no business logic in controllers, no SQL outside DAOs.

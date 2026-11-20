@@ -1,16 +1,18 @@
+"""Tests du téléchargement des données ILOSTAT (fetcher/fetcher.py), avec l'API simulée."""
+
+from unittest.mock import Mock, patch
+
 import pandas as pd
 import pytest
 import requests
-from unittest.mock import patch, Mock
 
 from fetcher.fetcher import (
     URL_ILOSTAT,
     construire_url,
-    load_data,
-    get_columns_info,
     filter_columns,
+    get_columns_info,
+    load_data,
 )
-
 
 # ============================================================
 # TESTS DE CONSTRUIRE_URL

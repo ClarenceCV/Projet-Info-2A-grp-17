@@ -1,3 +1,5 @@
+"""Objet métier ActionJournal : une action du journal (F6), et la liste des actions possibles."""
+
 from dataclasses import dataclass
 from datetime import datetime
 

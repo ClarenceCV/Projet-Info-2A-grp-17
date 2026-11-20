@@ -4,10 +4,10 @@ Accès à la table utilisateur. Entrée : valeurs Python ; sortie : objets Utili
 """
 
 from psycopg2.errors import UniqueViolation
-from business_object.utilisateur import Utilisateur
-from utils.log_utils import log
 
+from business_object.utilisateur import Utilisateur
 from dao.db_connection import DBConnection
+from utils.log_utils import log
 
 # Colonnes lues pour construire un Utilisateur (jamais le hash du mot de passe)
 COLONNES_UTILISATEUR = "id, pseudo, role, date_creation"

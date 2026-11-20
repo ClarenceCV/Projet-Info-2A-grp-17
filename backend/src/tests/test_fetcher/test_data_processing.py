@@ -15,18 +15,19 @@ import requests
 from business_object.indicateur import Indicateur
 from fetcher.data_processing import DataProcessing
 
-
 # ---------------------------------------------------------
 # Données de test
 # ---------------------------------------------------------
 
-@pytest.fixture
-def processing():
+@pytest.fixture(name="processing")
+def fixture_processing():
+    """Un DataProcessing neuf pour chaque test."""
     return DataProcessing()
 
 
-@pytest.fixture
-def df_brut():
+@pytest.fixture(name="df_brut")
+def fixture_df_brut():
+    """Petit extrait brut, au format renvoyé par l'API ILOSTAT."""
     return pd.DataFrame({
         "ref_area": ["FRA", "DEU", "FRA"],
         "ref_area.label": ["France", "Germany", "France"],

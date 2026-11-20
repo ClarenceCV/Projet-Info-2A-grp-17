@@ -9,33 +9,51 @@ from fastapi.testclient import TestClient
 
 from controller import multi_indicateurs_controller
 
-# On n'importe pas main.py : il interroge la base dès l'import (UtilisateurService().initialiser_admin()).
+# On n'importe pas main.py : il interroge la base dès l'import
+# (UtilisateurService().initialiser_admin()).
 # Petite application avec seulement le routeur testé, au même préfixe que dans main.py.
 app = FastAPI()
 app.include_router(multi_indicateurs_controller.router, prefix="/analyses")
 client = TestClient(app)
 
 
-@pytest.fixture
-def payload_valide() -> dict:
+@pytest.fixture(name="payload_valide")
+def fixture_payload_valide() -> dict:
     """Corps de requête valide, au format envoyé par la page Streamlit : 2 sélections + base 100."""
     return {
         "selections": [
-            {"indicateur": "EMP_5EMP_SEX_OC2_NB_Q", "pays": "FRA", "classif1": "Total", "sexe": "Total"},
-            {"indicateur": "EMP_5WAP_SEX_AGE_RT_Q", "pays": "FRA", "classif1": "15+", "sexe": "Total"},
+            {
+                "indicateur": "EMP_5EMP_SEX_OC2_NB_Q",
+                "pays": "FRA",
+                "classif1": "Total",
+                "sexe": "Total",
+            },
+            {
+                "indicateur": "EMP_5WAP_SEX_AGE_RT_Q",
+                "pays": "FRA",
+                "classif1": "15+",
+                "sexe": "Total",
+            },
         ],
         "base_100": True,
     }
 
 
-SELECTION = {"indicateur": "EMP_5WAP_SEX_AGE_RT_Q", "pays": "FRA", "classif1": "15+", "sexe": "Total"}
+SELECTION = {
+    "indicateur": "EMP_5WAP_SEX_AGE_RT_Q",
+    "pays": "FRA",
+    "classif1": "15+",
+    "sexe": "Total",
+}
 
 
 @pytest.mark.parametrize("nb_selections", [0, 5])
 def test_route_nombre_de_selections_invalide_renvoie_422(nb_selections):
     """Le schéma impose 1 à 4 sélections : FastAPI rejette la requête lui-même (422)."""
     payload = {"selections": [SELECTION] * nb_selections, "base_100": True}
-    with patch("service.multi_indicateurs_service.MultiIndicateursService.comparer") as faux_comparer:
+    with patch(
+        "service.multi_indicateurs_service.MultiIndicateursService.comparer"
+    ) as faux_comparer:
         response = client.post("/analyses/multi-indicateurs", json=payload)
 
     assert response.status_code == 422

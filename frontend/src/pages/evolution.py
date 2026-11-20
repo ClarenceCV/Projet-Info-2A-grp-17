@@ -1,19 +1,21 @@
-# Page « Évolution d'un indicateur (F3) » : EN CONSTRUCTION
-# Responsable : C (voir sa fiche dans doc/taches/)
-# Endpoint prévu : GET /analyses/evolution
-#
-# Modèle à suivre : pages/explorer.py (sélecteurs → api_client → affichage)
+"""Page « Évolution d'un indicateur (F3) » : EN CONSTRUCTION
+Responsable : C (voir sa fiche dans doc/taches/)
+Endpoint prévu : GET /analyses/evolution
+
+Modèle à suivre : pages/explorer.py (sélecteurs → api_client → affichage)
+"""
 
 # Page Streamlit : évolution d'un indicateur sur les N derniers trimestres (F3).
 # Utilise les sélecteurs (utils/selecteurs.py) et le client API (utils/api_client.py) de B.
 # ####Adapter les noms de fonctions importées à ceux réellement présents dans le code de B.
-import streamlit as st
 import pandas as pd
 import plotly.express as px
+import streamlit as st
 
 from utils.api_client import api_client
-from utils.selecteurs import choisir_classif1, choisir_indicateur, choisir_pays, choisir_sexe
 from utils.auth_guard import exiger_connexion
+from utils.selecteurs import choisir_classif1, choisir_indicateur, choisir_pays, choisir_sexe
+from utils.session import donnees_ou_arret
 
 exiger_connexion()  # protège la page (c.f. utils/auth_guard.py)
 
@@ -31,15 +33,16 @@ if not pays:
 
 reponse = api_client.get(
     "/analyses/evolution",
-    params={"indicateur": indicateur, "pays": pays, "classif1": classif1, "sexe": sexe, "n_periodes": n},
+    params={
+        "indicateur": indicateur,
+        "pays": pays,
+        "classif1": classif1,
+        "sexe": sexe,
+        "n_periodes": n,
+    },
 )
-if reponse["status_code"] == 0:  # backend injoignable
-    st.error(reponse["data"])
-    st.stop()
-if reponse["status_code"] != 200:  # le backend a répondu avec une erreur
-    st.error(f"Erreur {reponse['status_code']} : {reponse['data']}")
-    st.stop()
-df = pd.DataFrame(reponse["data"])
+# en cas d'erreur : message affiché et page arrêtée
+df = pd.DataFrame(donnees_ou_arret(reponse))
 
 if df.empty:
     st.warning("Aucune donnée pour cette sélection.")

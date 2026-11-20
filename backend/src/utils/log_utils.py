@@ -1,9 +1,11 @@
+"""Outils de logs techniques : initialisation depuis logging_config.yml et décorateur @log."""
+
 import logging
 import logging.config
-import pandas as pd
 from functools import wraps
 from pathlib import Path
 
+import pandas as pd
 import yaml
 
 # Chemin vers le dossier backend
@@ -40,7 +42,7 @@ def initialize_logs(name: str):
     logging.config.dictConfig(config)
 
     logging.info("-" * 50)
-    logging.info(f"Starting {name}")
+    logging.info("Starting %s", name)
     logging.info("-" * 50)
 
 
@@ -81,77 +83,61 @@ class LogIndentation:
         return " " * cls.indentation_size * cls.current_indentation
 
 
+# Paramètres dont la valeur est masquée dans les logs (mots de passe, tokens...)
+MOTS_SENSIBLES = {"password", "passwd", "pwd", "pass", "mdp", "token", "secret", "key"}
+
+
+def _est_sensible(nom_parametre: str) -> bool:
+    """True si le nom du paramètre contient un mot sensible (sa valeur ne doit pas être loggée)."""
+    return any(mot in nom_parametre.lower() for mot in MOTS_SENSIBLES)
+
+
+def _parametres_lisibles(func, args: tuple, kwargs: dict) -> tuple:
+    """
+    Valeurs des paramètres d'un appel de méthode, sensibles remplacées par '*****'.
+    args[0] (self) est ignoré.
+    """
+    noms = func.__code__.co_varnames[1 : func.__code__.co_argcount]
+    valeurs = [
+        "*****" if _est_sensible(nom) else str(valeur) for nom, valeur in zip(noms, args[1:])
+    ]
+    valeurs += ["*****" if _est_sensible(nom) else str(v) for nom, v in kwargs.items()]
+    return tuple(valeurs)
+
+
+def _resumer(resultat) -> str:
+    """Résumé court d'un résultat pour les logs (taille au lieu du contenu pour les collections)."""
+    if isinstance(resultat, pd.DataFrame):
+        return f"DataFrame : {len(resultat)} lignes, {len(resultat.columns)} colonnes"
+    if isinstance(resultat, list):
+        return f"Liste : {len(resultat)} éléments"
+    if isinstance(resultat, dict):
+        return f"Dictionnaire : {len(resultat)} éléments"
+    return str(resultat)
+
+
 def log(func):
     """Log automatiquement l'entrée, la sortie et les erreurs d'une fonction."""
 
-    SENSITIVE_KEYWORDS = {
-        "password", "passwd", "pwd", "pass",
-        "token", "secret", "key",
-    }
-
     @wraps(func)
     def wrapper(*args, **kwargs):
-
-        if args and hasattr(args[0], "__class__"):
-            logger = get_logger(args[0].__class__.__module__)
-        else:
-            logger = get_logger(func.__module__)
+        module = args[0].__class__.__module__ if args else func.__module__
+        logger = get_logger(module)
 
         LogIndentation.increase_indentation()
         indentation = LogIndentation.get_indentation()
+        nom = func.__name__
 
-        method_name = func.__name__
-
-        # Récupération des paramètres
-        param_names = func.__code__.co_varnames[1:func.__code__.co_argcount]
-        args_list = []
-
-        for i, arg in enumerate(args[1:]):
-            if i >= len(param_names):
-                break
-
-            param_name = param_names[i].lower()
-
-            if any(keyword in param_name for keyword in SENSITIVE_KEYWORDS):
-                args_list.append("*****")
-            else:
-                args_list.append(str(arg))
-
-        for k, v in kwargs.items():
-            if any(keyword in k.lower() for keyword in SENSITIVE_KEYWORDS):
-                args_list.append("*****")
-            else:
-                args_list.append(str(v))
-
-        args_tuple = tuple(args_list)
-
-        logger.info(f"{indentation}{method_name}{args_tuple} - START")
-
+        # %s : le message n'est construit que s'il est vraiment écrit (recommandé par pylint)
+        logger.info("%s%s%s - START", indentation, nom, _parametres_lisibles(func, args, kwargs))
         try:
-            result = func(*args, **kwargs)
-
-            # Résumé du résultat
-            if isinstance(result, pd.DataFrame):
-                result_str = (
-                    f"DataFrame : {len(result)} lignes, "
-                    f"{len(result.columns)} colonnes"
-                )
-            elif isinstance(result, list):
-                result_str = f"Liste : {len(result)} éléments"
-            elif isinstance(result, dict):
-                result_str = f"Dictionnaire : {len(result)} éléments"
-            else:
-                result_str = str(result)
-
-            logger.info(f"{indentation}{method_name} - END")
-            logger.info(f"{indentation}  └─> Output: {result_str}")
-
-            return result
-
+            resultat = func(*args, **kwargs)
+            logger.info("%s%s - END", indentation, nom)
+            logger.info("%s  └─> Output: %s", indentation, _resumer(resultat))
+            return resultat
         except Exception:
-            logger.exception(f"{indentation}{method_name} - ERROR")
+            logger.exception("%s%s - ERROR", indentation, nom)
             raise
-
         finally:
             LogIndentation.decrease_indentation()
 
