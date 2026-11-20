@@ -4,10 +4,15 @@ from unittest.mock import patch
 
 import pandas as pd
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from main import app
+from controller import multi_indicateurs_controller
 
+# On n'importe pas main.py : il interroge la base dès l'import (UtilisateurService().initialiser_admin()).
+# Petite application avec seulement le routeur testé, au même préfixe que dans main.py.
+app = FastAPI()
+app.include_router(multi_indicateurs_controller.router, prefix="/analyses")
 client = TestClient(app)
 
 
