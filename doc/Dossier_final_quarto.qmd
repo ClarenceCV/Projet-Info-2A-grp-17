@@ -148,7 +148,7 @@ C'est dans ce contexte que s'inscrit le projet **LaborScope**, réalisé dans le
 
 Dans le rapport intermédiaire, nous avons posé les bases du projet : cahier des charges, identification des utilisateurs, fonctionnalités attendues, structure de la base de données et organisation du travail en équipe. Le présent rapport final en constitue l'aboutissement. Il présente la conception détaillée de l'application, sa réalisation, les choix techniques effectués ainsi que les résultats obtenus.
 
-Ce document s'organise en \[quatre\] chapitres. Le premier rappelle l'étude préalable (contexte, cahier des charges et architecture générale). Le deuxième expose le modèle de conception à travers les diagrammes UML (cas d'utilisation, classes, activités et séquences). Le troisième décrit la réalisation de l'application : technologies employées, implémentation des fonctionnalités et analyse des résultats. Enfin, le dernier chapitre dresse le bilan du projet, en soulignant ses limites et les perspectives d'amélioration envisageables.
+Ce document s'organise en cinq (05) chapitres. Le premier rappelle l'étude préalable (contexte, cahier des charges et architecture générale). Le deuxième expose le modèle de conception à travers les diagrammes UML (cas d'utilisation, classes, activités et séquences). Le troisième décrit la réalisation de l'application : technologies employées, implémentation des fonctionnalités et analyse des résultats. Le quatrième chapitre explique en détail les différentes fonctionnalités présentes dans l'application.Enfin, le dernier chapitre évoque les retours de chaque membre du groupe par rapport au projet.
 
 \newpage
 
@@ -200,11 +200,9 @@ Pour faciliter la lecture de notre code, et permettre à d’autres développeur
 ```{=latex}
 \mychapter{Modelisation de l'application}
 ```
-=======
-Pour bien comprendre l’application **Laborscope**, nous allons expliquer ici l’ensemble des possibilités qu’elle offre à un utilisateur. Pour une meilleure conceptualisation, nous utiliserons des diagrammes UML. \newline Tout d’abord, il est nécessaire de créer un compte. En effet notre application est utilisable par plusieurs utilisateurs(administrateurs et utilisateurs). Avant la première connexion, l’utilisateur est obligé de créer un compte à l’aide d’un pseudo et d’un mot de passe. Deux utilisateurs ne peuvent avoir le même identifiant, ce dernier se doit d’être unique.
-
 
 Pour bien comprendre l’application **Laborscope**, nous allons expliquer ici l’ensemble des possibilités qu’elle offre à un utilisateur. Pour une meilleure conceptualisation, nous utiliserons des diagrammes UML. \newline Tout d’abord, il est nécessaire de créer un compte. En effet notre application est utilisable par plusieurs utilisateurs(administrateurs et utilisateurs). Avant la première connexion, l’utilisateur est obligé de créer un compte à l’aide d’un pseudo et d’un mot de passe. Deux utilisateurs ne peuvent avoir le même identifiant, ce dernier se doit d’être unique.
+
 
 ```{=latex}
 \sectiontitre{Menu principal}
@@ -217,8 +215,9 @@ Si son compte existe déjà, l’utilisateur se connecte grâce à son pseudo et
 ```{=latex}
 \mychapter{Implémentation}
 ```
-
 (obtention des données et fonctionnement du DAO)
+
+Ce chapitre décrit la manière dont LaborScope a été réalisé, depuis les données brutes d’ILOSTAT jusqu’à l’application interactive utilisée par l’utilisateur final. Il présente les choix techniques retenus, l’organisation de la base de donnée et les principaux points de fonctionnement du DAO.
 
 \newpage
 
