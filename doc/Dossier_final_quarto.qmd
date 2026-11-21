@@ -251,6 +251,41 @@ Ce chapitre décrit la manière dont LaborScope a été réalisé, depuis les do
 (Détails sur les fonctionnalités de l'application)
 
 ```{=latex}
+\sectiontitre{Explorer les données}
+```
+
+```{=latex}
+\subsectiontitre{Présentation de la fonctionnalité}
+```
+
+La page « Explorer les données » permet de consulter directement les données ILOSTAT enregistrées dans notre base, sans calcul. L'utilisateur choisit un indicateur, un ou plusieurs pays, une modalité (une tranche d'âge ou une profession selon l'indicateur, le total étant proposé par défaut) et le sexe (Total, Hommes ou Femmes). La page affiche alors un tableau avec une ligne par observation.
+
+Chaque ligne donne le pays, la période, la valeur et son unité, mais aussi la source de la donnée (le nom de l'enquête nationale) et son statut éventuel. Ces informations sont utiles pour savoir d'où vient un chiffre avant de l'utiliser dans une analyse. Les lignes sont triées par pays puis par période. Le tableau affiche au plus 100 observations, ce qui suffit pour quelques pays mais peut couper le résultat si l'utilisateur en choisit beaucoup.
+
+```{=latex}
+\subsectiontitre{Fonctionnement technique}
+```
+
+La page repose sur les mêmes couches que le reste de l'application :
+
+- la couche DAO (classe ObservationDAO) construit une requête SQL qui joint les tables des observations, des indicateurs et des pays, puis ajoute un filtre pour chaque choix de l'utilisateur ;
+- la couche service (classe ObservationService) transmet simplement la demande au DAO, puisqu'il n'y a pas de calcul à faire ;
+- la couche controller expose les données avec FastAPI sur l'endpoint GET /observations, réservé aux utilisateurs connectés. Elle renvoie une erreur 404 si l'indicateur n'existe pas ;
+- la page Streamlit utilise les menus de sélection communs à toutes les pages et affiche le résultat dans un tableau.
+
+```{=latex}
+\subsectiontitre{Exemple et interprétation}
+```
+
+On consulte le taux de chômage des 15 ans et plus (hommes et femmes confondus) au Botswana et en Gambie, deux pays qui ont très peu de données dans notre base.
+
+![Taux de chômage des 15 ans et plus au Botswana et en Gambie](images/explorer_tableau.png){width=100%}
+
+Le tableau ne contient que trois lignes. Pour le Botswana, on a deux observations, en 2020Q1 (24,0 %) et en 2020Q4 (25,4 %), qui viennent d'une enquête auprès des ménages (« HS - Multi-Topic Household Survey »). Environ un actif sur quatre y était donc au chômage en 2020. Pour la Gambie, on n'a qu'une seule observation, en 2026Q1 (6,2 %), issue d'une enquête emploi (« LFS - Labour Force Survey »).
+
+Cet exemple montre l'intérêt de la page : avant de comparer ces deux pays, on voit tout de suite que leurs données datent d'années très différentes et viennent de deux types d'enquêtes. Une comparaison directe entre 25 % et 6 % doit donc être faite avec prudence. C'est aussi pour cette raison que les autres fonctionnalités affichent toujours la période de chaque pays.
+
+```{=latex}
 \sectiontitre{Comparaison entre pays (F4)}
 ```
 
@@ -258,7 +293,7 @@ Ce chapitre décrit la manière dont LaborScope a été réalisé, depuis les do
 \subsectiontitre{Présentation de la fonctionnalité}
 ```
 
-La comparaison entre pays permet de comparer un indicateur entre plusieurs pays choisis par l'utilisateur, et de voir rapidement quels pays ont les valeurs les plus hautes et les plus basses. L'utilisateur choisit l'indicateur (par exemple le taux d'emploi), les pays, la modalité (une tranche d'âge comme 15+, ou une profession selon l'indicateur) et le sexe (Total, Male ou Female). Il choisit aussi combien de pays il veut voir dans les « plus hauts » et les « plus bas » (3 par défaut).
+La comparaison entre pays permet de comparer un indicateur entre plusieurs pays choisis par l'utilisateur, et de voir rapidement quels pays ont les valeurs les plus hautes et les plus basses. L'utilisateur choisit l'indicateur (par exemple le taux d'emploi), les pays, la modalité (une tranche d'âge comme 15+, ou une profession selon l'indicateur) et le sexe (Total, Hommes ou Femmes). Il choisit aussi combien de pays il veut voir dans les « plus hauts » et les « plus bas » (3 par défaut).
 
 La principale subtilité vient des périodes. Tous les pays ne publient pas leurs données au même rythme : un pays peut avoir des données jusqu'en 2026 alors qu'un autre s'arrête en 2024. Par défaut, nous prenons la dernière période disponible de chaque pays. Ainsi, aucun pays n'est exclu du classement, mais les pays ne sont pas forcément comparés à la même date. Pour que l'utilisateur ne soit pas trompé, la période de chaque pays est toujours affichée, et un message prévient quand les périodes ne sont pas les mêmes. L'utilisateur peut aussi :
 
