@@ -318,11 +318,9 @@ La carte réutilise entièrement la fonctionnalité F4. Nous n'avons pas créé 
 
 On affiche le taux de chômage des 15 ans et plus (hommes et femmes confondus), avec la dernière période disponible de chaque pays.
 
-<!-- Capture à ajouter : page Carte, taux de chômage 15+, Total, dernière période disponible
 ![Taux de chômage des 15 ans et plus, dernière période disponible de chaque pays](images/fo2_carte_chomage.png){width=100%}
--->
 
-La carte montre 79 pays. Les taux les plus élevés sont à Djibouti (39,0 %, 2025Q4) et en Afrique du Sud (32,9 %, 2026Q2), suivis du Botswana, de l'Angola et du Zimbabwe, tous au-dessus de 20 %. Les plus bas sont en Thaïlande (0,7 %, 2026Q1), au Belize (1,9 %) et au Viêt Nam (2,0 %). La France se situe à 7,5 % (2024Q4).
+La carte montre 79 pays. Sur la capture, la souris est placée sur l'Afrique du Sud : l'info-bulle indique son taux de chômage (32,9 %) et la période utilisée (2026Q2). Les taux les plus élevés sont à Djibouti (39,0 %, 2025Q4) et en Afrique du Sud (32,9 %, 2026Q2), suivis du Botswana, de l'Angola et du Zimbabwe, tous au-dessus de 20 %. Les plus bas sont en Thaïlande (0,7 %, 2026Q1), au Belize (1,9 %) et au Viêt Nam (2,0 %). La France se situe à 7,5 % (2024Q4).
 
 Cet exemple montre aussi les limites de la carte. Les 79 pays ne sont pas comparés à la même date : on trouve 12 périodes différentes, de 2020Q4 pour le Botswana à 2026Q3 pour les plus récentes. La valeur du Botswana a donc près de six ans d'écart avec celles d'autres pays. Certains pays n'ont qu'une seule période dans la base, ce qui explique qu'il n'existe aucune période commune à tous les pays : la case « dernière période commune » n'est donc utile que pour un petit nombre de pays. Enfin, seuls les pays importés dans notre base apparaissent en couleur ; les autres restent en blanc.
 
