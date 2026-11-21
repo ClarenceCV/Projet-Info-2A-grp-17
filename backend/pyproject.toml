@@ -38,6 +38,11 @@ addopts = "-rs"              # affiche la raison des tests ignorés (ex : base i
 [tool.ruff]
 line-length = 100            # même limite que pylint
 
+[tool.ruff.lint.flake8-bugbear]
+# Depends(...) / Query(...) en valeur par défaut d'un paramètre : c'est la syntaxe normale de FastAPI
+# (FastAPI les lit à chaque requête), pas l'erreur que la règle B008 cherche à éviter
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Security"]
+
 [tool.pylint.main]
 # psycopg2.errors est créé à l'exécution (module écrit en C) : pylint ne peut pas en lire le contenu
 # et croirait à tort que psycopg2.errors.UniqueViolation n'existe pas

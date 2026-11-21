@@ -135,16 +135,16 @@ Access levels: **public** (no token), **user** (logged in, otherwise `401`), **a
 | `POST` | `/utilisateurs` | public | creates an account (role `utilisateur`) |
 | `GET` | `/utilisateurs/moi` | user | current user |
 | **Reference data** | | | |
-| `GET` | `/indicateurs` | public | indicators available |
-| `GET` | `/indicateurs/{code}` | public | one indicator (`404` if unknown) |
-| `GET` | `/indicateurs/{code}/classif1` | public | breakdowns available (professions or age groups) |
-| `GET` | `/pays` | public | countries available |
-| `GET` | `/observations` | public | raw observations, with filters (country, period, sex, classif1) |
+| `GET` | `/indicateurs` | user | indicators available |
+| `GET` | `/indicateurs/{code}` | user | one indicator (`404` if unknown) |
+| `GET` | `/indicateurs/{code}/classif1` | user | breakdowns available (professions or age groups) |
+| `GET` | `/pays` | user | countries available |
+| `GET` | `/observations` | user | raw observations, with filters (country, period, sex, classif1) |
 | **Analyses** | | | |
-| `GET` | `/analyses/evolution` | public | time series of an indicator for one or several countries (F3) |
-| `GET` | `/analyses/comparaison-pays` | public | ranking of countries on the latest common period (F4) |
-| `POST` | `/analyses/multi-indicateurs` | public | 1 to 4 series compared, optionally in base 100 (F5) |
-| `GET` | `/rapport` | public | generates a PDF report (FO3) |
+| `GET` | `/analyses/evolution` | user | time series of an indicator for one or several countries (F3) |
+| `GET` | `/analyses/comparaison-pays` | user | ranking of countries on the latest common period (F4) |
+| `POST` | `/analyses/multi-indicateurs` | user | 1 to 4 series compared, optionally in base 100 (F5) |
+| `GET` | `/rapport` | user | generates a PDF report (FO3) |
 | **Administration** | | | |
 | `GET` / `POST` | `/admin/utilisateurs` | admin | lists accounts / creates an account with any role |
 | `DELETE` | `/admin/utilisateurs/{id}` | admin | deletes an account (not one's own) |
@@ -180,6 +180,17 @@ def my_route(utilisateur: Utilisateur = Depends(utilisateur_connecte)):  # logge
 def my_admin_route(admin: Utilisateur = Depends(admin_requis)):        # admin, else 401 / 403
     ...
 ```
+
+When **every** route of a controller needs the same guard, it is set once on the router.
+This is how all data controllers (indicators, countries, observations, analyses, report) are protected,
+so a route added later to one of them is protected too:
+
+```python
+router = APIRouter(dependencies=[Depends(utilisateur_connecte)])
+```
+
+[`tests/test_controller/test_acces_donnees.py`](src/tests/test_controller/test_acces_donnees.py) checks that
+each of these routes answers `401` without a valid token.
 
 **Rules and security choices**
 

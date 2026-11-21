@@ -1,16 +1,18 @@
 """Endpoint de la comparaison entre pays (F4) (préfixe /analyses, c.f. main.py)"""
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
+from controller.auth import utilisateur_connecte
 from schema.comparaison_pays_model import ComparaisonPaysModel
 from service.comparaison_pays_service import ComparaisonPaysService
 from service.indicateur_service import IndicateurService
 
-router = APIRouter()
+# routes réservées aux utilisateurs connectés (sinon 401), c.f. controller/auth.py
+router = APIRouter(dependencies=[Depends(utilisateur_connecte)])
 
 
 @router.get("/comparaison-pays", response_model=ComparaisonPaysModel)
-async def comparer_pays(
+def comparer_pays(
     indicateur: str = Query(description="Code de l'indicateur, ex : EMP_5WAP_SEX_AGE_RT_Q"),
     classif1: str = Query(description="Profession ou tranche d'âge, ex : 15+"),
     pays: list[str] | None = Query(
@@ -18,7 +20,9 @@ async def comparer_pays(
     ),
     sexe: str = Query("Total", description="Total, Male ou Female"),
     top: int = Query(3, ge=1, le=50, description="Nombre de pays dans plus_hauts et plus_bas"),
-    periode: str | None = Query(None, description="Période choisie, ex : 2025Q2 (vide = la dernière)"),
+    periode: str | None = Query(
+        None, description="Période choisie, ex : 2025Q2 (vide = la dernière)"
+    ),
 ):
     """
     Compare un indicateur entre pays, à la dernière période disponible de chaque pays

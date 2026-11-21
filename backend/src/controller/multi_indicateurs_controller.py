@@ -2,13 +2,15 @@
 
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from business_object.selection import Selection
+from controller.auth import utilisateur_connecte
 from schema.multi_indicateurs_model import MultiIndicateursRequest, PointSerieModel
 from service.multi_indicateurs_service import MultiIndicateursService
 
-router = APIRouter()
+# routes réservées aux utilisateurs connectés (sinon 401), c.f. controller/auth.py
+router = APIRouter(dependencies=[Depends(utilisateur_connecte)])
 service = MultiIndicateursService()
 
 
@@ -17,7 +19,7 @@ service = MultiIndicateursService()
     response_model=list[PointSerieModel],
     summary="Comparer plusieurs indicateurs (F5)",
 )
-async def comparer_indicateurs(requete: MultiIndicateursRequest) -> list[dict[str, Any]]:
+def comparer_indicateurs(requete: MultiIndicateursRequest) -> list[dict[str, Any]]:
     """Compare l'évolution temporelle de 1 à 4 indicateurs."""
     selections_bo = [
         Selection(indicateur=s.indicateur, pays=s.pays, classif1=s.classif1, sexe=s.sexe)

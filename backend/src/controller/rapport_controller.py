@@ -1,10 +1,12 @@
 """Contrôleur FastAPI pour l'exportation du rapport PDF (FO3)."""
 
-from fastapi import APIRouter, Query, Response, status
+from fastapi import APIRouter, Depends, Query, Response, status
 
+from controller.auth import utilisateur_connecte
 from service.rapport_service import RapportService
 
-router = APIRouter(tags=["Rapport"])
+# route réservée aux utilisateurs connectés (sinon 401), c.f. controller/auth.py
+router = APIRouter(tags=["Rapport"], dependencies=[Depends(utilisateur_connecte)])
 
 
 @router.get(

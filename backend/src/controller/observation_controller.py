@@ -1,17 +1,19 @@
 """Endpoints de l'API concernant les observations (préfixe /observations, c.f. main.py)"""
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
+from controller.auth import utilisateur_connecte
 from schema.observation_model import ObservationModel
 from service.indicateur_service import IndicateurService
 from service.observation_service import ObservationService
 
-router = APIRouter()
+# routes réservées aux utilisateurs connectés (sinon 401), c.f. controller/auth.py
+router = APIRouter(dependencies=[Depends(utilisateur_connecte)])
 
 
 # "" : l'adresse est exactement /observations
 @router.get("", response_model=list[ObservationModel])
-async def lister_observations(
+def lister_observations(
     indicateur: str = Query(description="Code de l'indicateur, ex : EMP_5WAP_SEX_AGE_RT_Q"),
     pays: list[str] | None = Query(
         None, description="Codes ISO, ex : FRA (répéter pour plusieurs pays)"

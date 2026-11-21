@@ -2,17 +2,19 @@
 
 from dataclasses import asdict
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
+from controller.auth import utilisateur_connecte
 from schema.indicateur_model import IndicateurClassif1Model, IndicateurModel
 from service.indicateur_service import IndicateurService
 from service.observation_service import ObservationService
 
-router = APIRouter()
+# routes réservées aux utilisateurs connectés (sinon 401), c.f. controller/auth.py
+router = APIRouter(dependencies=[Depends(utilisateur_connecte)])
 
 
 @router.get("", response_model=list[IndicateurModel])  # "" : l'adresse est exactement /indicateurs
-async def lister_indicateurs():
+def lister_indicateurs():
     """Liste les indicateurs disponibles dans la base."""
     indicateurs = IndicateurService().lister()
     # objet Indicateur (dataclass) -> dict -> IndicateurModel (format JSON de l'API)
@@ -20,7 +22,7 @@ async def lister_indicateurs():
 
 
 @router.get("/{code}", response_model=IndicateurModel)
-async def indicateur_par_code(code: str):
+def indicateur_par_code(code: str):
     """
     Renvoie un indicateur à partir de son code (ex : EMP_5EMP_SEX_OC2_NB_Q).
     Erreur 404 si l'indicateur n'existe pas.
@@ -32,7 +34,7 @@ async def indicateur_par_code(code: str):
 
 
 @router.get("/{code}/classif1", response_model=IndicateurClassif1Model)
-async def liste_classif1(code: str):
+def liste_classif1(code: str):
     """
     Liste les modalités de classif1 présentes en base pour un indicateur
     (professions ou tranches d'âge selon l'indicateur). Erreur 404 si l'indicateur est inconnu.

@@ -4,6 +4,9 @@ Lancement (depuis backend/src) :
     uv run python main.py
 Puis ouvrir la documentation interactive : <url du service>/docs
 (sur Onyxia : Mes services > VSCode > Ouvrir > lien du port 5000)
+
+Les comptes par défaut (user / user et admin / admin) sont créés par la réinitialisation de la
+base (python -m utils.reset_database, c.f. utils/comptes_par_defaut.py), pas par ce fichier.
 """
 
 import os
@@ -27,7 +30,6 @@ from controller import (
     rapport_controller,
     utilisateur_controller,
 )
-from service.utilisateur_service import UtilisateurService
 from utils.log_utils import initialize_logs
 
 # charge le .env (connexion à la base, host et port du webservice)
@@ -35,9 +37,6 @@ dotenv.load_dotenv(override=True)
 
 # initialisation des logs:
 initialize_logs("laborscope")
-
-# initialisation du compte admin si la base n'est pas chargé
-UtilisateurService().initialiser_admin()
 
 app = FastAPI(title="LaborScope", description="Analyse du marché du travail mondial (ILOSTAT)")
 

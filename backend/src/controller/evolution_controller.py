@@ -2,17 +2,19 @@
 
 from typing import Literal
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
+from controller.auth import utilisateur_connecte
 from schema.pays_model import EvolutionModel
 from service.evolution_service import EvolutionService
 from service.indicateur_service import IndicateurService
 
-router = APIRouter()
+# routes réservées aux utilisateurs connectés (sinon 401), c.f. controller/auth.py
+router = APIRouter(dependencies=[Depends(utilisateur_connecte)])
 
 
 @router.get("/evolution", response_model=list[EvolutionModel])
-async def evolution_indicateur(
+def evolution_indicateur(
     indicateur: str = Query(description="Code de l'indicateur, ex : EMP_5WAP_SEX_AGE_RT_Q"),
     pays: list[str] = Query(description="Codes ISO"),
     classif1: str = Query(description="Profession ou tranche d'âge, ex : 15+"),

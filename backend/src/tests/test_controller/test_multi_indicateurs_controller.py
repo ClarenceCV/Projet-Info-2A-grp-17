@@ -8,12 +8,16 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from controller import multi_indicateurs_controller
+from controller.auth import utilisateur_connecte
+from tests.test_controller.faux_comptes import JDUPONT
 
-# On n'importe pas main.py : il interroge la base dès l'import
-# (UtilisateurService().initialiser_admin()).
+# On n'importe pas main.py (il charge le .env et démarre les logs).
 # Petite application avec seulement le routeur testé, au même préfixe que dans main.py.
 app = FastAPI()
 app.include_router(multi_indicateurs_controller.router, prefix="/analyses")
+# La route est réservée aux utilisateurs connectés : on simule ici un utilisateur connecté
+# (l'authentification elle-même est testée dans test_acces_donnees.py).
+app.dependency_overrides[utilisateur_connecte] = lambda: JDUPONT
 client = TestClient(app)
 
 
