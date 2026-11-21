@@ -276,6 +276,20 @@ Ce chapitre décrit la manière dont LaborScope a été réalisé, depuis les do
 \sectiontitre{Témoignage de William}
 ```
 
+Dans ce projet, je me suis occupé de la comparaison d'un indicateur entre pays (F4) et de la carte du monde (FO2). J'ai codé ces deux fonctionnalités sur toutes les couches de l'application, du service jusqu'aux pages Streamlit, en passant par l'endpoint et les tests. En dehors du code, j'ai surtout participé aux réunions, en donnant mon avis sur la manière dont on voyait le projet et sur ce qu'on voulait faire de l'application.
+
+Avant le projet, j'étais très faible en programmation. Je pense avoir beaucoup progressé, en Python mais aussi sur des choses que je n'avais jamais faites, comme la création d'une API ou d'une interface avec Streamlit.
+
+Les rôles se sont répartis assez naturellement. Chacun connaissait ses points forts, et nous n'avons pas eu besoin de désigner un chef de projet ou un référent technique. On se faisait confiance, on s'écoutait et on suivait le plan fixé ensemble, ce qui a rendu le travail très agréable.
+
+Ce plan est pour moi le point fort du projet. Laurent a passé du temps à préparer, avec l'aide de l'IA, une fiche détaillée pour chaque membre : les tâches à réaliser, des étapes claires, des indications et des tutoriels. Chacun pouvait donc avancer de façon autonome et à son rythme, sans trop dépendre des autres, tout en ayant déjà des aides à disposition. Je pense que cette organisation nous a rendus efficaces.
+
+J'ai surtout appris comment se construit un projet de cette taille, en particulier l'architecture technique en couches et l'utilisation des API. Le moment où j'ai vraiment compris le fonctionnement de l'ensemble, c'est en suivant le trajet d'une requête, depuis l'URL jusqu'à la base de données, puis le retour.
+
+Les difficultés ont surtout été techniques, liées à la programmation elle-même, qui n'est pas mon point fort. Les outils d'IA, conseillés par l'équipe enseignante pour ce projet, m'ont beaucoup aidé sur ce point : ils permettent de comprendre un problème très rapidement, ce qui m'a souvent débloqué.
+
+Ce que je retiens avant tout, c'est la répartition et l'organisation du travail, qui ont très bien fonctionné. Avec le recul, la seule chose que je changerais serait de commencer la rédaction du rapport plus tôt. Si cette façon de travailler est possible en stage ou en entreprise, je la reprendrai volontiers.
+
 \newpage
 
 ```{=latex}
