@@ -224,14 +224,70 @@ Pour faciliter la lecture de notre code, et permettre à d’autres développeur
 \mychapter{Modelisation de l'application}
 ```
 
-Pour bien comprendre l’application **Laborscope**, nous allons expliquer ici l’ensemble des possibilités qu’elle offre à un utilisateur. Pour une meilleure conceptualisation, nous utiliserons des diagrammes UML. \newline Tout d’abord, il est nécessaire de créer un compte. En effet notre application est utilisable par plusieurs utilisateurs(administrateurs et utilisateurs). Avant la première connexion, l’utilisateur est obligé de créer un compte à l’aide d’un pseudo et d’un mot de passe. Deux utilisateurs ne peuvent avoir le même identifiant, ce dernier se doit d’être unique.
-
+Pour bien comprendre l'application **Laborscope**, nous expliquons ici l'ensemble des possibilités qu'elle offre selon le type de personne qui l'utilise, puis la façon de naviguer entre ses différentes pages. Pour une meilleure conceptualisation, nous nous appuyons sur un diagramme UML de cas d'utilisation.
 
 ```{=latex}
-\sectiontitre{Menu principal}
+\sectiontitre{Diagramme de cas d'utilisation}
 ```
 
-Si son compte existe déjà, l’utilisateur se connecte grâce à son pseudo et son mot de passe. Il accède alors aux fonctions principales de l’application, à savoir:. L’utilisateur peut aussi simplement choisir de consulter.
+L'application distingue trois acteurs :
+
+- le **visiteur**, qui n'est pas connecté : il peut seulement créer un compte ou se connecter ;
+- l'**utilisateur**, connecté avec un compte classique : il a accès à toutes les analyses de l'application ;
+- l'**administrateur** : il peut faire tout ce que fait un utilisateur (flèche d'héritage sur le diagramme) et dispose en plus des fonctions de gestion de l'application.
+
+![Diagramme de cas d'utilisation de l'application](images/diagramme_cas_utilisation.png){width="42%"}
+
+Ce diagramme a été mis à jour par rapport à celui du rapport intermédiaire. Nous y avons ajouté deux cas d'utilisation apparus pendant le développement : « Explorer les données », qui permet de consulter les observations brutes de la base, et « Forcer l'import ILOSTAT », qui permet à un administrateur de recharger toutes les données depuis l'API de l'OIT.
+
+```{=latex}
+\sectiontitre{Navigation dans l'application}
+```
+
+L'application se présente sous la forme d'un site web. Un menu latéral, à gauche de l'écran, permet de passer d'une page à l'autre. Son contenu change selon le rôle de la personne connectée : chacun ne voit que les pages auxquelles il a droit.
+
+```{=latex}
+\subsectiontitre{Accueil et accès au compte}
+```
+
+À l'ouverture de l'application, le visiteur arrive sur la page d'accueil, qui présente brièvement Laborscope et les données ILOSTAT sur lesquelles elle s'appuie. Son menu ne contient que trois pages : « Accueil », « Se connecter » et « Créer un compte ». Deux boutons de la page d'accueil mènent aussi directement à ces deux dernières pages.
+
+Avant la première connexion, il faut créer un compte à l'aide d'un pseudo et d'un mot de passe d'au moins 8 caractères, saisi deux fois pour éviter les fautes de frappe. Deux utilisateurs ne peuvent pas avoir le même pseudo, ce dernier se doit d'être unique. Une fois le compte créé, l'utilisateur est connecté automatiquement. Si son compte existe déjà, il se connecte grâce à son pseudo et son mot de passe.
+
+```{=latex}
+\subsectiontitre{Menu utilisateur}
+```
+
+Une fois connecté, l'utilisateur retrouve la page d'accueil, qui l'invite à choisir une analyse dans le menu. Celui-ci contient une rubrique « Analyses » avec six pages :
+
+- **Explorer les données** : consulter les observations brutes d'un indicateur sous forme de tableau ;
+- **Évolution (F3)** : suivre l'évolution d'un indicateur au cours du temps ;
+- **Comparaison pays (F4)** : classer plusieurs pays selon un indicateur ;
+- **Carte du monde (FO2)** : afficher un indicateur sur une carte du monde ;
+- **Multi-indicateurs (F5)** : comparer plusieurs indicateurs sur un même graphique ;
+- **Rapport PDF (FO3)** : générer un rapport synthétique au format PDF.
+
+Ces pages fonctionnent toutes de la même façon : l'utilisateur choisit un indicateur, puis les filtres qui l'intéressent (pays, sexe, tranche d'âge ou profession selon l'indicateur), et le résultat s'affiche sous forme de tableau, de graphique ou de carte. Elles sont détaillées dans le chapitre « Fonctionnement de l'application ».
+
+En bas du menu, l'utilisateur voit le pseudo et le rôle avec lesquels il est connecté, ainsi qu'un bouton « Se déconnecter » qui le ramène au menu du visiteur.
+
+```{=latex}
+\subsectiontitre{Menu administrateur}
+```
+
+L'administrateur voit le même menu que l'utilisateur, avec en plus une rubrique « Administration » composée de trois pages :
+
+- **Utilisateurs** : afficher la liste des comptes, ajouter un compte en choisissant son rôle (utilisateur ou administrateur) et supprimer un compte ;
+- **Données** : forcer un nouvel import des données ILOSTAT, et modifier ou supprimer manuellement une observation ;
+- **Logs et historique** : consulter, dans deux onglets, l'historique des actions (connexions, créations et suppressions de comptes, imports et modifications des données...) et les logs techniques de l'application.
+
+Les actions difficiles à annuler (suppression d'un compte ou d'une observation, nouvel import qui écrase les modifications manuelles) ne sont possibles qu'après avoir coché une case de confirmation.
+
+```{=latex}
+\subsectiontitre{Contrôle des accès}
+```
+
+Cacher les pages dans le menu ne suffit pas à protéger l'application. Chaque page vérifie donc aussi le rôle de la personne qui l'ouvre : un visiteur qui accède à une page d'analyse reçoit le message « Connectez-vous pour accéder à cette page », et un utilisateur qui accède à une page d'administration reçoit le message « Réservé aux administrateurs ». Ces droits sont également vérifiés par l'API, qui refuse les requêtes d'une personne non connectée ou sans les droits nécessaires. Enfin, si la session n'est plus valable (par exemple après une réinitialisation de la base de données), l'utilisateur est prévenu et le menu redevient celui du visiteur.
 
 \newpage
 
