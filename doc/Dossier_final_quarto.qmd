@@ -242,6 +242,102 @@ Si son compte existe déjà, l’utilisateur se connecte grâce à son pseudo et
 
 Ce chapitre décrit la manière dont LaborScope a été réalisé, depuis les données brutes d’ILOSTAT jusqu’à l’application interactive utilisée par l’utilisateur final. Il présente les choix techniques retenus, l’organisation de la base de donnée et les principaux points de fonctionnement du DAO.
 
+```{=latex}
+\sectiontitre{Des données ILOSTAT à la base de données}
+```
+
+```{=latex}
+\subsectiontitre{Récupération des données}
+```
+
+L'application se base sur les données ouvertes de l'API ILOSTAT. Dans un premier temps, il nous fallait comprendre comment cette API fonctionne pour pouvoir décider de la manière d'importer les données.
+
+Le site donne accès à de nombreux indicateurs. Le cahier des charges nous en imposait deux, et nous en avons choisi trois :
+
+- le taux de chômage par sexe et âge ;
+- le taux d'emploi par sexe et âge ;
+- l'emploi par sexe et profession.
+
+Chaque indicateur a son propre identifiant dans l'URL de l'API (par exemple `EMP_5EMP_SEX_OC2_NB_Q` pour l'emploi par sexe et profession). Nous avons choisi de reconstruire chaque URL à partir de cet identifiant plutôt que de coder les URL en dur. Une URL contient quatre paramètres : `id`, le code de l'indicateur ; `timefrom`, la première année récupérée ; `type=both`, qui permet d'obtenir à la fois le code d'un pays (« FRA ») et son nom (« France ») ; et `format=.csv`, pour recevoir les données sous forme de tableau.
+
+Nos différents indicateurs sont stockés dans un fichier : `backend/src/config_import.py`. Ce fichier contient aussi la liste des 80 pays suivis et l'année de début des données (2020). C'est le seul fichier à modifier si l'on veut ajouter un indicateur ou un pays : le reste du code s'adapte automatiquement.
+
+Pour chaque indicateur, l'import fait un appel à l'API par pays. Si un appel échoue, il est relancé une deuxième fois après 3 secondes. Si ce deuxième essai échoue aussi, le pays est ignoré et l'import passe au pays suivant. Ainsi, une erreur sur un pays ne bloque pas toute la récupération.
+
+```{=latex}
+\subsectiontitre{Traitement des données}
+```
+
+Le problème est que les tableaux récupérés depuis l'API ne sont pas propres : certaines colonnes sont superflues et leurs noms ne sont pas synthétiques. Il nous fallait donc traiter les données après les avoir récupérées.
+
+Le dossier qui contient tous les fichiers de traitement est `src/fetcher/`. Il contient en particulier quatre fichiers :
+
+- `fetcher.py` : construit les URL nécessaires et télécharge les données de l'API sous forme de tableau (DataFrame) ;
+- `parser.py` : nettoie les libellés d'ILOSTAT en retirant leurs préfixes ;
+- `data_processing.py` : utilise les méthodes des deux fichiers précédents. Il sélectionne et renomme les colonnes utiles, nettoie les tableaux, puis les enregistre dans la base ;
+- `charger_donnees.py` : script final qui lance l'ensemble : récupérer les données d'ILOSTAT, les traiter et les stocker.
+
+Le nettoyage, fait par la méthode `parse_data` de `data_processing.py`, se déroule en quatre étapes :
+
+1. sélection des colonnes utiles et renommage ;
+2. conversion des valeurs en nombres, puis suppression des lignes sans valeur ;
+3. nettoyage des libellés : par exemple « Age (Youth, adults): 15-24 » devient « 15-24 » et « Sex: Female » devient « Female ». Quand une dimension n'existe pas pour un indicateur, on la remplace par `_NA` ;
+4. suppression des doublons, c'est-à-dire des lignes qui ont le même pays, la même source, la même période, le même sexe et la même modalité.
+
+Le tableau suivant montre les colonnes que nous gardons et leur nouveau nom :
+
+| Colonne ILOSTAT  | Colonne dans notre base | Exemple                    |
+|------------------|-------------------------|----------------------------|
+| `ref_area`       | `code_iso`              | FRA                        |
+| `ref_area.label` | `nom_pays`              | France                     |
+| `time`           | `periode`               | 2024Q4                     |
+| `sex.label`      | `sexe`                  | Female                     |
+| `classif1.label` | `classif1`              | 15-24                      |
+| `obs_value`      | `valeur`                | 7,5                        |
+
+: Colonnes conservées et renommées lors du traitement des données
+
+[Graphe simplifié du chemin des données]
+
+```{=latex}
+\subsectiontitre{Stockage, business objects et DAO}
+```
+
+Comme nous ne souhaitions pas stocker chaque tableau dans notre environnement, nous avons décidé de travailler avec PostgreSQL. L'objectif est d'avoir nos données sous forme de tables SQL pour pouvoir les utiliser plus facilement. Les DAO (Data Access Objects) nous permettent de communiquer avec la base SQL et d'utiliser les données récupérées.
+
+La structure de la base est définie dans le fichier `data/init_db.sql`, à la racine du projet. Il crée nos trois tables principales, « indicateur », « pays » et « observation ». Ces trois tables fonctionnent de manière très simple : « indicateur » recense tous les indicateurs (3 ici), « pays » recense tous les pays utilisés, et « observation » contient toutes les lignes des tableaux provenant d'ILOSTAT, quel que soit l'indicateur. C'est la table la plus importante de l'application : elle contient toutes les données.
+
+Cette organisation correspond à un modèle en étoile : « observation » est la table de faits, au centre, et « indicateur » et « pays » sont des tables de dimensions qui la complètent. Chaque observation fait référence à un indicateur et à un pays grâce à des clés étrangères. Le dossier `data/` contient aussi un second fichier, `pop_db.sql`, qui fournit un petit jeu de données de secours si l'API est injoignable.
+
+Une observation est identifiée par une clé primaire composée de six colonnes : l'indicateur, le pays, la source, la période, le sexe et la modalité. Cette clé nous permet de relancer l'import autant de fois que nécessaire sans créer de doublons : grâce à la commande SQL `INSERT ... ON CONFLICT`, une observation déjà présente n'est pas ajoutée une deuxième fois, mais sa valeur est mise à jour.
+
+Chacune de ces trois tables a son propre DAO (`IndicateurDAO`, `PaysDAO` et `ObservationDAO`, dans le dossier `src/dao/`), qui fait le lien entre PostgreSQL et l'application. Les DAO sont les seuls fichiers du projet qui contiennent des requêtes SQL. Ils fonctionnent dans les deux sens :
+
+- en écriture : ils reçoivent un tableau propre et l'insèrent dans la base. Les observations sont envoyées par paquets de 1000 lignes pour aller plus vite. L'ordre d'enregistrement est important : on enregistre d'abord l'indicateur, puis les pays, puis les observations, car une observation ne peut pas faire référence à un pays ou à un indicateur qui n'existe pas encore ;
+- en lecture : ils récupèrent les données pour le reste de l'application. Par exemple, la méthode `lire` d'`ObservationDAO` renvoie les observations d'un indicateur et peut les filtrer par pays, période, sexe et modalité.
+
+Tous les DAO passent par une seule connexion à la base, gérée par la classe `DBConnection`. Elle utilise le patron Singleton : une seule instance de la classe peut exister, donc une seule connexion est ouverte et partagée par toute l'application. Les paramètres de connexion (adresse, nom de la base, identifiants) sont lus dans le fichier `.env`, ce qui évite de les écrire dans le code.
+
+Les DAO ne renvoient pas seulement des tableaux : ils peuvent aussi renvoyer des business objects. Ce sont des classes simples, dans le dossier `src/business_object/`, qui représentent les objets que manipule l'application :
+
+- `Indicateur` : le code, le libellé, l'unité, la fréquence et le type de modalité d'un indicateur. Ce sont ces objets qui décrivent les indicateurs dans `config_import.py`. Cette classe vérifie aussi ses attributs à la création, par exemple que la fréquence vaut bien « Q », « A » ou « M » ;
+- `Pays` : le code ISO et le nom d'un pays, avec des méthodes pour retrouver son continent et les groupes auxquels il appartient ;
+- `Selection` : un indicateur et ses filtres (pays, modalité, sexe), utilisé pour la comparaison multi-indicateurs.
+
+Par exemple, la méthode `lister` de `PaysDAO` renvoie une liste d'objets `Pays`, et celle d'`IndicateurDAO` une liste d'objets `Indicateur`. Les observations, elles, restent sous forme de tableaux pandas, car les services font leurs calculs directement dessus.
+
+[Diagramme de classes des business objects]
+
+```{=latex}
+\subsectiontitre{Limites}
+```
+
+Cette chaîne d'import a tout de même quelques limites :
+
+- l'import est lent : comme on fait un appel à l'API par pays et par indicateur, il faut plusieurs centaines d'appels pour tout récupérer. Ici ce n'est pas encore très contraigant. Si la table "observation" dépasse les 500 milles ligne il faudrait travailler avec d'autres outils qui rendent l'import et la lecture plus rapide.
+- les données ne remontent qu'à 2020 ;
+- la couverture est très inégale selon les pays : certains n'ont qu'un seul trimestre dans la base, ce qui limite les comparaisons (voir la carte du monde au chapitre 4).
+
 \newpage
 
 ```{=latex}
