@@ -596,6 +596,17 @@ Cet exemple montre aussi les limites de la carte. Les 79 pays ne sont pas compar
 \sectiontitre{Témoignage d'Antifa}
 ```
 
+Dans ce projet, j'ai codé la fonctionnalité d'évolution d'un indicateur (F3) sur toutes les couches de l'application : le service qui calcule les variations, l'endpoint, les tests, puis la page Streamlit avec ses graphiques. J'ai aussi pris en charge une grande partie du dossier : création du dossier intermédiaire d'analyse, de la page de garde et du squelette Quarto du dossier final, mise à jour du diagramme d'architecture avec Christian, rédaction de l'introduction et du chapitre 1, et mise en forme générale.
+
+Pour être honnête, mon investissement n'a pas été régulier. Au début, j'ai surtout travaillé sur les documents, alors que le code est arrivé plus tard, à partir de la semaine 6. Ensuite, certaines semaines n'ont pas laissé de trace dans nos suivis (charge de travail d'autres matières, examens, etc). Avec le recul, j'aurais dû commencer la partie code plus tôt, car F3 s'est retrouvée codée en plusieurs étapes espacées dans le temps, et le dossier s'est écrit en fin de projet.
+
+Je n'ai jamis été très  à l'aise en programmation, et la fiche de tâches de Laurent m'a été très utile : elle expliquait les étapes, les fichiers à écrire et les pièges à éviter. Je reconnais que sans elle, j'aurais eu du mal à avancer seule. Ce qui m'a vraiment fait comprendre l'application, c'est de suivre le trajet d'une requête, de l'URL jusqu'à la base de données, puis le retour sous forme de graphique. Les outils d'IA m'ont beaucoup aidée pour comprendre les erreurs et les pièges de pandas, comme les valeurs vides ou la division par zéro, mais j'ai dû vérifier moi-même le résultat avec les tests et avec des exemples.
+
+Les principales difficultés ont été techniques. Git m'a posé beaucoup de problèmes : push refusé, conflits sur un même fichier, fichiers modifiés que je ne reconnaissais pas. J'ai aussi eu du mal avec l'organisation des tests et les imports du backend. Certains de mes commits ont un message trop vague, et Clarence a dû relire et corriger une partie de mon code (par exemple la structure du schéma), ce qui est normal pour la qualité du projet, mais montre que j'ai encore des progrès à faire en rigueur.
+
+Je retiens que la qualité d'un projet vient autant de l'organisation et des tests que du code lui-même : détail à première vue anodin, comme l'ordre entre le calcul des variations et la coupe aux N dernières périodes, change complètement le résultat affiché. Je retiens aussi que F3 reste imparfaite : un trimestre manquant n'est pas signalé, et la variation est alors calculée entre deux observations qui ne sont pas consécutives.
+
+Si c'était à refaire, je répartirais mon temps de façon plus régulière, je commencerais le code avant les documents, et je commiterais plus souvent avec des messages clairs. Cette expérience m'a appris à travailler en équipe sur un projet de cette taille, et je m'en servirai pour les futurs projets.
 ```{=latex}
 \sectiontitre{Témoignage de Laurent}
 ```
