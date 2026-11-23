@@ -106,10 +106,8 @@ kable_ise <- function(df, caption = NULL, digits = 3,
 \newpage
 \listoffigures
 \newpage
-
 ```{=latex}
 \mychapterstar{REMERCIEMENTS}
-
 ```
 
 Nous tenons à exprimer notre sincère gratitude à toutes les personnes qui ont contribué, de près ou de loin, à la réalisation de ce projet.
@@ -185,31 +183,52 @@ Les utilisateurs disposent d’un compte classique leur permettant de consulter 
 ```{=latex}
 \subsectiontitre{Méthode de travail}
 ```
-Pour livrer notre application à temps, nous avons réalisé un diagramme de GANTT. C’est un calendrier prévisionnel avec les différentes tâches à réaliser et leur durée estimée. Ce type de diagramme est indispensable pour avoir une bonne vision de l’avancement du projet et ne pas perdre de vue les dates de rendus. \newline
-Dans le cadre de notre projet, nous pouvons distinguer cinq grandes étapes :\newline • « Diagramme UML » : il s’agit ici de modéliser l’ensemble du projet en respectant le cahier des charges que nous avons établi. Il y a pour cela deux phases. La première est la phase d’étude. Elle permet de construire le diagramme de cas d’utilisation. Vient ensuite la phase de conception. Il s’agit alors de créer les diagrammes d’activités correspondant aux cas d'utilisation du premier diagramme, le diagramme de classes et celui de la base de données. Cette étape est cruciale car sans elle, l’implémentation ne pourra être faite correctement.\newline • « Dossier d’analyse » : pour s’assurer du bon démarrage du projet, nous avons réalisé un dossier d’analyse qui regroupe l’ensemble de la planification et de la modélisation. Chacun d’entre nous ayant participé à la rédaction de ce rapport, il était important de consacrer du temps à sa conception. Cela permet d’assurer la cohérence du contenu et d’en faire des relectures.\newline • « Implémentation » : c’est le temps de la réalisation du projet. Cette étape comporte l'importation des données à partir de l'ILOSTAT,la création de la base de données, le développement de la DAO et la mise en place des différentes fonctionnalités du projet. C’est la partie la plus longue du projet. Nous avions prévu d’y consacrer environ 1 mois après le dépot du rapport intermédiaire, or nous avons eu besoin de 10 jours supplémentaires pour que tout fonctionne correctement.\newline • « Rapport et code » : Afin de gagner du temps, nous voulions rédiger le rapport parallèlement à l’étape d’implémentaion. Cette dernière plus complexe et chronophage que prévu, nous avons décidé de, finalement, repousser l’écriture au.... Tout comme pour le dossier d’analyse, nous avons accordé deux jours à la relecture. Le code final étant à rendre pour le 25 novembre, nous consacrerons la dernière semaine au dossier final.\newline • « Soutenance » : pour finir, nous aurons une semaine pour créer un diaporama afin de présenter notre projet le 09 décembre devant un jury composé d’un professionnel de l’informatique, de notre encadrant et d’un représentant de l’ENSAI.\newline
 
+Pour livrer notre application à temps, nous avons réalisé un diagramme de GANTT. C’est un calendrier prévisionnel avec les différentes tâches à réaliser et leur durée estimée. Ce type de diagramme est indispensable pour avoir une bonne vision de l’avancement du projet et ne pas perdre de vue les dates de rendus. \newline Dans le cadre de notre projet, nous pouvons distinguer cinq grandes étapes :\newline • « Diagramme UML » : il s’agit ici de modéliser l’ensemble du projet en respectant le cahier des charges que nous avons établi. Il y a pour cela deux phases. La première est la phase d’étude. Elle permet de construire le diagramme de cas d’utilisation. Vient ensuite la phase de conception. Il s’agit alors de créer les diagrammes d’activités correspondant aux cas d'utilisation du premier diagramme, le diagramme de classes et celui de la base de données. Cette étape est cruciale car sans elle, l’implémentation ne pourra être faite correctement.\newline • « Dossier d’analyse » : pour s’assurer du bon démarrage du projet, nous avons réalisé un dossier d’analyse qui regroupe l’ensemble de la planification et de la modélisation. Chacun d’entre nous ayant participé à la rédaction de ce rapport, il était important de consacrer du temps à sa conception. Cela permet d’assurer la cohérence du contenu et d’en faire des relectures.\newline • « Implémentation » : c’est le temps de la réalisation du projet. Cette étape comporte l'importation des données à partir de l'ILOSTAT,la création de la base de données, le développement de la DAO et la mise en place des différentes fonctionnalités du projet. C’est la partie la plus longue du projet. Nous avions prévu d’y consacrer environ 1 mois après le dépot du rapport intermédiaire, or nous avons eu besoin de 10 jours supplémentaires pour que tout fonctionne correctement.\newline • « Rapport et code » : Afin de gagner du temps, nous voulions rédiger le rapport parallèlement à l’étape d’implémentaion. Cette dernière plus complexe et chronophage que prévu, nous avons décidé de, finalement, repousser l’écriture au.... Tout comme pour le dossier d’analyse, nous avons accordé deux jours à la relecture. Le code final étant à rendre pour le 25 novembre, nous consacrerons la dernière semaine au dossier final.\newline • « Soutenance » : pour finir, nous aurons une semaine pour créer un diaporama afin de présenter notre projet le 09 décembre devant un jury composé d’un professionnel de l’informatique, de notre encadrant et d’un représentant de l’ENSAI.\newline
+
+(diagramme de GANTT)
 ```{=latex}
 \subsectiontitre{Organisation de l'équipe}
 ```
- Pour la bonne avancée du travail, les taches ont été réparties parmis les cinq membres du groupe.
+
+Le projet a été réalisé par cinq membres. Pour avancer en parallèle sans se bloquer, le travail a été découpé en cinq rôles, chacun décrit dans une fiche de tâches détaillée (objectifs, fichiers à écrire, étapes, tutoriels) rédigée par Laurent Khaouli. Le partage suit un principe simple : deux membres construisent le socle commun, et les trois autres codent chacun une fonctionnalité complète, de la base de données jusqu’à l’écran. Cela leur permet de toucher toutes les couches de l’application.
+
+\textbf{•Le socle commun}
+
+-Clarence Chemla-Vidaud (rôle A : données et administration). Elle est responsable de tout ce qui touche aux données : import depuis ILOSTAT (fetcher), base de données, gestion des pays et des modalités, actions d’administration sur les données (F1, F2 et la partie données de F6). Elle assure aussi la qualité du projet : infrastructure de tests, journalisation (logs), intégration continue et README. En fin de projet, elle a relu l’ensemble du backend, harmonisé le code avec pylint et simplifié plusieurs fichiers (schémas, controllers).\newline
+-Laurent Khaouli (rôle B : utilisateurs, sécurité et squelette frontend). Il gère les comptes (création, connexion, rôles utilisateur et administrateur, historique des actions, partie comptes de F6) et construit le squelette de l’application Streamlit dans lequel chacun a ajouté sa page. Il a aussi conçu l’organisation du travail en fiches et testé le fonctionnement des endpoints.
+
+\textbf{•Les fonctionnalités}
+
+-Antifa Badarou (rôle C : évolution d’un indicateur, F3). Elle a codé le calcul de l’évolution d’un indicateur sur les N derniers trimestres : service, schéma, controller, tests, puis la page d’affichage des graphiques. Elle a fournit le template pour la rédaction du dossier final et effectué des mises en formes et réglages global du document.Elle a  aussi rédigé avec l'aide des autres memebres le dossier final.\newline
+
+-William Margerand (rôle D : comparaison entre pays, F4, et carte du monde, FO2). Il a codé le classement des pays pour la période la plus récente (valeurs les plus hautes et les plus basses) avec ses tests, puis la carte choroplèthe. Il a ensuite amélioré le choix de la période, la période commune et les couleurs. Il a rédigé les sections du dossier consacrées à F4 et FO2, à l’exploration des données, ainsi que le chapitre 2 de modélisation et le diagramme de cas d’utilisation.\newline
+
+-Christian Adjeba (rôle E : comparaison multi-indicateurs, F5, et rapport PDF, FO3). Il a codé la comparaison de plusieurs indicateurs sur un même graphique (schéma, controller, service), puis la génération automatique du rapport PDF (service, controller, tests et page frontend). Il a aussi amélioré F5 après les échanges avec le tuteur et harmonisé les noms d’indicateurs dans le rapport.\newline
+
+\textbf{•Organisation commune}
+
+Chacun a rédigé ses propres sections du dossier final et tenu un compte rendu hebdomadaire (12 semaines). Les fichiers partagés, comme main.py, n’ont reçu qu’une ligne par controller, ce qui a limité les conflits. Les relectures croisées et les échanges réguliers avec le tuteur ont permis de valider les choix de conception.
+
 ```{=latex}
 \sectiontitre{Réadaptation des diagrammes}
 ```
- A la suite du dépot du rapport intermédiare,notre tuteur nous a fais des remarques concernants le diagramme d'architecture et le diagramme de classe. Nous avons donc intégrer ses remarques et amélioré les diagrammes concernés.
- 
+
+A la suite du dépot du rapport intermédiare,notre tuteur nous a fais des remarques concernants le diagramme d'architecture et le diagramme de classe. Nous avons donc intégrer ses remarques et amélioré les diagrammes concernés.
+
 ```{=latex}
 \subsectiontitre{Diagramme d'architecture}
 ```
- Voilà ci contre le diagramme d'architecture qui montre la structure globale de l'API:
- 
+
+Voilà ci contre le diagramme d'architecture qui montre la structure globale de l'API:
+
 ```{=latex}
 \subsectiontitre{Diagramme de classes}
 ```
-
-
+ Voila ci après le diagramme de classe corrigé:
+ 
 ```{=latex}
 \sectiontitre{Normes de codage utilisées}
-
 ```
 
 Pour que n’importe quel programme soit facilement compréhensible par tous les développeurs informatiques, il existe des conventions de nommage en python. Ainsi le projet **Laborscope**, développée en python suit les règles suivantes :\newline
@@ -294,6 +313,7 @@ Cacher les pages dans le menu ne suffit pas à protéger l'application. Chaque p
 ```{=latex}
 \mychapter{Implémentation}
 ```
+
 (obtention des données et fonctionnement du DAO)
 
 Ce chapitre décrit la manière dont LaborScope a été réalisé, depuis les données brutes d’ILOSTAT jusqu’à l’application interactive utilisée par l’utilisateur final. Il présente les choix techniques retenus, l’organisation de la base de donnée et les principaux points de fonctionnement du DAO.
@@ -335,25 +355,25 @@ Le dossier qui contient tous les fichiers de traitement est `src/fetcher/`. Il c
 
 Le nettoyage, fait par la méthode `parse_data` de `data_processing.py`, se déroule en quatre étapes :
 
-1. sélection des colonnes utiles et renommage ;
-2. conversion des valeurs en nombres, puis suppression des lignes sans valeur ;
-3. nettoyage des libellés : par exemple « Age (Youth, adults): 15-24 » devient « 15-24 » et « Sex: Female » devient « Female ». Quand une dimension n'existe pas pour un indicateur, on la remplace par `_NA` ;
-4. suppression des doublons, c'est-à-dire des lignes qui ont le même pays, la même source, la même période, le même sexe et la même modalité.
+1.  sélection des colonnes utiles et renommage ;
+2.  conversion des valeurs en nombres, puis suppression des lignes sans valeur ;
+3.  nettoyage des libellés : par exemple « Age (Youth, adults): 15-24 » devient « 15-24 » et « Sex: Female » devient « Female ». Quand une dimension n'existe pas pour un indicateur, on la remplace par `_NA` ;
+4.  suppression des doublons, c'est-à-dire des lignes qui ont le même pays, la même source, la même période, le même sexe et la même modalité.
 
 Le tableau suivant montre les colonnes que nous gardons et leur nouveau nom :
 
-| Colonne ILOSTAT  | Colonne dans notre base | Exemple                    |
-|------------------|-------------------------|----------------------------|
-| `ref_area`       | `code_iso`              | FRA                        |
-| `ref_area.label` | `nom_pays`              | France                     |
-| `time`           | `periode`               | 2024Q4                     |
-| `sex.label`      | `sexe`                  | Female                     |
-| `classif1.label` | `classif1`              | 15-24                      |
-| `obs_value`      | `valeur`                | 7,5                        |
+| Colonne ILOSTAT  | Colonne dans notre base | Exemple |
+|------------------|-------------------------|---------|
+| `ref_area`       | `code_iso`              | FRA     |
+| `ref_area.label` | `nom_pays`              | France  |
+| `time`           | `periode`               | 2024Q4  |
+| `sex.label`      | `sexe`                  | Female  |
+| `classif1.label` | `classif1`              | 15-24   |
+| `obs_value`      | `valeur`                | 7,5     |
 
 : Colonnes conservées et renommées lors du traitement des données
 
-[Graphe simplifié du chemin des données]
+\[Graphe simplifié du chemin des données\]
 
 ```{=latex}
 \subsectiontitre{Stockage, business objects et DAO}
@@ -382,7 +402,7 @@ Les DAO ne renvoient pas seulement des tableaux : ils peuvent aussi renvoyer des
 
 Par exemple, la méthode `lister` de `PaysDAO` renvoie une liste d'objets `Pays`, et celle d'`IndicateurDAO` une liste d'objets `Indicateur`. Les observations, elles, restent sous forme de tableaux pandas, car les services font leurs calculs directement dessus.
 
-[Diagramme de classes des business objects]
+\[Diagramme de classes des business objects\]
 
 ```{=latex}
 \subsectiontitre{Limites}
@@ -431,11 +451,58 @@ La page repose sur les mêmes couches que le reste de l'application :
 
 On consulte le taux de chômage des 15 ans et plus (hommes et femmes confondus) au Botswana et en Gambie, deux pays qui ont très peu de données dans notre base.
 
-![Taux de chômage des 15 ans et plus au Botswana et en Gambie](images/explorer_tableau.png){width=100%}
+![Taux de chômage des 15 ans et plus au Botswana et en Gambie](images/explorer_tableau.png){width="100%"}
 
 Le tableau ne contient que trois lignes. Pour le Botswana, on a deux observations, en 2020Q1 (24,0 %) et en 2020Q4 (25,4 %), qui viennent d'une enquête auprès des ménages (« HS - Multi-Topic Household Survey »). Environ un actif sur quatre y était donc au chômage en 2020. Pour la Gambie, on n'a qu'une seule observation, en 2026Q1 (6,2 %), issue d'une enquête emploi (« LFS - Labour Force Survey »).
 
 Cet exemple montre l'intérêt de la page : avant de comparer ces deux pays, on voit tout de suite que leurs données datent d'années très différentes et viennent de deux types d'enquêtes. Une comparaison directe entre 25 % et 6 % doit donc être faite avec prudence. C'est aussi pour cette raison que les autres fonctionnalités affichent toujours la période de chaque pays.
+
+```{=latex}
+\sectiontitre{Evolution d'un indicateur (F3)}
+```
+
+```{=latex}
+\subsectiontitre{Présentation de la fonctionnalité}
+```
+
+L'évolution d'un indicateur permet de suivre comment une valeur change au cours du temps, pour un ou plusieurs pays. L'utilisateur choisit l'indicateur (par exemple le taux d'emploi), les pays, la modalité (une tranche d'âge comme 15+, ou une profession selon l'indicateur) et le sexe (Total, Hommes ou Femmes). Il choisit aussi le nombre de derniers trimestres à afficher, de 2 à 20 (8 par défaut).
+
+La page affiche trois éléments :
+
+- un graphique en courbes avec une courbe par pays, pour voir la tendance de la valeur ;
+- un graphique en barres qui montre, pour chaque trimestre, la variation par rapport au trimestre précédent ;
+- un tableau détaillé avec la valeur, la variation absolue et la variation en pourcentage.
+
+Deux difficultés ont influencé nos choix. D'une part, la base peut contenir plusieurs sources pour un même pays et un même trimestre : si on les gardait toutes, le graphique aurait deux points à la même date. Nous gardons une seule source par pays et par période (la première par ordre alphabétique). D'autre part, les pays n'ont pas tous le même nombre de trimestres disponibles : le nombre demandé est donc appliqué pays par pays, et un pays qui a moins de données que demandé affiche simplement tout ce qu'il a. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
+
+
+```{=latex}
+\subsectiontitre{Fonctionnement technique de la fonctionnalité}
+```
+
+La fonctionnalité suit l'architecture en couches de l'application :
+
+- la couche DAO lit en base les observations de l'indicateur pour les pays, la modalité et le sexe demandés. Nous avons réutilisé la classe ObservationDAO, qui existait déjà ;
+- la couche service (classe EvolutionService) fait les calculs avec pandas ;
+- la couche controller expose le résultat avec FastAPI sur l'endpoint GET /analyses/evolution, réservé aux utilisateurs connectés. Elle vérifie les paramètres (par exemple, n_periodes doit être compris entre 1 et 40) et renvoie une erreur 404 si l'indicateur n'existe pas ;
+- la page Streamlit appelle cet endpoint et trace les graphiques avec Plotly Express.
+
+Le calcul du service se fait en quatre étapes :
+
+1. on garde une seule source par pays et par période ;
+2. on trie les observations par pays puis par période (le format « 2024Q4 » se trie dans l'ordre chronologique) ;
+3. on calcule les variations pays par pays : la variation absolue est la valeur moins celle de la période précédente, et la variation en pourcentage est cette différence divisée par la valeur précédente ;
+4. on ne garde que les N dernières périodes de chaque pays.
+
+L'ordre des étapes 3 et 4 est important. Si on coupait avant de calculer, la première période conservée n'aurait pas de variation. On calcule donc les variations sur tout l'historique, puis on garde les N dernières lignes.
+
+Deux cas particuliers sont traités. La première période de chaque pays n'a pas de période précédente : ses variations valent « vide » (null dans le JSON) au lieu d'une valeur inventée. Si la valeur précédente est égale à 0, le pourcentage n'est pas défini (division par zéro) : il est aussi laissé vide, car l'infini n'est pas accepté par le format JSON.
+
+Le service est testé avec pytest : la base est remplacée par de petites données écrites à la main, ce qui permet de vérifier les variations, la coupe aux N dernières périodes pays par pays, le choix d'une seule source, le tri chronologique, la division par zéro et le cas où aucune donnée n'existe. L'endpoint est aussi testé (réponse 200, erreur 404, erreur 422, résultat vide).
+
+```{=latex}
+\subsectiontitre{Exemple et interprètation}
+```
 
 ```{=latex}
 \sectiontitre{Comparaison entre pays (F4)}
@@ -473,9 +540,9 @@ Le service est testé avec pytest : la base est remplacée par de petites donné
 
 On compare le nombre de personnes en emploi (indicateur « Emploi par sexe et profession », toutes professions confondues, hommes et femmes) entre la France, l'Allemagne, l'Espagne et l'Italie, avec la dernière période disponible et un pays dans les « plus hauts » et un dans les « plus bas ».
 
-![Nombre de personnes en emploi (en milliers), dernière période disponible](images/f4_graphique.png){width=95%}
+![Nombre de personnes en emploi (en milliers), dernière période disponible](images/f4_graphique.png){width="95%"}
 
-![Tableaux des valeurs les plus hautes, les plus basses et du classement complet](images/f4_tableaux.png){width=95%}
+![Tableaux des valeurs les plus hautes, les plus basses et du classement complet](images/f4_tableaux.png){width="95%"}
 
 Les quatre pays ont tous leur dernière donnée en 2024Q4 : ils sont donc comparés à la même date et la page n'affiche pas de message d'avertissement. L'Allemagne arrive en tête avec environ 43,5 millions de personnes en emploi (en bleu foncé), devant la France (28,9 millions) et l'Italie (24,0 millions). L'Espagne est en dernière position avec 21,9 millions (en bleu clair), soit à peu près deux fois moins que l'Allemagne.
 
@@ -505,7 +572,7 @@ La carte réutilise entièrement la fonctionnalité F4. Nous n'avons pas créé 
 
 On affiche le taux de chômage des 15 ans et plus (hommes et femmes confondus), avec la dernière période disponible de chaque pays.
 
-![Taux de chômage des 15 ans et plus, dernière période disponible de chaque pays](images/fo2_carte_chomage.png){width=100%}
+![Taux de chômage des 15 ans et plus, dernière période disponible de chaque pays](images/fo2_carte_chomage.png){width="100%"}
 
 La carte montre 79 pays. Sur la capture, la souris est placée sur l'Afrique du Sud : l'info-bulle indique son taux de chômage (32,9 %) et la période utilisée (2026Q2). Les taux les plus élevés sont à Djibouti (39,0 %, 2025Q4) et en Afrique du Sud (32,9 %, 2026Q2), suivis du Botswana, de l'Angola et du Zimbabwe, tous au-dessus de 20 %. Les plus bas sont en Thaïlande (0,7 %, 2026Q1), au Belize (1,9 %) et au Viêt Nam (2,0 %). La France se situe à 7,5 % (2024Q4).
 
@@ -557,3 +624,14 @@ Ce que je retiens avant tout, c'est la répartition et l'organisation du travail
 \mychapterstar{CONCLUSION}
 ```
 
+Le projet **Laborscope** avait pour objectif de concevoir une application d’analyse interactive du marché du travail mondial à partir des données ILOSTAT. Il aboutit à une application fonctionnelle de bout en bout : une base PostgreSQL alimentée par les données de l’Organisation internationale du travail, une API REST développée avec FastAPI, et une interface web (réalisée avec Streamlit) permettant d’explorer les indicateurs, de les comparer entre pays, de suivre leur évolution dans le temps ,les visualiser sur une carte du monde et surtout imprimer les informations voulues en format pdf.
+
+Sur le plan technique, l’architecture en couches (controllers, services, DAO) et la séparation entre backend et frontend se sont révélées pertinentes. Elles ont permis de répartir le travail entre les membres du groupe, de développer en parallèle sans se bloquer mutuellement, et de tester chaque couche séparément. Les tests automatisés avec pytest, la gestion de l’environnement avec uv et l’utilisation de Git ont renforcé la fiabilité et la reproductibilité du projet.
+
+Ce travail nous a aussi appris à traiter des données réelles, qui sont rarement parfaites. Nous avons dû gérer des sources multiples pour une même observation, des périodes manquantes ou des valeurs nulles pouvant rendre un calcul de variation indéfini. Chaque choix de traitement a dû être justifié et documenté, car il influence directement les résultats affichés à l’utilisateur.
+
+Le projet présente néanmoins des limites.Les trimestres manquants ne sont pas signalés dans le calcul des variations, la qualité des résultats dépend de la couverture inégale des pays dans ILOSTAT, et les performances n’ont pas été optimisées pour de très gros volumes de données.
+
+Plusieurs pistes d’amélioration sont envisageables : ajouter des analyses statistiques plus poussées (tests, régressions, prévisions), mettre en cache les requêtes les plus fréquentes, signaler explicitement les périodes manquantes, enrichir l’application avec d’autres sources de données, et déployer l’ensemble sur un serveur accessible en ligne.
+
+Enfin, ce projet a été une expérience formatrice de travail en équipe : organisation par fiches de tâches, coordination autour de conventions communes, relectures croisées et résolution de conflits Git. Il nous a permis de mettre en pratique, sur un cas concret, les compétences acquises en programmation, en bases de données et en statistiques durant notre deuxième année à l’ENSAI.
