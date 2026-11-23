@@ -581,12 +581,122 @@ Cet exemple montre aussi les limites de la carte. Les 79 pays ne sont pas compar
 \newpage
 
 ```{=latex}
+\sectiontitre{Comparaison multi-indicateurs (F5)}
+```
+
+```{=latex}
+\subsectiontitre{Présentation de la fonctionnalité}
+```
+
+La comparaison multi-indicateurs permet de superposer jusqu'à quatre séries sur un même graphique. Elle répond à un besoin fréquent : croiser des indicateurs qui n'ont ni la même unité ni le même ordre de grandeur, comme un taux d'emploi (autour de 68 %), un taux de chômage (autour de 7 à 8 %) ou un nombre de personnes en emploi (en milliers).
+
+Pour chaque série, l'utilisateur choisit un indicateur, un pays, une modalité (une tranche d'âge ou une profession selon l'indicateur) et le sexe. Une case à cocher permet d'activer ou de désactiver chacune des quatre séries. Chaque série est nommée en langage clair (par exemple « Taux d'emploi par sexe et âge - FRA - Total - 15+ ») plutôt qu'avec le code technique d'ILOSTAT. L'utilisateur peut aussi choisir entre deux affichages :
+
+- l'indice en base 100 : toutes les séries sont ramenées à 100 à une même date de départ $t_0$, ce qui permet de comparer leurs évolutions relatives malgré des unités différentes :
+
+$$\text{valeur}_{\text{base 100}}(t) = \frac{\text{valeur}(t)}{\text{valeur}(t_0)} \times 100$$
+
+- les valeurs brutes, plus adaptées quand les séries sont dans la même unité.
+
+Pour que la comparaison reste cohérente, la page applique deux règles. D'abord, les indicateurs choisis doivent avoir la même fréquence (trimestrielle ou annuelle) : si on mélange les deux, la page refuse la comparaison et affiche une erreur. Ensuite, les séries sont alignées sur leur fenêtre commune : la date de départ est la plus récente des premières périodes de chaque série. Sous le graphique, un tableau reprend les données affichées. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
+
+```{=latex}
+\subsectiontitre{Fonctionnement technique}
+```
+
+La fonctionnalité suit l'architecture en couches de l'application :
+
+- le business object `Selection` regroupe les paramètres d'une série (indicateur, pays, modalité, sexe) ;
+- la couche DAO récupère les informations de chaque indicateur (libellé, unité, fréquence) avec `IndicateurDAO`, et les observations filtrées avec `ObservationDAO`, qui existait déjà ;
+- la couche service (fichier `multi_indicateurs_service.py`) vérifie que les indicateurs existent et ont la même fréquence, supprime les doublons par période, aligne les séries sur la période de début commune et calcule la colonne en base 100 avec pandas. Elle construit aussi les intitulés lisibles des séries ;
+- la couche controller expose le résultat avec FastAPI sur l'endpoint POST /analyses/multi-indicateurs. Elle reçoit la liste des séries actives et l'option base 100, puis renvoie les séries calculées au format JSON ;
+- la page Streamlit affiche les quatre colonnes de sélection (les modalités proposées dépendent de l'indicateur choisi), met en cache les listes d'indicateurs et de pays, et trace le graphique avec Plotly Express (infobulles, zoom, légende cliquable).
+
+Le service et le controller sont testés avec pytest, et le code est contrôlé avec ruff.
+
+```{=latex}
+\subsectiontitre{Exemple et interprétation}
+```
+
+On compare, pour la France, le taux d'emploi (15 ans et plus, hommes et femmes confondus) et le taux de chômage, de 2020Q1 à 2024Q4, en base 100.
+
+![Taux d'emploi et taux de chômage de la France en base 100 (2020Q1 à 2024Q4)](images/evolution-comparative-multi-indicateurs.png){width=92%}
+
+Les deux séries démarrent à 100 en 2020Q1, ce qui permet de comparer leurs variations malgré des niveaux de départ très différents. En 2020Q2, le taux de chômage chute autour de 84, puis remonte à 110,2 en 2020Q3, tandis que le taux d'emploi baisse légèrement à 98,3 en 2020Q2. Ce mouvement du chômage s'explique en partie par un effet statistique : pendant le premier confinement, beaucoup de personnes sans emploi ont cessé de chercher du travail et ont donc été comptées comme inactives. À partir de 2021Q1, les deux courbes s'écartent : le taux d'emploi se stabilise entre 103 et 104 (soit 3 à 4 % de plus qu'au début de 2020), alors que le taux de chômage reste sous son niveau initial, entre 86 et 95.
+
+Il faut faire attention à la lecture d'un indice en base 100 : il mesure une variation relative, pas une variation en points de pourcentage. Un taux de chômage à l'indice 90 signifie que le taux a baissé de 10 % par rapport à 2020Q1 (par exemple de 7,5 % à 6,75 %), et non de 10 points. Le résultat dépend aussi de la date de départ : un point de départ différent changerait l'allure des courbes.
+
+```{=latex}
+\sectiontitre{Rapport PDF (F03)}
+```
+
+```{=latex}
+\subsectiontitre{Présentation de la fonctionnalité}
+```
+
+La page « Rapport PDF » permet à l'utilisateur de télécharger un rapport d'analyse comparative, sans avoir à copier lui-même les graphiques et les chiffres. Il choisit un indicateur, les pays à comparer et une période, et l'application génère automatiquement un document PDF de quatre parties :
+
+- un rappel des paramètres choisis : l'intitulé complet de l'indicateur, son unité et son code ILOSTAT entre crochets, ce qui permet de retrouver la source ;
+- un graphique de l'évolution de l'indicateur pour chaque pays ;
+- un tableau de statistiques par pays : minimum, maximum, moyenne et variation sur la période ;
+- une conclusion rédigée automatiquement à partir de ces statistiques.
+
+```{=latex}
+\subsectiontitre{Fonctionnement technique}
+```
+
+Le graphique du rapport est tracé côté serveur avec Matplotlib en mode `Agg`, qui permet de produire une image sans affichage à l'écran. <!-- À compléter : bibliothèque utilisée pour assembler le PDF, service, endpoint et fichier de la page Streamlit -->
+
+```{=latex}
+\subsectiontitre{Exemple et interprétation}
+```
+
+On génère le rapport pour l'indicateur « Emploi par sexe et profession (milliers) », en comparant l'Allemagne et la France de 2023Q1 à 2024Q4.
+
+![Exemple de rapport PDF généré par LaborScope](images/telechargement.PNG){width=100%}
+
+Le graphique met tout d'abord en évidence un écart de niveau structurel important entre les deux marchés du travail : sur l'ensemble de la période étudiée (2023Q1 à 2024Q4), l'emploi total en Allemagne oscille entre 42 338,85 et 43 504,96 milliers de personnes (soit environ 42,3 à 43,5 millions d'actifs occupés), contre 28 448,00 à 29 216,59 milliers en France (environ 28,4 à 29,2 millions). Cet écart de près de 14 millions d'emplois s'explique d'abord par la différence de taille démographique entre les deux pays (environ 84 millions d'habitants en Allemagne contre 68 millions en France), mais aussi par un taux d'emploi structurellement plus élevé , notamment chez les seniors et dans le recours au temps partiel.
+
+Au-delà de ce décalage de volume, l'analyse des variations permet d'apprécier le dynamisme respectif des créations nettes d'emplois sur la période : l'emploi total progresse de +1 166,11 milliers en Allemagne (soit une hausse relative d'environ +2,75 % entre début 2023 et fin 2024), contre +485,16 milliers en France (soit environ +1,71 %). Sur cette fenêtre temporelle, le marché du travail allemand affiche donc un volume de créations nettes plus de deux fois supérieur à celui de la France, porté notamment par la croissance des emplois dans le secteur des services (santé, action sociale, éducation et administration publique) et par les flux d'immigration active qui soutiennent l'offre de travail face au vieillissement démographique.  
+L'utilisateur dispose ainsi, en un seul document PDF, des ordres de grandeur absolus et des amplitudes de variation pour appuyer son diagnostic économique..
+
+Comme pour la comparaison entre pays (F4), cet indicateur est un nombre de personnes et non un taux : l'écart entre les deux pays reflète surtout leur taille, et non la situation de leur marché du travail. Le rapport est surtout utile pour garder une trace des paramètres et des chiffres consultés, avec la source de chaque donnée.
+
+
+```{=latex}
 \mychapter{Retour sur le projet}
 ```
 
 ```{=latex}
 \sectiontitre{Témoignage de Christian}
 ```
+Une dynamique de groupe bienveillante et structurée  
+
+Ces trois mois passés aux côtés de mes camarades à concevoir et développer l'application LaborScope ont constitué une expérience particulièrement enrichissante, tant sur le plan humain que technique. Au-delà de l'aspect purement académique, ce projet a avant tout permis de tisser une véritable relation amicale au sein du groupe. Travailler dans un climat de confiance, d'écoute et de bonne humeur avec chacun des membres de l'équipe a été un moteur essentiel tout au long du semestre.
+
+Au démarrage du projet, lors de sa présentation initiale, j'ai ressenti une certaine appréhension : j'avais du mal à cerner concrètement l'ampleur des attentes et la manière dont les différentes briques de l'application allaient s'articuler entre elles. C'est grâce aux échanges réguliers lors de nos séances de travail que j'ai progressivement levé ces zones d'ombre, jusqu'à m'approprier pleinement les objectifs et la logique globale du projet.
+
+L'organisation mise en place par le groupe a largement contribué à cette réussite. Le découpage clair du travail étape par étape initié par Laurent, avec des objectifs précis et des livrables attendus à chaque jalon, nous a donné un cadre rassurant et efficace pour avancer sans nous disperser. De son côté, l'appui précieux de Clarence lors des phases de débogage et de résolution de blocages techniques m'a permis de surmonter rapidement des situations complexes et de gagner en autonomie.
+
+Une vision d'ensemble grâce au développement des fonctionnalités F5 et F03  
+
+La réalisation de la comparaison multi-indicateurs (F5) et de la génération de rapport PDF (FO3) a joué un rôle charnière dans ma montée en compétence. Parce que la fonctionnalité F5 se situe au carrefour de l'application et mobilise les briques développées en amont par l'ensemble du groupe (référentiels des pays et des indicateurs, extraction des séries temporelles, gestion des classifications), je ne pouvais pas me contenter de coder de manière isolée. Il m'a fallu comprendre en profondeur le fonctionnement du code de mes camarades afin d'y raccorder proprement mes traitements et d'adapter mon implémentation à l'existant.
+
+Le développement de la fonctionnalité FO3, permettant le téléchargement d'un rapport PDF structuré, a prolongé cette logique en me confrontant à l'automatisation complète de la restitution d'une analyse : assemblage des métadonnées lisibles (intitulés complets et unités des indicateurs), génération de graphiques côté serveur, calcul des indicateurs statistiques clés (minimum, maximum, moyenne, évolution) et synthèse automatique des résultats. Cette transversalité m'a offert une compréhension globale de la construction d'une application informatique, depuis la base de données jusqu'au livrable exploitable par l'utilisateur final.
+
+Apports techniques et travail collaboratif  
+
+Sur le plan technique, ce projet m'a permis de franchir un cap important dans ma manière de concevoir, structurer et partager du code au sein d'une équipe. J'ai notamment acquis des compétences essentielles sur plusieurs plans :
+
+la maîtrise d'une architecture en couches rigoureuse : j'ai appris à bien distinguer les responsabilités de chaque composant, en séparant nettement les objets métiers (business_object) — qui modélisent les concepts fondamentaux du domaine comme une sélection d'analyse — des couches d'accès aux données (DAO) et de la logique applicative (services) ;
+
+l'utilisation quotidienne de Git et GitHub : le travail en équipe sur un dépôt commun m'a permis de me familiariser concrètement avec le versionnement du code, la gestion des branches par fonctionnalité, les fusions (merges), la résolution de conflits et la synchronisation régulière avec les avancées des autres membres du groupe ;
+
+l'articulation entre backend et frontend : j'ai compris comment relier proprement une API REST exposée avec FastAPI à une interface interactive développée sous Streamlit, en veillant à la cohérence des formats échangés et à la gestion des erreurs ;
+
+les bonnes pratiques de qualité logicielle : l'écriture de tests unitaires automatisés (pytest) et la vérification systématique du style de code (ruff) avant chaque partage sur GitHub se sont révélées indispensables pour sécuriser nos développements collectifs.
+
+En définitive, cette expérience collective m'a permis de consolider durablement mes compétences en développement logiciel et en travail collaboratif, tout en me donnant confiance dans ma capacité à mener à bien un projet informatique complet, de sa conception initiale jusqu'à son produit final.
 
 ```{=latex}
 \sectiontitre{Témoignage de Clarence}
