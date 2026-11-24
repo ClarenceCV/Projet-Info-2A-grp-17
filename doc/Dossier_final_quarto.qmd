@@ -197,6 +197,21 @@ Le planning a globalement été respecté, chacun a pu coder à son rythme lors 
 
 ![Diagramme de Gantt du projet (en rouge : les dates de rendu)](images/diagramme_gantt.png){width="100%"}
 
+Pour travailler ensemble, nous nous sommes appuyés sur les outils suivants :
+
+| Outil | Utilisation dans le projet |
+|-------|----------------------------|
+| GitHub | Dépôt commun du code et du dossier, historique de toutes les modifications |
+| WhatsApp | Échanges quotidiens, questions rapides et organisation des séances |
+| Comptes rendus hebdomadaires | Suivi de l'avancement semaine par semaine (12 semaines), dans le dossier `doc/suivi` du dépôt |
+| Fiches de tâches | Une fiche par rôle : objectifs, fichiers à écrire, étapes et tutoriels |
+| Onyxia | Environnement de travail commun : service VSCode pour coder, service PostgreSQL pour la base |
+| Réunions avec le tuteur | Validation des choix de conception et retours sur l'avancement |
+| IA générative | Aide à la compréhension des erreurs, à la rédaction des fiches et à la relecture, conseillée par l'équipe enseignante |
+| Quarto | Rédaction du dossier final à plusieurs, dans le dépôt |
+
+: Outils de travail utilisés par l'équipe
+
 ```{=latex}
 \subsectiontitre{Organisation de l'équipe}
 ```
@@ -238,6 +253,24 @@ Afin d'offrir une expérience utilisateur optimale et de valoriser pleinement le
 - **une couverture optimale des fonctionnalités attendues** : la séparation entre la logique métier côté serveur et l'affichage côté client facilite l'intégration de traitements avancés (normalisation en Base 100, génération de rapports PDF, gestion des rôles utilisateurs) tout en garantissant la maintenabilité du code.
 
 ![Diagramme d'architecture générale de l'application LaborScope](images/diagramme_architecture.PNG){width="85%"}
+
+Le tableau suivant présente les technologies utilisées dans chaque couche de l'application, et la raison de leur choix :
+
+| Couche | Outils | Rôle et raison du choix |
+|--------|--------|-------------------------|
+| Langage et environnement | Python 3.12, uv | Langage commun à tout le groupe ; uv installe les mêmes versions des bibliothèques chez chacun (fichier `uv.lock`) |
+| Récupération des données | requests | Téléchargement des fichiers CSV de l'API ILOSTAT |
+| Traitement des données | pandas | Nettoyage des données et calculs des analyses (variations, classements, base 100) directement sur des tableaux |
+| Base de données | PostgreSQL, psycopg2 | Base relationnelle fournie par Onyxia ; clés et contraintes garantissent la cohérence des données |
+| API | FastAPI, uvicorn | Vérification automatique des paramètres des requêtes et documentation interactive générée seule (page `/docs`) |
+| Interface | Streamlit, Plotly | Interface web écrite entièrement en Python, sans HTML ni JavaScript ; graphiques interactifs et carte du monde |
+| Rapport PDF | Matplotlib, fpdf2 | Graphique tracé côté serveur, puis assemblé avec les statistiques dans un document PDF |
+| Sécurité | bcrypt | Hachage des mots de passe : ils ne sont jamais stockés en clair |
+| Référentiels de pays | pycountry_convert, worldcountrygroups | Continent et groupes de chaque pays, sans les écrire à la main |
+| Configuration | python-dotenv, PyYAML | Identifiants de connexion lus dans le fichier `.env` (absents du code) ; configuration des logs |
+| Qualité | pytest, ruff, pylint | Tests unitaires, vérification du style et de la qualité du code |
+
+: Stack technique de l'application
 
 ```{=latex}
 \subsectiontitre{Diagramme de classes}
