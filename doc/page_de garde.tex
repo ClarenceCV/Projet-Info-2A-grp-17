@@ -1,0 +1,56 @@
+	% ============================================================
+	% PAGE DE GARDE
+	% ============================================================
+	\newgeometry{top=2.2cm, bottom=2.2cm, left=2.2cm, right=2.2cm, headheight=15pt}
+	\begin{titlepage}
+		\begin{tikzpicture}[remember picture,overlay,inner sep=0,outer sep=0]
+			\draw[blue,line width=4pt] ([xshift=-1.5cm,yshift=-2cm]current page.north east) coordinate (A)--([xshift=1.5cm,yshift=-2cm]current page.north west) coordinate(B)--([xshift=1.5cm,yshift=2cm]current page.south west) coordinate (C)--([xshift=-1.5cm,yshift=2cm]current page.south east) coordinate(D)--cycle;
+			\draw ([yshift=0.5cm,xshift=-0.5cm]A)-- ([yshift=0.5cm,xshift=0.5cm]B)--
+			([yshift=-0.5cm,xshift=0.5cm]B) --([yshift=-0.5cm,xshift=-0.5cm]B)--([yshift=0.5cm,xshift=-0.5cm]C)--([yshift=0.5cm,xshift=0.5cm]C)--([yshift=-0.5cm,xshift=0.5cm]C)-- ([yshift=-0.5cm,xshift=-0.5cm]D)--([yshift=0.5cm,xshift=-0.5cm]D)--([yshift=0.5cm,xshift=0.5cm]D)--([yshift=-0.5cm,xshift=0.5cm]A)--([yshift=-0.5cm,xshift=-0.5cm]A)--([yshift=0.5cm,xshift=-0.5cm]A);
+			\draw ([yshift=-0.3cm,xshift=0.3cm]A)-- ([yshift=-0.3cm,xshift=-0.3cm]B)--
+			([yshift=0.3cm,xshift=-0.3cm]B) --([yshift=0.3cm,xshift=0.3cm]B)--([yshift=-0.3cm,xshift=0.3cm]C)--([yshift=-0.3cm,xshift=-0.3cm]C)--([yshift=0.3cm,xshift=-0.3cm]C)-- ([yshift=0.3cm,xshift=0.3cm]D)--([yshift=-0.3cm,xshift=0.3cm]D)--([yshift=-0.3cm,xshift=-0.3cm]D)--([yshift=0.3cm,xshift=-0.3cm]A)--([yshift=0.3cm,xshift=0.3cm]A)--([yshift=-0.3cm,xshift=0.3cm]A);
+		\end{tikzpicture}
+		
+		\hspace*{-0.5cm}
+		\hfill
+		\hspace*{-0.1cm}
+		\begin{center}
+			\vspace*{-1cm}
+			\includegraphics[scale=0.45]{images/logoENSAI.png}\\
+			\rule{10cm}{0.4pt}\\[0.5cm]
+			
+			{\color{blue}\hrule height 1.5pt}\vspace{0.5cm}
+			\Large\textbf{ÉCOLE NATIONALE DE LA STATISTIQUE ET DE L'ANALYSE DE L'INFORMATION (ENSAI)}\\
+			\vspace{0.5cm}
+			{\color{blue}\hrule height 1.5pt}
+			\vspace{1cm}
+			
+			\normalsize
+			\textbf{Filière :} Cycle Ingénieur(2A) \hfill \textbf{Matière :} Projet informatique \\
+			\vspace{0.5cm}
+			
+			\begin{tcolorbox}[colframe=blue, colback=blue!5, coltitle=gray!20, sharp corners]
+				\centering \Large\textbf{LABORSCOPE : Analyse interactive du marché du travail mondial (ILOSTAT)}
+			\end{tcolorbox}
+			
+			\vspace{1.5cm}
+		\end{center}
+		
+		\begin{table}[h!]
+			\centering
+			\renewcommand{\arraystretch}{2}
+			\begin{tabular}{p{10cm} p{10cm}}
+				\large\shadowbox{\textbf{Réalisé par :}} & \large\shadowbox{\textbf{Supervisé par :}} \\
+				\multicolumn{1}{p{10cm}}{\parbox{10cm}{Christian ADJEBA MBA	\\ Antifa BADAROU	\\ Clarence CHEMLA-VIDAUD\\Laurent KHAOULI\\ William MARGERAND
+}} &
+				\multicolumn{1}{p{10cm}}{\parbox{10cm}{Ludovic DENEUVILLE\\ \textit{Responsable}\\ Anas KNEFATI \\ \textit{Tuteur}}} \\
+			\end{tabular}
+		\end{table}
+		
+		\vfill
+		\begin{center}
+			\shadowbox{\textbf{\large{ANNEE ACADEMIQUE 2026-2027}}}
+		\end{center}
+	\end{titlepage}
+	\newpage
+	\restoregeometry

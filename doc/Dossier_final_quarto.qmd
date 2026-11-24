@@ -15,6 +15,7 @@ format:
       - DIV=11
       - numbers=noendperiod
     include-in-header: header_dossier_final.tex
+    include-before-body: page_de garde.tex
     keep-tex: false
     highlight-style: pygments
     listings: false
@@ -187,6 +188,7 @@ Les utilisateurs disposent d’un compte classique leur permettant de consulter 
 Pour livrer notre application à temps, nous avons réalisé un diagramme de GANTT. C’est un calendrier prévisionnel avec les différentes tâches à réaliser et leur durée estimée. Ce type de diagramme est indispensable pour avoir une bonne vision de l’avancement du projet et ne pas perdre de vue les dates de rendus. \newline Dans le cadre de notre projet, nous pouvons distinguer cinq grandes étapes :\newline • « Diagramme UML » : il s’agit ici de modéliser l’ensemble du projet en respectant le cahier des charges que nous avons établi. Il y a pour cela deux phases. La première est la phase d’étude. Elle permet de construire le diagramme de cas d’utilisation. Vient ensuite la phase de conception. Il s’agit alors de créer les diagrammes d’activités correspondant aux cas d'utilisation du premier diagramme, le diagramme de classes et celui de la base de données. Cette étape est cruciale car sans elle, l’implémentation ne pourra être faite correctement.\newline • « Dossier d’analyse » : pour s’assurer du bon démarrage du projet, nous avons réalisé un dossier d’analyse qui regroupe l’ensemble de la planification et de la modélisation. Chacun d’entre nous ayant participé à la rédaction de ce rapport, il était important de consacrer du temps à sa conception. Cela permet d’assurer la cohérence du contenu et d’en faire des relectures.\newline • « Implémentation » : c’est le temps de la réalisation du projet. Cette étape comporte l'importation des données à partir de l'ILOSTAT,la création de la base de données, le développement de la DAO et la mise en place des différentes fonctionnalités du projet. C’est la partie la plus longue du projet. Nous avions prévu d’y consacrer environ 1 mois après le dépot du rapport intermédiaire, or nous avons eu besoin de 10 jours supplémentaires pour que tout fonctionne correctement.\newline • « Rapport et code » : Afin de gagner du temps, nous voulions rédiger le rapport parallèlement à l’étape d’implémentaion. Cette dernière plus complexe et chronophage que prévu, nous avons décidé de, finalement, repousser l’écriture au.... Tout comme pour le dossier d’analyse, nous avons accordé deux jours à la relecture. Le code final étant à rendre pour le 25 novembre, nous consacrerons la dernière semaine au dossier final.\newline • « Soutenance » : pour finir, nous aurons une semaine pour créer un diaporama afin de présenter notre projet le 09 décembre devant un jury composé d’un professionnel de l’informatique, de notre encadrant et d’un représentant de l’ENSAI.\newline
 
 (diagramme de GANTT)
+
 ```{=latex}
 \subsectiontitre{Organisation de l'équipe}
 ```
@@ -195,12 +197,11 @@ Le projet a été réalisé par cinq membres. Pour avancer en parallèle sans se
 
 \textbf{•Le socle commun}
 
--Clarence Chemla-Vidaud (rôle A : données et administration). Elle est responsable de tout ce qui touche aux données : import depuis ILOSTAT (fetcher), base de données, gestion des pays et des modalités, actions d’administration sur les données (F1, F2 et la partie données de F6). Elle assure aussi la qualité du projet : infrastructure de tests, journalisation (logs), intégration continue et README. En fin de projet, elle a relu l’ensemble du backend, harmonisé le code avec pylint et simplifié plusieurs fichiers (schémas, controllers).\newline
--Laurent Khaouli (rôle B : utilisateurs, sécurité et squelette frontend). Il gère les comptes (création, connexion, rôles utilisateur et administrateur, historique des actions, partie comptes de F6) et construit le squelette de l’application Streamlit dans lequel chacun a ajouté sa page. Il a aussi conçu l’organisation du travail en fiches et testé le fonctionnement des endpoints.
+-Clarence Chemla-Vidaud (rôle A : données et administration). Elle est responsable de tout ce qui touche aux données : import depuis ILOSTAT (fetcher), base de données, gestion des pays et des modalités, actions d’administration sur les données (F1, F2 et la partie données de F6). Elle assure aussi la qualité du projet : infrastructure de tests, journalisation (logs), intégration continue et README. En fin de projet, elle a relu l’ensemble du backend, harmonisé le code avec pylint et simplifié plusieurs fichiers (schémas, controllers).\newline -Laurent Khaouli (rôle B : utilisateurs, sécurité et squelette frontend). Il gère les comptes (création, connexion, rôles utilisateur et administrateur, historique des actions, partie comptes de F6) et construit le squelette de l’application Streamlit dans lequel chacun a ajouté sa page. Il a aussi conçu l’organisation du travail en fiches et testé le fonctionnement des endpoints.
 
 \textbf{•Les fonctionnalités}
 
--Antifa Badarou (rôle C : évolution d’un indicateur, F3). Elle a codé le calcul de l’évolution d’un indicateur sur les N derniers trimestres : service, schéma, controller, tests, puis la page d’affichage des graphiques. Elle a fournit le template pour la rédaction du dossier final et effectué des mises en formes et réglages global du document.Elle a  aussi rédigé avec l'aide des autres memebres le dossier final.\newline
+-Antifa Badarou (rôle C : évolution d’un indicateur, F3). Elle a codé le calcul de l’évolution d’un indicateur sur les N derniers trimestres : service, schéma, controller, tests, puis la page d’affichage des graphiques. Elle a fournit le template pour la rédaction du dossier final et effectué des mises en formes et réglages global du document.Elle a aussi rédigé avec l'aide des autres memebres le dossier final.\newline
 
 -William Margerand (rôle D : comparaison entre pays, F4, et carte du monde, FO2). Il a codé le classement des pays pour la période la plus récente (valeurs les plus hautes et les plus basses) avec ses tests, puis la carte choroplèthe. Il a ensuite amélioré le choix de la période, la période commune et les couleurs. Il a rédigé les sections du dossier consacrées à F4 et FO2, à l’exploration des données, ainsi que le chapitre 2 de modélisation et le diagramme de cas d’utilisation.\newline
 
@@ -225,8 +226,9 @@ Voilà ci contre le diagramme d'architecture qui montre la structure globale de 
 ```{=latex}
 \subsectiontitre{Diagramme de classes}
 ```
- Voila ci après le diagramme de classe corrigé:
- 
+
+Voila ci après le diagramme de classe corrigé:
+
 ```{=latex}
 \sectiontitre{Normes de codage utilisées}
 ```
@@ -475,7 +477,6 @@ La page affiche trois éléments :
 
 Deux difficultés ont influencé nos choix. D'une part, la base peut contenir plusieurs sources pour un même pays et un même trimestre : si on les gardait toutes, le graphique aurait deux points à la même date. Nous gardons une seule source par pays et par période (la première par ordre alphabétique). D'autre part, les pays n'ont pas tous le même nombre de trimestres disponibles : le nombre demandé est donc appliqué pays par pays, et un pays qui a moins de données que demandé affiche simplement tout ce qu'il a. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
 
-
 ```{=latex}
 \subsectiontitre{Fonctionnement technique de la fonctionnalité}
 ```
@@ -489,10 +490,10 @@ La fonctionnalité suit l'architecture en couches de l'application :
 
 Le calcul du service se fait en quatre étapes :
 
-1. on garde une seule source par pays et par période ;
-2. on trie les observations par pays puis par période (le format « 2024Q4 » se trie dans l'ordre chronologique) ;
-3. on calcule les variations pays par pays : la variation absolue est la valeur moins celle de la période précédente, et la variation en pourcentage est cette différence divisée par la valeur précédente ;
-4. on ne garde que les N dernières périodes de chaque pays.
+1.  on garde une seule source par pays et par période ;
+2.  on trie les observations par pays puis par période (le format « 2024Q4 » se trie dans l'ordre chronologique) ;
+3.  on calcule les variations pays par pays : la variation absolue est la valeur moins celle de la période précédente, et la variation en pourcentage est cette différence divisée par la valeur précédente ;
+4.  on ne garde que les N dernières périodes de chaque pays.
 
 L'ordre des étapes 3 et 4 est important. Si on coupait avant de calculer, la première période conservée n'aurait pas de variation. On calcule donc les variations sur tout l'historique, puis on garde les N dernières lignes.
 
@@ -620,7 +621,7 @@ Le service et le controller sont testés avec pytest, et le code est contrôlé 
 
 On compare, pour la France, le taux d'emploi (15 ans et plus, hommes et femmes confondus) et le taux de chômage, de 2020Q1 à 2024Q4, en base 100.
 
-![Taux d'emploi et taux de chômage de la France en base 100 (2020Q1 à 2024Q4)](images/evolution-comparative-multi-indicateurs.png){width=92%}
+![Taux d'emploi et taux de chômage de la France en base 100 (2020Q1 à 2024Q4)](images/evolution-comparative-multi-indicateurs.png){width="92%"}
 
 Les deux séries démarrent à 100 en 2020Q1, ce qui permet de comparer leurs variations malgré des niveaux de départ très différents. En 2020Q2, le taux de chômage chute autour de 84, puis remonte à 110,2 en 2020Q3, tandis que le taux d'emploi baisse légèrement à 98,3 en 2020Q2. Ce mouvement du chômage s'explique en partie par un effet statistique : pendant le premier confinement, beaucoup de personnes sans emploi ont cessé de chercher du travail et ont donc été comptées comme inactives. À partir de 2021Q1, les deux courbes s'écartent : le taux d'emploi se stabilise entre 103 et 104 (soit 3 à 4 % de plus qu'au début de 2020), alors que le taux de chômage reste sous son niveau initial, entre 86 et 95.
 
@@ -653,15 +654,16 @@ Le graphique du rapport est tracé côté serveur avec Matplotlib en mode `Agg`,
 
 On génère le rapport pour l'indicateur « Emploi par sexe et profession (milliers) », en comparant l'Allemagne et la France de 2023Q1 à 2024Q4.
 
-![Exemple de rapport PDF généré par LaborScope](images/telechargement.PNG){width=100%}
+![Exemple de rapport PDF généré par LaborScope](images/telechargement.PNG){width="100%"}
 
 Le graphique met tout d'abord en évidence un écart de niveau structurel important entre les deux marchés du travail : sur l'ensemble de la période étudiée (2023Q1 à 2024Q4), l'emploi total en Allemagne oscille entre 42 338,85 et 43 504,96 milliers de personnes (soit environ 42,3 à 43,5 millions d'actifs occupés), contre 28 448,00 à 29 216,59 milliers en France (environ 28,4 à 29,2 millions). Cet écart de près de 14 millions d'emplois s'explique d'abord par la différence de taille démographique entre les deux pays (environ 84 millions d'habitants en Allemagne contre 68 millions en France), mais aussi par un taux d'emploi structurellement plus élevé , notamment chez les seniors et dans le recours au temps partiel.
 
-Au-delà de ce décalage de volume, l'analyse des variations permet d'apprécier le dynamisme respectif des créations nettes d'emplois sur la période : l'emploi total progresse de +1 166,11 milliers en Allemagne (soit une hausse relative d'environ +2,75 % entre début 2023 et fin 2024), contre +485,16 milliers en France (soit environ +1,71 %). Sur cette fenêtre temporelle, le marché du travail allemand affiche donc un volume de créations nettes plus de deux fois supérieur à celui de la France, porté notamment par la croissance des emplois dans le secteur des services (santé, action sociale, éducation et administration publique) et par les flux d'immigration active qui soutiennent l'offre de travail face au vieillissement démographique.  
+Au-delà de ce décalage de volume, l'analyse des variations permet d'apprécier le dynamisme respectif des créations nettes d'emplois sur la période : l'emploi total progresse de +1 166,11 milliers en Allemagne (soit une hausse relative d'environ +2,75 % entre début 2023 et fin 2024), contre +485,16 milliers en France (soit environ +1,71 %). Sur cette fenêtre temporelle, le marché du travail allemand affiche donc un volume de créations nettes plus de deux fois supérieur à celui de la France, porté notamment par la croissance des emplois dans le secteur des services (santé, action sociale, éducation et administration publique) et par les flux d'immigration active qui soutiennent l'offre de travail face au vieillissement démographique.\
 L'utilisateur dispose ainsi, en un seul document PDF, des ordres de grandeur absolus et des amplitudes de variation pour appuyer son diagnostic économique..
 
 Comme pour la comparaison entre pays (F4), cet indicateur est un nombre de personnes et non un taux : l'écart entre les deux pays reflète surtout leur taille, et non la situation de leur marché du travail. Le rapport est surtout utile pour garder une trace des paramètres et des chiffres consultés, avec la source de chaque donnée.
 
+\newpage
 
 ```{=latex}
 \mychapter{Retour sur le projet}
@@ -670,7 +672,8 @@ Comme pour la comparaison entre pays (F4), cet indicateur est un nombre de perso
 ```{=latex}
 \sectiontitre{Témoignage de Christian}
 ```
-Une dynamique de groupe bienveillante et structurée  
+
+Une dynamique de groupe bienveillante et structurée
 
 Ces trois mois passés aux côtés de mes camarades à concevoir et développer l'application LaborScope ont constitué une expérience particulièrement enrichissante, tant sur le plan humain que technique. Au-delà de l'aspect purement académique, ce projet a avant tout permis de tisser une véritable relation amicale au sein du groupe. Travailler dans un climat de confiance, d'écoute et de bonne humeur avec chacun des membres de l'équipe a été un moteur essentiel tout au long du semestre.
 
@@ -678,13 +681,13 @@ Au démarrage du projet, lors de sa présentation initiale, j'ai ressenti une ce
 
 L'organisation mise en place par le groupe a largement contribué à cette réussite. Le découpage clair du travail étape par étape initié par Laurent, avec des objectifs précis et des livrables attendus à chaque jalon, nous a donné un cadre rassurant et efficace pour avancer sans nous disperser. De son côté, l'appui précieux de Clarence lors des phases de débogage et de résolution de blocages techniques m'a permis de surmonter rapidement des situations complexes et de gagner en autonomie.
 
-Une vision d'ensemble grâce au développement des fonctionnalités F5 et F03  
+Une vision d'ensemble grâce au développement des fonctionnalités F5 et F03
 
 La réalisation de la comparaison multi-indicateurs (F5) et de la génération de rapport PDF (FO3) a joué un rôle charnière dans ma montée en compétence. Parce que la fonctionnalité F5 se situe au carrefour de l'application et mobilise les briques développées en amont par l'ensemble du groupe (référentiels des pays et des indicateurs, extraction des séries temporelles, gestion des classifications), je ne pouvais pas me contenter de coder de manière isolée. Il m'a fallu comprendre en profondeur le fonctionnement du code de mes camarades afin d'y raccorder proprement mes traitements et d'adapter mon implémentation à l'existant.
 
 Le développement de la fonctionnalité FO3, permettant le téléchargement d'un rapport PDF structuré, a prolongé cette logique en me confrontant à l'automatisation complète de la restitution d'une analyse : assemblage des métadonnées lisibles (intitulés complets et unités des indicateurs), génération de graphiques côté serveur, calcul des indicateurs statistiques clés (minimum, maximum, moyenne, évolution) et synthèse automatique des résultats. Cette transversalité m'a offert une compréhension globale de la construction d'une application informatique, depuis la base de données jusqu'au livrable exploitable par l'utilisateur final.
 
-Apports techniques et travail collaboratif  
+Apports techniques et travail collaboratif
 
 Sur le plan technique, ce projet m'a permis de franchir un cap important dans ma manière de concevoir, structurer et partager du code au sein d'une équipe. J'ai notamment acquis des compétences essentielles sur plusieurs plans :
 
@@ -710,13 +713,14 @@ Dans ce projet, j'ai codé la fonctionnalité d'évolution d'un indicateur (F3) 
 
 Pour être honnête, mon investissement n'a pas été régulier. Au début, j'ai surtout travaillé sur les documents, alors que le code est arrivé plus tard, à partir de la semaine 6. Ensuite, certaines semaines n'ont pas laissé de trace dans nos suivis (charge de travail d'autres matières, examens, etc). Avec le recul, j'aurais dû commencer la partie code plus tôt, car F3 s'est retrouvée codée en plusieurs étapes espacées dans le temps, et le dossier s'est écrit en fin de projet.
 
-Je n'ai jamis été très  à l'aise en programmation, et la fiche de tâches de Laurent m'a été très utile : elle expliquait les étapes, les fichiers à écrire et les pièges à éviter. Je reconnais que sans elle, j'aurais eu du mal à avancer seule. Ce qui m'a vraiment fait comprendre l'application, c'est de suivre le trajet d'une requête, de l'URL jusqu'à la base de données, puis le retour sous forme de graphique. Les outils d'IA m'ont beaucoup aidée pour comprendre les erreurs et les pièges de pandas, comme les valeurs vides ou la division par zéro, mais j'ai dû vérifier moi-même le résultat avec les tests et avec des exemples.
+Je n'ai jamis été très à l'aise en programmation, et la fiche de tâches de Laurent m'a été très utile : elle expliquait les étapes, les fichiers à écrire et les pièges à éviter. Je reconnais que sans elle, j'aurais eu du mal à avancer seule. Ce qui m'a vraiment fait comprendre l'application, c'est de suivre le trajet d'une requête, de l'URL jusqu'à la base de données, puis le retour sous forme de graphique. Les outils d'IA m'ont beaucoup aidée pour comprendre les erreurs et les pièges de pandas, comme les valeurs vides ou la division par zéro, mais j'ai dû vérifier moi-même le résultat avec les tests et avec des exemples.
 
 Les principales difficultés ont été techniques. Git m'a posé beaucoup de problèmes : push refusé, conflits sur un même fichier, fichiers modifiés que je ne reconnaissais pas. J'ai aussi eu du mal avec l'organisation des tests et les imports du backend. Certains de mes commits ont un message trop vague, et Clarence a dû relire et corriger une partie de mon code (par exemple la structure du schéma), ce qui est normal pour la qualité du projet, mais montre que j'ai encore des progrès à faire en rigueur.
 
 Je retiens que la qualité d'un projet vient autant de l'organisation et des tests que du code lui-même : détail à première vue anodin, comme l'ordre entre le calcul des variations et la coupe aux N dernières périodes, change complètement le résultat affiché. Je retiens aussi que F3 reste imparfaite : un trimestre manquant n'est pas signalé, et la variation est alors calculée entre deux observations qui ne sont pas consécutives.
 
 Si c'était à refaire, je répartirais mon temps de façon plus régulière, je commencerais le code avant les documents, et je commiterais plus souvent avec des messages clairs. Cette expérience m'a appris à travailler en équipe sur un projet de cette taille, et je m'en servirai pour les futurs projets.
+
 ```{=latex}
 \sectiontitre{Témoignage de Laurent}
 ```

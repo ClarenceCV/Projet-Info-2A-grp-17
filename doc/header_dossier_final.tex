@@ -4,6 +4,7 @@
 %  Les "chapitres" sont des \section redéfinies visuellement.
 % =============================================================
 
+	
 % ---------- Langue ----------
 %\usepackage[french]{babel}
 \addto\captionsfrench{%
@@ -52,6 +53,9 @@
 
 % ---------- PDF ----------
 \usepackage{pdfpages}
+
+%---------Page de garde---------
+\usepackage{fancybox}
 
 % =============================================================
 %  PALETTE
@@ -226,13 +230,20 @@
 \newcounter{isesubsubsecnum}
 \renewcommand{\theisesubsubsecnum}{\theisesubsecnum.\arabic{isesubsubsecnum}}
 
+% ------Identifiants de liens uniques (hyperref) : évitent les doublons entre chapitres-----
+
+\def\theHchapnum{\arabic{chapnum}}
+\def\theHisesecnum{\arabic{chapnum}.\arabic{isesecnum}}
+\def\theHisesubsecnum{\arabic{chapnum}.\arabic{isesecnum}.\arabic{isesubsecnum}}
+\def\theHisesubsubsecnum{\arabic{chapnum}.\arabic{isesecnum}.\arabic{isesubsecnum}.\arabic{isesubsubsecnum}}
+
 % ── \mychapter : badge numéroté ───────────────────────────────
 \newcommand{\mychapter}[1]{%
   \refstepcounter{chapnum}%
   \setcounter{isesecnum}{0}%
   \setcounter{isesubsecnum}{0}%
   \setcounter{isesubsubsecnum}{0}%
-  \addcontentsline{toc}{chapter}{\protect\numberline{\thechapnum}#1}%
+  \addcontentsline{toc}{chapter}{\thechapnum\quad #1}%
   \vspace{30pt}%
   \noindent
   \begin{tikzpicture}
