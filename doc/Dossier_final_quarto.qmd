@@ -278,6 +278,8 @@ Le tableau suivant présente les technologies utilisées dans chaque couche de l
 
 Voila ci après le diagramme de classe corrigé:
 
+![Diagramme de classes des business objects](images/diagramme_classes.png){width="100%"}
+
 ```{=latex}
 \sectiontitre{Normes de codage utilisées}
 ```
@@ -436,6 +438,8 @@ La structure de la base est définie dans le fichier `data/init_db.sql`, à la r
 
 Cette organisation correspond à un modèle en étoile : « observation » est la table de faits, au centre, et « indicateur » et « pays » sont des tables de dimensions qui la complètent. Chaque observation fait référence à un indicateur et à un pays grâce à des clés étrangères. Le dossier `data/` contient aussi un second fichier, `pop_db.sql`, qui fournit un petit jeu de données de secours si l'API est injoignable.
 
+![Schéma de la base de données](images/schema_bdd.png){width="100%"}
+
 Une observation est identifiée par une clé primaire composée de six colonnes : l'indicateur, le pays, la source, la période, le sexe et la modalité. Cette clé nous permet de relancer l'import autant de fois que nécessaire sans créer de doublons : grâce à la commande SQL `INSERT ... ON CONFLICT`, une observation déjà présente n'est pas ajoutée une deuxième fois, mais sa valeur est mise à jour.
 
 Chacune de ces trois tables a son propre DAO (`IndicateurDAO`, `PaysDAO` et `ObservationDAO`, dans le dossier `src/dao/`), qui fait le lien entre PostgreSQL et l'application. Les DAO sont les seuls fichiers du projet qui contiennent des requêtes SQL. Ils fonctionnent dans les deux sens :
@@ -453,7 +457,7 @@ Les DAO ne renvoient pas seulement des tableaux : ils peuvent aussi renvoyer des
 
 Par exemple, la méthode `lister` de `PaysDAO` renvoie une liste d'objets `Pays`, et celle d'`IndicateurDAO` une liste d'objets `Indicateur`. Les observations, elles, restent sous forme de tableaux pandas, car les services font leurs calculs directement dessus.
 
-\![Diagramme de classes des business objects](images/Buisnessdiagdivpar2.png)
+Ces classes sont représentées dans le diagramme de classes de la partie « Réadaptation des diagrammes ».
 
 ```{=latex}
 \subsectiontitre{Limites}
