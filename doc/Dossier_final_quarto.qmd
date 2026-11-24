@@ -187,6 +187,7 @@ Les utilisateurs disposent d’un compte classique leur permettant de consulter 
 Pour livrer notre application à temps, nous avons réalisé un diagramme de GANTT. C’est un calendrier prévisionnel avec les différentes tâches à réaliser et leur durée estimée. Ce type de diagramme est indispensable pour avoir une bonne vision de l’avancement du projet et ne pas perdre de vue les dates de rendus. \newline Dans le cadre de notre projet, nous pouvons distinguer cinq grandes étapes :\newline • « Diagramme UML » : il s’agit ici de modéliser l’ensemble du projet en respectant le cahier des charges que nous avons établi. Il y a pour cela deux phases. La première est la phase d’étude. Elle permet de construire le diagramme de cas d’utilisation. Vient ensuite la phase de conception. Il s’agit alors de créer les diagrammes d’activités correspondant aux cas d'utilisation du premier diagramme, le diagramme de classes et celui de la base de données. Cette étape est cruciale car sans elle, l’implémentation ne pourra être faite correctement.\newline • « Dossier d’analyse » : pour s’assurer du bon démarrage du projet, nous avons réalisé un dossier d’analyse qui regroupe l’ensemble de la planification et de la modélisation. Chacun d’entre nous ayant participé à la rédaction de ce rapport, il était important de consacrer du temps à sa conception. Cela permet d’assurer la cohérence du contenu et d’en faire des relectures.\newline • « Implémentation » : c’est le temps de la réalisation du projet. Cette étape comporte l'importation des données à partir de l'ILOSTAT,la création de la base de données, le développement de la DAO et la mise en place des différentes fonctionnalités du projet. C’est la partie la plus longue du projet. Nous avions prévu d’y consacrer environ 1 mois après le dépot du rapport intermédiaire, or nous avons eu besoin de 10 jours supplémentaires pour que tout fonctionne correctement.\newline • « Rapport et code » : Afin de gagner du temps, nous voulions rédiger le rapport parallèlement à l’étape d’implémentaion. Cette dernière plus complexe et chronophage que prévu, nous avons décidé de, finalement, repousser l’écriture au.... Tout comme pour le dossier d’analyse, nous avons accordé deux jours à la relecture. Le code final étant à rendre pour le 25 novembre, nous consacrerons la dernière semaine au dossier final.\newline • « Soutenance » : pour finir, nous aurons une semaine pour créer un diaporama afin de présenter notre projet le 09 décembre devant un jury composé d’un professionnel de l’informatique, de notre encadrant et d’un représentant de l’ENSAI.\newline
 
 (diagramme de GANTT)
+
 ```{=latex}
 \subsectiontitre{Organisation de l'équipe}
 ```
@@ -195,12 +196,11 @@ Le projet a été réalisé par cinq membres. Pour avancer en parallèle sans se
 
 \textbf{•Le socle commun}
 
--Clarence Chemla-Vidaud (rôle A : données et administration). Elle est responsable de tout ce qui touche aux données : import depuis ILOSTAT (fetcher), base de données, gestion des pays et des modalités, actions d’administration sur les données (F1, F2 et la partie données de F6). Elle assure aussi la qualité du projet : infrastructure de tests, journalisation (logs), intégration continue et README. En fin de projet, elle a relu l’ensemble du backend, harmonisé le code avec pylint et simplifié plusieurs fichiers (schémas, controllers).\newline
--Laurent Khaouli (rôle B : utilisateurs, sécurité et squelette frontend). Il gère les comptes (création, connexion, rôles utilisateur et administrateur, historique des actions, partie comptes de F6) et construit le squelette de l’application Streamlit dans lequel chacun a ajouté sa page. Il a aussi conçu l’organisation du travail en fiches et testé le fonctionnement des endpoints.
+-Clarence Chemla-Vidaud (rôle A : données et administration). Elle est responsable de tout ce qui touche aux données : import depuis ILOSTAT (fetcher), base de données, gestion des pays et des modalités, actions d’administration sur les données (F1, F2 et la partie données de F6). Elle assure aussi la qualité du projet : infrastructure de tests, journalisation (logs), intégration continue et README. En fin de projet, elle a relu l’ensemble du backend, harmonisé le code avec pylint et simplifié plusieurs fichiers (schémas, controllers).\newline -Laurent Khaouli (rôle B : utilisateurs, sécurité et squelette frontend). Il gère les comptes (création, connexion, rôles utilisateur et administrateur, historique des actions, partie comptes de F6) et construit le squelette de l’application Streamlit dans lequel chacun a ajouté sa page. Il a aussi conçu l’organisation du travail en fiches et testé le fonctionnement des endpoints.
 
 \textbf{•Les fonctionnalités}
 
--Antifa Badarou (rôle C : évolution d’un indicateur, F3). Elle a codé le calcul de l’évolution d’un indicateur sur les N derniers trimestres : service, schéma, controller, tests, puis la page d’affichage des graphiques. Elle a fournit le template pour la rédaction du dossier final et effectué des mises en formes et réglages global du document.Elle a  aussi rédigé avec l'aide des autres memebres le dossier final.\newline
+-Antifa Badarou (rôle C : évolution d’un indicateur, F3). Elle a codé le calcul de l’évolution d’un indicateur sur les N derniers trimestres : service, schéma, controller, tests, puis la page d’affichage des graphiques. Elle a fournit le template pour la rédaction du dossier final et effectué des mises en formes et réglages global du document.Elle a aussi rédigé avec l'aide des autres memebres le dossier final.\newline
 
 -William Margerand (rôle D : comparaison entre pays, F4, et carte du monde, FO2). Il a codé le classement des pays pour la période la plus récente (valeurs les plus hautes et les plus basses) avec ses tests, puis la carte choroplèthe. Il a ensuite amélioré le choix de la période, la période commune et les couleurs. Il a rédigé les sections du dossier consacrées à F4 et FO2, à l’exploration des données, ainsi que le chapitre 2 de modélisation et le diagramme de cas d’utilisation.\newline
 
@@ -225,8 +225,9 @@ Voilà ci contre le diagramme d'architecture qui montre la structure globale de 
 ```{=latex}
 \subsectiontitre{Diagramme de classes}
 ```
- Voila ci après le diagramme de classe corrigé:
- 
+
+Voila ci après le diagramme de classe corrigé:
+
 ```{=latex}
 \sectiontitre{Normes de codage utilisées}
 ```
@@ -251,9 +252,9 @@ Pour bien comprendre l'application **Laborscope**, nous expliquons ici l'ensembl
 
 L'application distingue trois acteurs :
 
-- le **visiteur**, qui n'est pas connecté : il peut seulement créer un compte ou se connecter ;
-- l'**utilisateur**, connecté avec un compte classique : il a accès à toutes les analyses de l'application ;
-- l'**administrateur** : il peut faire tout ce que fait un utilisateur (flèche d'héritage sur le diagramme) et dispose en plus des fonctions de gestion de l'application.
+-   le **visiteur**, qui n'est pas connecté : il peut seulement créer un compte ou se connecter ;
+-   l'**utilisateur**, connecté avec un compte classique : il a accès à toutes les analyses de l'application ;
+-   l'**administrateur** : il peut faire tout ce que fait un utilisateur (flèche d'héritage sur le diagramme) et dispose en plus des fonctions de gestion de l'application.
 
 ![Diagramme de cas d'utilisation de l'application](images/diagramme_cas_utilisation.png){width="42%"}
 
@@ -279,12 +280,12 @@ Avant la première connexion, il faut créer un compte à l'aide d'un pseudo et 
 
 Une fois connecté, l'utilisateur retrouve la page d'accueil, qui l'invite à choisir une analyse dans le menu. Celui-ci contient une rubrique « Analyses » avec six pages :
 
-- **Explorer les données** : consulter les observations brutes d'un indicateur sous forme de tableau ;
-- **Évolution (F3)** : suivre l'évolution d'un indicateur au cours du temps ;
-- **Comparaison pays (F4)** : classer plusieurs pays selon un indicateur ;
-- **Carte du monde (FO2)** : afficher un indicateur sur une carte du monde ;
-- **Multi-indicateurs (F5)** : comparer plusieurs indicateurs sur un même graphique ;
-- **Rapport PDF (FO3)** : générer un rapport synthétique au format PDF.
+-   **Explorer les données** : consulter les observations brutes d'un indicateur sous forme de tableau ;
+-   **Évolution (F3)** : suivre l'évolution d'un indicateur au cours du temps ;
+-   **Comparaison pays (F4)** : classer plusieurs pays selon un indicateur ;
+-   **Carte du monde (FO2)** : afficher un indicateur sur une carte du monde ;
+-   **Multi-indicateurs (F5)** : comparer plusieurs indicateurs sur un même graphique ;
+-   **Rapport PDF (FO3)** : générer un rapport synthétique au format PDF.
 
 Ces pages fonctionnent toutes de la même façon : l'utilisateur choisit un indicateur, puis les filtres qui l'intéressent (pays, sexe, tranche d'âge ou profession selon l'indicateur), et le résultat s'affiche sous forme de tableau, de graphique ou de carte. Elles sont détaillées dans le chapitre « Fonctionnement de l'application ».
 
@@ -296,9 +297,9 @@ En bas du menu, l'utilisateur voit le pseudo et le rôle avec lesquels il est co
 
 L'administrateur voit le même menu que l'utilisateur, avec en plus une rubrique « Administration » composée de trois pages :
 
-- **Utilisateurs** : afficher la liste des comptes, ajouter un compte en choisissant son rôle (utilisateur ou administrateur) et supprimer un compte ;
-- **Données** : forcer un nouvel import des données ILOSTAT, et modifier ou supprimer manuellement une observation ;
-- **Logs et historique** : consulter, dans deux onglets, l'historique des actions (connexions, créations et suppressions de comptes, imports et modifications des données...) et les logs techniques de l'application.
+-   **Utilisateurs** : afficher la liste des comptes, ajouter un compte en choisissant son rôle (utilisateur ou administrateur) et supprimer un compte ;
+-   **Données** : forcer un nouvel import des données ILOSTAT, et modifier ou supprimer manuellement une observation ;
+-   **Logs et historique** : consulter, dans deux onglets, l'historique des actions (connexions, créations et suppressions de comptes, imports et modifications des données...) et les logs techniques de l'application.
 
 Les actions difficiles à annuler (suppression d'un compte ou d'une observation, nouvel import qui écrase les modifications manuelles) ne sont possibles qu'après avoir coché une case de confirmation.
 
@@ -330,9 +331,9 @@ L'application se base sur les données ouvertes de l'API ILOSTAT. Dans un premie
 
 Le site donne accès à de nombreux indicateurs. Le cahier des charges nous en imposait deux, et nous en avons choisi trois :
 
-- le taux de chômage par sexe et âge ;
-- le taux d'emploi par sexe et âge ;
-- l'emploi par sexe et profession.
+-   le taux de chômage par sexe et âge ;
+-   le taux d'emploi par sexe et âge ;
+-   l'emploi par sexe et profession.
 
 Chaque indicateur a son propre identifiant dans l'URL de l'API (par exemple `EMP_5EMP_SEX_OC2_NB_Q` pour l'emploi par sexe et profession). Nous avons choisi de reconstruire chaque URL à partir de cet identifiant plutôt que de coder les URL en dur. Une URL contient quatre paramètres : `id`, le code de l'indicateur ; `timefrom`, la première année récupérée ; `type=both`, qui permet d'obtenir à la fois le code d'un pays (« FRA ») et son nom (« France ») ; et `format=.csv`, pour recevoir les données sous forme de tableau.
 
@@ -348,10 +349,10 @@ Le problème est que les tableaux récupérés depuis l'API ne sont pas propres 
 
 Le dossier qui contient tous les fichiers de traitement est `src/fetcher/`. Il contient en particulier quatre fichiers :
 
-- `fetcher.py` : construit les URL nécessaires et télécharge les données de l'API sous forme de tableau (DataFrame) ;
-- `parser.py` : nettoie les libellés d'ILOSTAT en retirant leurs préfixes ;
-- `data_processing.py` : utilise les méthodes des deux fichiers précédents. Il sélectionne et renomme les colonnes utiles, nettoie les tableaux, puis les enregistre dans la base ;
-- `charger_donnees.py` : script final qui lance l'ensemble : récupérer les données d'ILOSTAT, les traiter et les stocker.
+-   `fetcher.py` : construit les URL nécessaires et télécharge les données de l'API sous forme de tableau (DataFrame) ;
+-   `parser.py` : nettoie les libellés d'ILOSTAT en retirant leurs préfixes ;
+-   `data_processing.py` : utilise les méthodes des deux fichiers précédents. Il sélectionne et renomme les colonnes utiles, nettoie les tableaux, puis les enregistre dans la base ;
+-   `charger_donnees.py` : script final qui lance l'ensemble : récupérer les données d'ILOSTAT, les traiter et les stocker.
 
 Le nettoyage, fait par la méthode `parse_data` de `data_processing.py`, se déroule en quatre étapes :
 
@@ -389,16 +390,16 @@ Une observation est identifiée par une clé primaire composée de six colonnes 
 
 Chacune de ces trois tables a son propre DAO (`IndicateurDAO`, `PaysDAO` et `ObservationDAO`, dans le dossier `src/dao/`), qui fait le lien entre PostgreSQL et l'application. Les DAO sont les seuls fichiers du projet qui contiennent des requêtes SQL. Ils fonctionnent dans les deux sens :
 
-- en écriture : ils reçoivent un tableau propre et l'insèrent dans la base. Les observations sont envoyées par paquets de 1000 lignes pour aller plus vite. L'ordre d'enregistrement est important : on enregistre d'abord l'indicateur, puis les pays, puis les observations, car une observation ne peut pas faire référence à un pays ou à un indicateur qui n'existe pas encore ;
-- en lecture : ils récupèrent les données pour le reste de l'application. Par exemple, la méthode `lire` d'`ObservationDAO` renvoie les observations d'un indicateur et peut les filtrer par pays, période, sexe et modalité.
+-   en écriture : ils reçoivent un tableau propre et l'insèrent dans la base. Les observations sont envoyées par paquets de 1000 lignes pour aller plus vite. L'ordre d'enregistrement est important : on enregistre d'abord l'indicateur, puis les pays, puis les observations, car une observation ne peut pas faire référence à un pays ou à un indicateur qui n'existe pas encore ;
+-   en lecture : ils récupèrent les données pour le reste de l'application. Par exemple, la méthode `lire` d'`ObservationDAO` renvoie les observations d'un indicateur et peut les filtrer par pays, période, sexe et modalité.
 
 Tous les DAO passent par une seule connexion à la base, gérée par la classe `DBConnection`. Elle utilise le patron Singleton : une seule instance de la classe peut exister, donc une seule connexion est ouverte et partagée par toute l'application. Les paramètres de connexion (adresse, nom de la base, identifiants) sont lus dans le fichier `.env`, ce qui évite de les écrire dans le code.
 
 Les DAO ne renvoient pas seulement des tableaux : ils peuvent aussi renvoyer des business objects. Ce sont des classes simples, dans le dossier `src/business_object/`, qui représentent les objets que manipule l'application :
 
-- `Indicateur` : le code, le libellé, l'unité, la fréquence et le type de modalité d'un indicateur. Ce sont ces objets qui décrivent les indicateurs dans `config_import.py`. Cette classe vérifie aussi ses attributs à la création, par exemple que la fréquence vaut bien « Q », « A » ou « M » ;
-- `Pays` : le code ISO et le nom d'un pays, avec des méthodes pour retrouver son continent et les groupes auxquels il appartient ;
-- `Selection` : un indicateur et ses filtres (pays, modalité, sexe), utilisé pour la comparaison multi-indicateurs.
+-   `Indicateur` : le code, le libellé, l'unité, la fréquence et le type de modalité d'un indicateur. Ce sont ces objets qui décrivent les indicateurs dans `config_import.py`. Cette classe vérifie aussi ses attributs à la création, par exemple que la fréquence vaut bien « Q », « A » ou « M » ;
+-   `Pays` : le code ISO et le nom d'un pays, avec des méthodes pour retrouver son continent et les groupes auxquels il appartient ;
+-   `Selection` : un indicateur et ses filtres (pays, modalité, sexe), utilisé pour la comparaison multi-indicateurs.
 
 Par exemple, la méthode `lister` de `PaysDAO` renvoie une liste d'objets `Pays`, et celle d'`IndicateurDAO` une liste d'objets `Indicateur`. Les observations, elles, restent sous forme de tableaux pandas, car les services font leurs calculs directement dessus.
 
@@ -410,9 +411,9 @@ Par exemple, la méthode `lister` de `PaysDAO` renvoie une liste d'objets `Pays`
 
 Cette chaîne d'import a tout de même quelques limites :
 
-- l'import est lent : comme on fait un appel à l'API par pays et par indicateur, il faut plusieurs centaines d'appels pour tout récupérer. Ici ce n'est pas encore très contraigant. Si la table "observation" dépasse les 500 milles ligne il faudrait travailler avec d'autres outils qui rendent l'import et la lecture plus rapide.
-- les données ne remontent qu'à 2020 ;
-- la couverture est très inégale selon les pays : certains n'ont qu'un seul trimestre dans la base, ce qui limite les comparaisons (voir la carte du monde au chapitre 4).
+-   l'import est lent : comme on fait un appel à l'API par pays et par indicateur, il faut plusieurs centaines d'appels pour tout récupérer. Ici ce n'est pas encore très contraigant. Si la table "observation" dépasse les 500 milles ligne il faudrait travailler avec d'autres outils qui rendent l'import et la lecture plus rapide.
+-   les données ne remontent qu'à 2020 ;
+-   la couverture est très inégale selon les pays : certains n'ont qu'un seul trimestre dans la base, ce qui limite les comparaisons (voir la carte du monde au chapitre 4).
 
 \newpage
 
@@ -440,10 +441,10 @@ Chaque ligne donne le pays, la période, la valeur et son unité, mais aussi la 
 
 La page repose sur les mêmes couches que le reste de l'application :
 
-- la couche DAO (classe ObservationDAO) construit une requête SQL qui joint les tables des observations, des indicateurs et des pays, puis ajoute un filtre pour chaque choix de l'utilisateur ;
-- la couche service (classe ObservationService) transmet simplement la demande au DAO, puisqu'il n'y a pas de calcul à faire ;
-- la couche controller expose les données avec FastAPI sur l'endpoint GET /observations, réservé aux utilisateurs connectés. Elle renvoie une erreur 404 si l'indicateur n'existe pas ;
-- la page Streamlit utilise les menus de sélection communs à toutes les pages et affiche le résultat dans un tableau.
+-   la couche DAO (classe ObservationDAO) construit une requête SQL qui joint les tables des observations, des indicateurs et des pays, puis ajoute un filtre pour chaque choix de l'utilisateur ;
+-   la couche service (classe ObservationService) transmet simplement la demande au DAO, puisqu'il n'y a pas de calcul à faire ;
+-   la couche controller expose les données avec FastAPI sur l'endpoint GET /observations, réservé aux utilisateurs connectés. Elle renvoie une erreur 404 si l'indicateur n'existe pas ;
+-   la page Streamlit utilise les menus de sélection communs à toutes les pages et affiche le résultat dans un tableau.
 
 ```{=latex}
 \subsectiontitre{Exemple et interprétation}
@@ -469,12 +470,11 @@ L'évolution d'un indicateur permet de suivre comment une valeur change au cours
 
 La page affiche trois éléments :
 
-- un graphique en courbes avec une courbe par pays, pour voir la tendance de la valeur ;
-- un graphique en barres qui montre, pour chaque trimestre, la variation par rapport au trimestre précédent ;
-- un tableau détaillé avec la valeur, la variation absolue et la variation en pourcentage.
+-   un graphique en courbes avec une courbe par pays, pour voir la tendance de la valeur ;
+-   un graphique en barres qui montre, pour chaque trimestre, la variation par rapport au trimestre précédent ;
+-   un tableau détaillé avec la valeur, la variation absolue et la variation en pourcentage.
 
 Deux difficultés ont influencé nos choix. D'une part, la base peut contenir plusieurs sources pour un même pays et un même trimestre : si on les gardait toutes, le graphique aurait deux points à la même date. Nous gardons une seule source par pays et par période (la première par ordre alphabétique). D'autre part, les pays n'ont pas tous le même nombre de trimestres disponibles : le nombre demandé est donc appliqué pays par pays, et un pays qui a moins de données que demandé affiche simplement tout ce qu'il a. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
-
 
 ```{=latex}
 \subsectiontitre{Fonctionnement technique de la fonctionnalité}
@@ -482,17 +482,17 @@ Deux difficultés ont influencé nos choix. D'une part, la base peut contenir pl
 
 La fonctionnalité suit l'architecture en couches de l'application :
 
-- la couche DAO lit en base les observations de l'indicateur pour les pays, la modalité et le sexe demandés. Nous avons réutilisé la classe ObservationDAO, qui existait déjà ;
-- la couche service (classe EvolutionService) fait les calculs avec pandas ;
-- la couche controller expose le résultat avec FastAPI sur l'endpoint GET /analyses/evolution, réservé aux utilisateurs connectés. Elle vérifie les paramètres (par exemple, n_periodes doit être compris entre 1 et 40) et renvoie une erreur 404 si l'indicateur n'existe pas ;
-- la page Streamlit appelle cet endpoint et trace les graphiques avec Plotly Express.
+-   la couche DAO lit en base les observations de l'indicateur pour les pays, la modalité et le sexe demandés. Nous avons réutilisé la classe ObservationDAO, qui existait déjà ;
+-   la couche service (classe EvolutionService) fait les calculs avec pandas ;
+-   la couche controller expose le résultat avec FastAPI sur l'endpoint GET /analyses/evolution, réservé aux utilisateurs connectés. Elle vérifie les paramètres (par exemple, n_periodes doit être compris entre 1 et 40) et renvoie une erreur 404 si l'indicateur n'existe pas ;
+-   la page Streamlit appelle cet endpoint et trace les graphiques avec Plotly Express.
 
 Le calcul du service se fait en quatre étapes :
 
-1. on garde une seule source par pays et par période ;
-2. on trie les observations par pays puis par période (le format « 2024Q4 » se trie dans l'ordre chronologique) ;
-3. on calcule les variations pays par pays : la variation absolue est la valeur moins celle de la période précédente, et la variation en pourcentage est cette différence divisée par la valeur précédente ;
-4. on ne garde que les N dernières périodes de chaque pays.
+1.  on garde une seule source par pays et par période ;
+2.  on trie les observations par pays puis par période (le format « 2024Q4 » se trie dans l'ordre chronologique) ;
+3.  on calcule les variations pays par pays : la variation absolue est la valeur moins celle de la période précédente, et la variation en pourcentage est cette différence divisée par la valeur précédente ;
+4.  on ne garde que les N dernières périodes de chaque pays.
 
 L'ordre des étapes 3 et 4 est important. Si on coupait avant de calculer, la première période conservée n'aurait pas de variation. On calcule donc les variations sur tout l'historique, puis on garde les N dernières lignes.
 
@@ -516,8 +516,8 @@ La comparaison entre pays permet de comparer un indicateur entre plusieurs pays 
 
 La principale subtilité vient des périodes. Tous les pays ne publient pas leurs données au même rythme : un pays peut avoir des données jusqu'en 2026 alors qu'un autre s'arrête en 2024. Par défaut, nous prenons la dernière période disponible de chaque pays. Ainsi, aucun pays n'est exclu du classement, mais les pays ne sont pas forcément comparés à la même date. Pour que l'utilisateur ne soit pas trompé, la période de chaque pays est toujours affichée, et un message prévient quand les périodes ne sont pas les mêmes. L'utilisateur peut aussi :
 
-- choisir une période précise dans un menu. Si un pays n'a pas de donnée pour cette période, on prend sa dernière période avant celle choisie, jamais une donnée plus récente ;
-- cocher une case pour utiliser la dernière période commune à tous les pays choisis. Tous les pays sont alors comparés à la même date. S'il n'existe aucune période commune, la page l'indique.
+-   choisir une période précise dans un menu. Si un pays n'a pas de donnée pour cette période, on prend sa dernière période avant celle choisie, jamais une donnée plus récente ;
+-   cocher une case pour utiliser la dernière période commune à tous les pays choisis. Tous les pays sont alors comparés à la même date. S'il n'existe aucune période commune, la page l'indique.
 
 Enfin, une case permet d'activer ou non la mise en couleur des pays les plus hauts (bleu foncé) et les plus bas (bleu clair). Quand elle est décochée, toutes les barres sont grises. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
 
@@ -527,10 +527,10 @@ Enfin, une case permet d'activer ou non la mise en couleur des pays les plus hau
 
 La fonctionnalité suit l'architecture en couches de l'application :
 
-- la couche DAO lit en base les observations de l'indicateur pour les pays, la modalité et le sexe demandés. Nous avons réutilisé la classe ObservationDAO, qui existait déjà ;
-- la couche service (classe ComparaisonPaysService) fait les calculs avec pandas ;
-- la couche controller expose le résultat avec FastAPI sur l'endpoint GET /analyses/comparaison-pays. Elle renvoie une erreur 404 si l'indicateur n'existe pas ;
-- la page Streamlit appelle cet endpoint et trace le graphique avec Plotly Express.
+-   la couche DAO lit en base les observations de l'indicateur pour les pays, la modalité et le sexe demandés. Nous avons réutilisé la classe ObservationDAO, qui existait déjà ;
+-   la couche service (classe ComparaisonPaysService) fait les calculs avec pandas ;
+-   la couche controller expose le résultat avec FastAPI sur l'endpoint GET /analyses/comparaison-pays. Elle renvoie une erreur 404 si l'indicateur n'existe pas ;
+-   la page Streamlit appelle cet endpoint et trace le graphique avec Plotly Express.
 
 Le service est testé avec pytest : la base est remplacée par de petites données écrites à la main, ce qui permet de vérifier le classement, le choix des périodes et les cas particuliers (aucune donnée, aucune période commune).
 
@@ -592,11 +592,11 @@ La comparaison multi-indicateurs permet de superposer jusqu'à quatre séries su
 
 Pour chaque série, l'utilisateur choisit un indicateur, un pays, une modalité (une tranche d'âge ou une profession selon l'indicateur) et le sexe. Une case à cocher permet d'activer ou de désactiver chacune des quatre séries. Chaque série est nommée en langage clair (par exemple « Taux d'emploi par sexe et âge - FRA - Total - 15+ ») plutôt qu'avec le code technique d'ILOSTAT. L'utilisateur peut aussi choisir entre deux affichages :
 
-- l'indice en base 100 : toutes les séries sont ramenées à 100 à une même date de départ $t_0$, ce qui permet de comparer leurs évolutions relatives malgré des unités différentes :
+-   l'indice en base 100 : toutes les séries sont ramenées à 100 à une même date de départ $t_0$, ce qui permet de comparer leurs évolutions relatives malgré des unités différentes :
 
 $$\text{valeur}_{\text{base 100}}(t) = \frac{\text{valeur}(t)}{\text{valeur}(t_0)} \times 100$$
 
-- les valeurs brutes, plus adaptées quand les séries sont dans la même unité.
+-   les valeurs brutes, plus adaptées quand les séries sont dans la même unité.
 
 Pour que la comparaison reste cohérente, la page applique deux règles. D'abord, les indicateurs choisis doivent avoir la même fréquence (trimestrielle ou annuelle) : si on mélange les deux, la page refuse la comparaison et affiche une erreur. Ensuite, les séries sont alignées sur leur fenêtre commune : la date de départ est la plus récente des premières périodes de chaque série. Sous le graphique, un tableau reprend les données affichées. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
 
@@ -606,11 +606,11 @@ Pour que la comparaison reste cohérente, la page applique deux règles. D'abord
 
 La fonctionnalité suit l'architecture en couches de l'application :
 
-- le business object `Selection` regroupe les paramètres d'une série (indicateur, pays, modalité, sexe) ;
-- la couche DAO récupère les informations de chaque indicateur (libellé, unité, fréquence) avec `IndicateurDAO`, et les observations filtrées avec `ObservationDAO`, qui existait déjà ;
-- la couche service (fichier `multi_indicateurs_service.py`) vérifie que les indicateurs existent et ont la même fréquence, supprime les doublons par période, aligne les séries sur la période de début commune et calcule la colonne en base 100 avec pandas. Elle construit aussi les intitulés lisibles des séries ;
-- la couche controller expose le résultat avec FastAPI sur l'endpoint POST /analyses/multi-indicateurs. Elle reçoit la liste des séries actives et l'option base 100, puis renvoie les séries calculées au format JSON ;
-- la page Streamlit affiche les quatre colonnes de sélection (les modalités proposées dépendent de l'indicateur choisi), met en cache les listes d'indicateurs et de pays, et trace le graphique avec Plotly Express (infobulles, zoom, légende cliquable).
+-   le business object `Selection` regroupe les paramètres d'une série (indicateur, pays, modalité, sexe) ;
+-   la couche DAO récupère les informations de chaque indicateur (libellé, unité, fréquence) avec `IndicateurDAO`, et les observations filtrées avec `ObservationDAO`, qui existait déjà ;
+-   la couche service (fichier `multi_indicateurs_service.py`) vérifie que les indicateurs existent et ont la même fréquence, supprime les doublons par période, aligne les séries sur la période de début commune et calcule la colonne en base 100 avec pandas. Elle construit aussi les intitulés lisibles des séries ;
+-   la couche controller expose le résultat avec FastAPI sur l'endpoint POST /analyses/multi-indicateurs. Elle reçoit la liste des séries actives et l'option base 100, puis renvoie les séries calculées au format JSON ;
+-   la page Streamlit affiche les quatre colonnes de sélection (les modalités proposées dépendent de l'indicateur choisi), met en cache les listes d'indicateurs et de pays, et trace le graphique avec Plotly Express (infobulles, zoom, légende cliquable).
 
 Le service et le controller sont testés avec pytest, et le code est contrôlé avec ruff.
 
@@ -620,7 +620,7 @@ Le service et le controller sont testés avec pytest, et le code est contrôlé 
 
 On compare, pour la France, le taux d'emploi (15 ans et plus, hommes et femmes confondus) et le taux de chômage, de 2020Q1 à 2024Q4, en base 100.
 
-![Taux d'emploi et taux de chômage de la France en base 100 (2020Q1 à 2024Q4)](images/evolution-comparative-multi-indicateurs.png){width=92%}
+![Taux d'emploi et taux de chômage de la France en base 100 (2020Q1 à 2024Q4)](images/evolution-comparative-multi-indicateurs.png){width="92%"}
 
 Les deux séries démarrent à 100 en 2020Q1, ce qui permet de comparer leurs variations malgré des niveaux de départ très différents. En 2020Q2, le taux de chômage chute autour de 84, puis remonte à 110,2 en 2020Q3, tandis que le taux d'emploi baisse légèrement à 98,3 en 2020Q2. Ce mouvement du chômage s'explique en partie par un effet statistique : pendant le premier confinement, beaucoup de personnes sans emploi ont cessé de chercher du travail et ont donc été comptées comme inactives. À partir de 2021Q1, les deux courbes s'écartent : le taux d'emploi se stabilise entre 103 et 104 (soit 3 à 4 % de plus qu'au début de 2020), alors que le taux de chômage reste sous son niveau initial, entre 86 et 95.
 
@@ -636,10 +636,10 @@ Il faut faire attention à la lecture d'un indice en base 100 : il mesure une va
 
 La page « Rapport PDF » permet à l'utilisateur de télécharger un rapport d'analyse comparative, sans avoir à copier lui-même les graphiques et les chiffres. Il choisit un indicateur, les pays à comparer et une période, et l'application génère automatiquement un document PDF de quatre parties :
 
-- un rappel des paramètres choisis : l'intitulé complet de l'indicateur, son unité et son code ILOSTAT entre crochets, ce qui permet de retrouver la source ;
-- un graphique de l'évolution de l'indicateur pour chaque pays ;
-- un tableau de statistiques par pays : minimum, maximum, moyenne et variation sur la période ;
-- une conclusion rédigée automatiquement à partir de ces statistiques.
+-   un rappel des paramètres choisis : l'intitulé complet de l'indicateur, son unité et son code ILOSTAT entre crochets, ce qui permet de retrouver la source ;
+-   un graphique de l'évolution de l'indicateur pour chaque pays ;
+-   un tableau de statistiques par pays : minimum, maximum, moyenne et variation sur la période ;
+-   une conclusion rédigée automatiquement à partir de ces statistiques.
 
 ```{=latex}
 \subsectiontitre{Fonctionnement technique}
@@ -653,15 +653,14 @@ Le graphique du rapport est tracé côté serveur avec Matplotlib en mode `Agg`,
 
 On génère le rapport pour l'indicateur « Emploi par sexe et profession (milliers) », en comparant l'Allemagne et la France de 2023Q1 à 2024Q4.
 
-![Exemple de rapport PDF généré par LaborScope](images/telechargement.PNG){width=100%}
+![Exemple de rapport PDF généré par LaborScope](images/telechargement.PNG){width="100%"}
 
 Le graphique met tout d'abord en évidence un écart de niveau structurel important entre les deux marchés du travail : sur l'ensemble de la période étudiée (2023Q1 à 2024Q4), l'emploi total en Allemagne oscille entre 42 338,85 et 43 504,96 milliers de personnes (soit environ 42,3 à 43,5 millions d'actifs occupés), contre 28 448,00 à 29 216,59 milliers en France (environ 28,4 à 29,2 millions). Cet écart de près de 14 millions d'emplois s'explique d'abord par la différence de taille démographique entre les deux pays (environ 84 millions d'habitants en Allemagne contre 68 millions en France), mais aussi par un taux d'emploi structurellement plus élevé , notamment chez les seniors et dans le recours au temps partiel.
 
-Au-delà de ce décalage de volume, l'analyse des variations permet d'apprécier le dynamisme respectif des créations nettes d'emplois sur la période : l'emploi total progresse de +1 166,11 milliers en Allemagne (soit une hausse relative d'environ +2,75 % entre début 2023 et fin 2024), contre +485,16 milliers en France (soit environ +1,71 %). Sur cette fenêtre temporelle, le marché du travail allemand affiche donc un volume de créations nettes plus de deux fois supérieur à celui de la France, porté notamment par la croissance des emplois dans le secteur des services (santé, action sociale, éducation et administration publique) et par les flux d'immigration active qui soutiennent l'offre de travail face au vieillissement démographique.  
+Au-delà de ce décalage de volume, l'analyse des variations permet d'apprécier le dynamisme respectif des créations nettes d'emplois sur la période : l'emploi total progresse de +1 166,11 milliers en Allemagne (soit une hausse relative d'environ +2,75 % entre début 2023 et fin 2024), contre +485,16 milliers en France (soit environ +1,71 %). Sur cette fenêtre temporelle, le marché du travail allemand affiche donc un volume de créations nettes plus de deux fois supérieur à celui de la France, porté notamment par la croissance des emplois dans le secteur des services (santé, action sociale, éducation et administration publique) et par les flux d'immigration active qui soutiennent l'offre de travail face au vieillissement démographique.\
 L'utilisateur dispose ainsi, en un seul document PDF, des ordres de grandeur absolus et des amplitudes de variation pour appuyer son diagnostic économique..
 
 Comme pour la comparaison entre pays (F4), cet indicateur est un nombre de personnes et non un taux : l'écart entre les deux pays reflète surtout leur taille, et non la situation de leur marché du travail. Le rapport est surtout utile pour garder une trace des paramètres et des chiffres consultés, avec la source de chaque donnée.
-
 
 ```{=latex}
 \mychapter{Retour sur le projet}
@@ -670,7 +669,8 @@ Comme pour la comparaison entre pays (F4), cet indicateur est un nombre de perso
 ```{=latex}
 \sectiontitre{Témoignage de Christian}
 ```
-Une dynamique de groupe bienveillante et structurée  
+
+Une dynamique de groupe bienveillante et structurée
 
 Ces trois mois passés aux côtés de mes camarades à concevoir et développer l'application LaborScope ont constitué une expérience particulièrement enrichissante, tant sur le plan humain que technique. Au-delà de l'aspect purement académique, ce projet a avant tout permis de tisser une véritable relation amicale au sein du groupe. Travailler dans un climat de confiance, d'écoute et de bonne humeur avec chacun des membres de l'équipe a été un moteur essentiel tout au long du semestre.
 
@@ -678,13 +678,13 @@ Au démarrage du projet, lors de sa présentation initiale, j'ai ressenti une ce
 
 L'organisation mise en place par le groupe a largement contribué à cette réussite. Le découpage clair du travail étape par étape initié par Laurent, avec des objectifs précis et des livrables attendus à chaque jalon, nous a donné un cadre rassurant et efficace pour avancer sans nous disperser. De son côté, l'appui précieux de Clarence lors des phases de débogage et de résolution de blocages techniques m'a permis de surmonter rapidement des situations complexes et de gagner en autonomie.
 
-Une vision d'ensemble grâce au développement des fonctionnalités F5 et F03  
+Une vision d'ensemble grâce au développement des fonctionnalités F5 et F03
 
 La réalisation de la comparaison multi-indicateurs (F5) et de la génération de rapport PDF (FO3) a joué un rôle charnière dans ma montée en compétence. Parce que la fonctionnalité F5 se situe au carrefour de l'application et mobilise les briques développées en amont par l'ensemble du groupe (référentiels des pays et des indicateurs, extraction des séries temporelles, gestion des classifications), je ne pouvais pas me contenter de coder de manière isolée. Il m'a fallu comprendre en profondeur le fonctionnement du code de mes camarades afin d'y raccorder proprement mes traitements et d'adapter mon implémentation à l'existant.
 
 Le développement de la fonctionnalité FO3, permettant le téléchargement d'un rapport PDF structuré, a prolongé cette logique en me confrontant à l'automatisation complète de la restitution d'une analyse : assemblage des métadonnées lisibles (intitulés complets et unités des indicateurs), génération de graphiques côté serveur, calcul des indicateurs statistiques clés (minimum, maximum, moyenne, évolution) et synthèse automatique des résultats. Cette transversalité m'a offert une compréhension globale de la construction d'une application informatique, depuis la base de données jusqu'au livrable exploitable par l'utilisateur final.
 
-Apports techniques et travail collaboratif  
+Apports techniques et travail collaboratif
 
 Sur le plan technique, ce projet m'a permis de franchir un cap important dans ma manière de concevoir, structurer et partager du code au sein d'une équipe. J'ai notamment acquis des compétences essentielles sur plusieurs plans :
 
@@ -710,16 +710,29 @@ Dans ce projet, j'ai codé la fonctionnalité d'évolution d'un indicateur (F3) 
 
 Pour être honnête, mon investissement n'a pas été régulier. Au début, j'ai surtout travaillé sur les documents, alors que le code est arrivé plus tard, à partir de la semaine 6. Ensuite, certaines semaines n'ont pas laissé de trace dans nos suivis (charge de travail d'autres matières, examens, etc). Avec le recul, j'aurais dû commencer la partie code plus tôt, car F3 s'est retrouvée codée en plusieurs étapes espacées dans le temps, et le dossier s'est écrit en fin de projet.
 
-Je n'ai jamis été très  à l'aise en programmation, et la fiche de tâches de Laurent m'a été très utile : elle expliquait les étapes, les fichiers à écrire et les pièges à éviter. Je reconnais que sans elle, j'aurais eu du mal à avancer seule. Ce qui m'a vraiment fait comprendre l'application, c'est de suivre le trajet d'une requête, de l'URL jusqu'à la base de données, puis le retour sous forme de graphique. Les outils d'IA m'ont beaucoup aidée pour comprendre les erreurs et les pièges de pandas, comme les valeurs vides ou la division par zéro, mais j'ai dû vérifier moi-même le résultat avec les tests et avec des exemples.
+Je n'ai jamis été très à l'aise en programmation, et la fiche de tâches de Laurent m'a été très utile : elle expliquait les étapes, les fichiers à écrire et les pièges à éviter. Je reconnais que sans elle, j'aurais eu du mal à avancer seule. Ce qui m'a vraiment fait comprendre l'application, c'est de suivre le trajet d'une requête, de l'URL jusqu'à la base de données, puis le retour sous forme de graphique. Les outils d'IA m'ont beaucoup aidée pour comprendre les erreurs et les pièges de pandas, comme les valeurs vides ou la division par zéro, mais j'ai dû vérifier moi-même le résultat avec les tests et avec des exemples.
 
 Les principales difficultés ont été techniques. Git m'a posé beaucoup de problèmes : push refusé, conflits sur un même fichier, fichiers modifiés que je ne reconnaissais pas. J'ai aussi eu du mal avec l'organisation des tests et les imports du backend. Certains de mes commits ont un message trop vague, et Clarence a dû relire et corriger une partie de mon code (par exemple la structure du schéma), ce qui est normal pour la qualité du projet, mais montre que j'ai encore des progrès à faire en rigueur.
 
 Je retiens que la qualité d'un projet vient autant de l'organisation et des tests que du code lui-même : détail à première vue anodin, comme l'ordre entre le calcul des variations et la coupe aux N dernières périodes, change complètement le résultat affiché. Je retiens aussi que F3 reste imparfaite : un trimestre manquant n'est pas signalé, et la variation est alors calculée entre deux observations qui ne sont pas consécutives.
 
 Si c'était à refaire, je répartirais mon temps de façon plus régulière, je commencerais le code avant les documents, et je commiterais plus souvent avec des messages clairs. Cette expérience m'a appris à travailler en équipe sur un projet de cette taille, et je m'en servirai pour les futurs projets.
+
 ```{=latex}
 \sectiontitre{Témoignage de Laurent}
 ```
+
+Dès le début, je me suis fortement investi dans ce projet. Les TP m'avaient fait découvrir l'architecture complète d'une application en couches (objets métier, DAO, services, API), que je ne connaissais que de loin. Le projet m'a permis de faire le lien entre ces différentes séances et de les assembler dans une application qui fonctionne de bout en bout.
+
+Le groupe était motivé. Nos niveaux en programmation étaient très différents, mais cela n'a pas freiné notre progression. Assez tôt, j'ai proposé une structure du code et une répartition du travail en cinq rôles, selon les envies et les compétences de chacun. Pour chaque rôle, j'ai rédigé avec l'aide de l'IA une fiche de tâches détaillée : objectifs, fichiers à écrire, étapes et tutoriels. Chacun pouvait ainsi avancer de façon autonome, sans attendre les autres.
+
+Ma partie technique portait sur les comptes utilisateurs et la sécurité (F6) : la création de compte et la connexion, le hachage des mots de passe avec bcrypt, le jeton de session, deux rôles (utilisateur et administrateur) dont les droits sont vérifiés par l'API, et un journal des actions importantes. J'ai aussi construit le squelette de l'interface Streamlit : le client de l'API, le menu qui dépend du rôle et les pages d'administration. J'ai ensuite participé à la finalisation, avec la protection des routes d'analyse, le README et la documentation du code. J'ai beaucoup appris sur la gestion des utilisateurs. Je n'imaginais pas le nombre de cas à prévoir : un jeton qui n'est plus valide, un administrateur qui veut supprimer son propre compte, ou un message d'erreur qui ne doit pas révéler si un pseudo existe.
+
+L'équipe enseignante a recommandé d'utiliser l'IA, et c'était selon moi un excellent choix. Nous avons pu consacrer notre temps à l'organisation du travail, aux choix de modélisation et aux choix techniques, plutôt qu'à l'écriture de code répétitif ou à la recherche d'erreurs. Cela m'a aussi appris à garder un regard critique : il fallait toujours relire le code proposé, le tester et l'adapter à notre architecture. J'apprécie d'autant plus ce choix qu'il correspond, je pense, aux attentes actuelles des entreprises. Elles cherchent moins des personnes qui écrivent chaque ligne de code que des data scientists capables d'organiser un projet et de travailler efficacement avec l'IA.
+
+La principale difficulté a été de garder un code cohérent entre cinq personnes qui avancent en parallèle. Il fallait s'accorder sur les noms des fonctions et sur les formats de données échangés entre le backend et l'interface, et gérer les conflits Git. Nous avons passé une partie de la dernière semaine à harmoniser le code (tests, documentation, qualité). Ce travail aurait été plus léger si nous avions fixé ces règles communes dès le départ.
+
+Ce que je retiens surtout, ce sont les compétences d'organisation d'un projet. J'ai toujours à cœur de garder une vision globale sur mes projets, et j'ai pu le faire ici en proposant à l'équipe une structure, une répartition des tâches et une organisation générale. Si c'était à refaire, je fixerais dès le début des règles communes pour le code et les tests, afin d'avoir moins de reprises en fin de projet.
 
 ```{=latex}
 \sectiontitre{Témoignage de William}
