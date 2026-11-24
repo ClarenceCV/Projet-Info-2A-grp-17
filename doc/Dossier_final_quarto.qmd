@@ -15,6 +15,7 @@ format:
       - DIV=11
       - numbers=noendperiod
     include-in-header: header_dossier_final.tex
+    include-before-body: page_de garde.tex
     keep-tex: false
     highlight-style: pygments
     listings: false
@@ -661,6 +662,8 @@ Au-delà de ce décalage de volume, l'analyse des variations permet d'apprécier
 L'utilisateur dispose ainsi, en un seul document PDF, des ordres de grandeur absolus et des amplitudes de variation pour appuyer son diagnostic économique..
 
 Comme pour la comparaison entre pays (F4), cet indicateur est un nombre de personnes et non un taux : l'écart entre les deux pays reflète surtout leur taille, et non la situation de leur marché du travail. Le rapport est surtout utile pour garder une trace des paramètres et des chiffres consultés, avec la source de chaque donnée.
+
+\newpage
 
 ```{=latex}
 \mychapter{Retour sur le projet}
