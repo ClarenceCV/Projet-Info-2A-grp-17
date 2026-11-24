@@ -169,13 +169,38 @@ C’est une application sécurisée (avec gestion des utilisateurs et administra
 
 L'objectif final est de transformer des données statistiques brutes et complexes en un outil simple qui permet de comprendre, comment évolue l'emploi dans le monde et comment les pays se comparent entre eux.
 
+**Fonctionnalités retenues**
+
+| Code | Fonctionnalité | Type |
+|------|----------------|------|
+| F1 | Téléchargement des indicateurs depuis l'API ILOSTAT | Obligatoire |
+| F2 | Nettoyage et stockage des données dans PostgreSQL | Obligatoire |
+| F3 | Évolution d'un indicateur sur les derniers trimestres | Obligatoire |
+| F4 | Comparaison d'un indicateur entre pays (valeurs les plus hautes et les plus basses) | Obligatoire |
+| F5 | Comparaison de plusieurs indicateurs sur un même graphique | Obligatoire |
+| F6 | Comptes utilisateurs, rôles et administration | Obligatoire |
+| FO2 | Carte du monde interactive | Optionnelle |
+| FO3 | Rapport d'analyse au format PDF | Optionnelle |
+
+: Fonctionnalités retenues
+
+**Hypothèses de fonctionnement**
+
+L'application repose sur quelques hypothèses :
+
+- les données sont importées à la demande (par un administrateur ou en ligne de commande), et ne sont pas mises à jour en temps réel ;
+- elles portent sur trois indicateurs trimestriels, pour environ 80 pays, depuis 2020 ;
+- quand plusieurs sources existent pour un même pays et une même période, les analyses qui suivent une série dans le temps n'en gardent qu'une ;
+- les analyses sont réservées aux personnes connectées ;
+- l'application et sa base de données fonctionnent sur Onyxia, l'environnement de travail de l'ENSAI.
+
 ```{=latex}
 \subsectiontitre{Identification des utilisateurs}
 ```
 
-On distingue deux types de profils dans l’accès aux fonctionnalités de l’application: les utilisateurs et les administrateurs.
+On distingue trois profils dans l’accès aux fonctionnalités de l’application : les visiteurs, les utilisateurs et les administrateurs.
 
-Les utilisateurs disposent d’un compte classique leur permettant de consulter des analyses, et de visualiser les données. Ils peuvent également générer de manière automatique des rapports d’analyse au format PDF contenant les données qu’ils ont consultées. Les administrateurs sont chargés de la gestion des comptes utilisateurs classiques et peuvent modifier ou supprimer des données. Ils peuvent également faire un suivi des activités. Les utilisateurs de l’application ne peuvent pas obtenir le statut d’administrateur. Ceci permet de mieux contrôler l’accès aux modifications des données.
+Les visiteurs ne sont pas connectés : ils peuvent seulement créer un compte ou se connecter. Les utilisateurs disposent d’un compte classique leur permettant de consulter des analyses, et de visualiser les données. Ils peuvent également générer de manière automatique des rapports d’analyse au format PDF contenant les données qu’ils ont consultées. Les administrateurs sont chargés de la gestion des comptes utilisateurs classiques et peuvent modifier ou supprimer des données. Ils peuvent également faire un suivi des activités. Les utilisateurs de l’application ne peuvent pas obtenir le statut d’administrateur. Ceci permet de mieux contrôler l’accès aux modifications des données.
 
 ```{=latex}
 \sectiontitre{Méthodologie de travail et organisation de l'équipe}
@@ -187,9 +212,9 @@ Les utilisateurs disposent d’un compte classique leur permettant de consulter 
 
 Pour livrer l'application à temps, nous avons suivi un diagramme de Gantt (figure ci-dessous). Il découpe le projet en tâches datées, regroupées en cinq phases, et fait apparaître en rouge les dates de rendu. Il nous a servi à vérifier chaque semaine l'avancement du projet, en lien avec nos comptes rendus hebdomadaires.
 
-- **Analyse et conception** (fin août à mi-septembre) : prise en main du sujet et des outils de travail. Nous avons cadré le projet ensemble puis réalisé des diagrammes (cas d'utilisation, activité, classes, architecture, Gantt). Ces éléments ont été rassemblés dans le dossier d'analyse. Ils nous ont permis de se mettre d'accord sur une vision du projet et des différentes fonctionnalités
-- **Socle technique** (septembre à début octobre) : structure du code, classes métier, script SQL et premiers DAO, puis import des données ILOSTAT (F1, F2). C'est aussi à ce moment que le travail a été réparti en fiches de tâches, une par rôle. Nous avions ainsi un réel socle pour l'application, des premiers jeux de données et une projection du travail de chacun. Tout était prêt pour le développement !
-- **Développement des fonctionnalités** (octobre à mi-novembre) : comptes, sécurité et administration (F6), analyses (F3, F4, F5), puis carte du monde (FO2) et rapport PDF (FO3). C'est la phase la plus longue : chacun codait sa fonctionnalité en parallèle, sur toutes les couches de l'application. Nous nous sommes entraider en permanence afin d'éviter les pertes de temps inutiles et de profiter de l'expertise de chacun
+- **Analyse et conception** (fin août à mi-septembre) : prise en main du sujet et des outils de travail. Nous avons cadré le projet ensemble puis réalisé des diagrammes (cas d'utilisation, activité, classes, architecture, Gantt). Ces éléments ont été rassemblés dans le dossier d'analyse. Ils nous ont permis de nous mettre d'accord sur une vision du projet et des différentes fonctionnalités.
+- **Socle technique** (septembre à début octobre) : structure du code, classes métier, script SQL et premiers DAO, puis import des données ILOSTAT (F1, F2). C'est aussi à ce moment que le travail a été réparti en fiches de tâches, une par rôle. Nous avions ainsi un réel socle pour l'application, des premiers jeux de données et une projection du travail de chacun. Tout était alors prêt pour la phase de développement.
+- **Développement des fonctionnalités** (octobre à mi-novembre) : comptes, sécurité et administration (F6), analyses (F3, F4, F5), puis carte du monde (FO2) et rapport PDF (FO3). C'est la phase la plus longue : chacun codait sa fonctionnalité en parallèle, sur toutes les couches de l'application. Nous nous sommes entraidés en permanence afin d'éviter les pertes de temps inutiles et de profiter de l'expertise de chacun.
 - **Finalisation du code** (novembre) : tests, corrections suite aux remarques du tuteur, harmonisation du code (pylint, docstrings) et README, jusqu'au rendu du code le 25 novembre.
 - **Dossier final et soutenance** : la rédaction du dossier a commencé début novembre, une fois les fonctionnalités stabilisées, et s'est terminée avec le rendu du 25 novembre. La préparation du diaporama occupera ensuite les deux dernières semaines, avant la soutenance du 9 décembre.
 
@@ -220,7 +245,7 @@ Le projet a été réalisé par cinq membres. Pour avancer en parallèle sans se
 
 \textbf{•Le socle commun}
 
--Clarence Chemla-Vidaud (rôle A : données et administration). Elle est responsable de tout ce qui touche aux données : import depuis ILOSTAT (fetcher), base de données, gestion des pays et des modalités, actions d’administration sur les données (F1, F2 et la partie données de F6). Elle assure aussi la qualité du projet : infrastructure de tests, journalisation (logs), intégration continue et README. En fin de projet, elle a relu l’ensemble du backend, harmonisé le code avec pylint et simplifié plusieurs fichiers (schémas, controllers).\newline -Laurent Khaouli (rôle B : utilisateurs, sécurité et squelette frontend). Il gère les comptes (création, connexion, rôles utilisateur et administrateur, historique des actions, partie comptes de F6) et construit le squelette de l’application Streamlit dans lequel chacun a ajouté sa page. Il a aussi conçu l’organisation du travail en fiches et testé le fonctionnement des endpoints.
+-Clarence Chemla-Vidaud (rôle A : données et administration). Elle est responsable de tout ce qui touche aux données : import depuis ILOSTAT (fetcher), base de données, gestion des pays et des modalités, actions d’administration sur les données (F1, F2 et la partie données de F6). Elle assure aussi la qualité du projet : infrastructure de tests, journalisation (logs) et README. En fin de projet, elle a relu l’ensemble du backend, harmonisé le code avec pylint et simplifié plusieurs fichiers (schémas, controllers).\newline -Laurent Khaouli (rôle B : utilisateurs, sécurité et squelette frontend). Il gère les comptes (création, connexion, rôles utilisateur et administrateur, historique des actions, partie comptes de F6) et construit le squelette de l’application Streamlit dans lequel chacun a ajouté sa page. Il a aussi conçu l’organisation du travail en fiches et testé le fonctionnement des endpoints.
 
 \textbf{•Les fonctionnalités}
 
@@ -276,7 +301,13 @@ Le tableau suivant présente les technologies utilisées dans chaque couche de l
 \subsectiontitre{Diagramme de classes}
 ```
 
-Voila ci après le diagramme de classe corrigé:
+Le diagramme de classes a presque entièrement changé depuis le rapport intermédiaire. L'ancien modèle comportait quatre classes : `Observation`, reliée par agrégation à `Pays`, `Indicateur` et `Profession`. En codant l'application, nous l'avons revu sur trois points.
+
+- **Les observations ne sont plus des objets.** Une analyse porte sur des milliers de lignes : créer un objet par ligne aurait été lent, alors que pandas calcule directement sur un tableau (variations, classements, base 100). Les DAO renvoient donc les observations sous forme de DataFrame, et la classe `Observation` a disparu.
+- **La classe `Profession` a été supprimée.** Selon l'indicateur, la ventilation est une profession ou une tranche d'âge. Plutôt qu'une classe par type de ventilation, une seule colonne générique, `classif1`, contient la valeur, et l'attribut `nom_classif1` d'`Indicateur` indique ce qu'elle représente. Ajouter un indicateur avec une autre ventilation ne demande donc aucune nouvelle classe.
+- **Les classes restantes ont été adaptées.** `Indicateur` et `Pays` sont identifiés par leur code (code ILOSTAT, code ISO) plutôt que par un identifiant numérique. `Indicateur` gagne son unité et sa fréquence, et vérifie ses attributs à sa création. `Pays` sait retrouver son continent et ses groupes de pays.
+
+Trois classes sont apparues avec les fonctionnalités : `Selection`, qui décrit une courbe de la comparaison multi-indicateurs (F5), `Utilisateur`, pour les comptes et les rôles (F6), et `ActionJournal`, pour le journal des actions. `Utilisateur` ne contient ni le mot de passe ni le jeton de session : ils restent en base, ce qui évite de les faire circuler dans le reste du code.
 
 ![Diagramme de classes des business objects](images/diagramme_classes.png){width="100%"}
 
@@ -284,11 +315,13 @@ Voila ci après le diagramme de classe corrigé:
 \sectiontitre{Normes de codage utilisées}
 ```
 
-Pour que n’importe quel programme soit facilement compréhensible par tous les développeurs informatiques, il existe des conventions de nommage en python. Ainsi le projet **Laborscope**, développée en python suit les règles suivantes :\newline
+Pour que le code reste lisible par les cinq membres du groupe, et par d'autres développeurs après nous, nous avons suivi des conventions communes, vérifiées automatiquement :
 
-•Indentation : 4 espaces par niveau (jamais de tabulations mélangées avec des espaces)\newline •Longueur de ligne : 79 caractères maximum pour le code (72 pour les commentaires et docstrings). Certaines lignes s'étendent à 88 ou 100.\newline •Lignes vides : 2 lignes entre les fonctions et classes de niveau supérieur, 1 ligne entre les méthodes\newline •Imports : un par ligne, en haut du fichier, regroupés dans l’ordre : bibliothèque standard, bibliothèques tierces, modules locaux\newline •Espaces : autour des opérateurs, pas d’espace avant les parenthèses d’un appel (f(x)), pas d’espace superflu à l’intérieur des crochets.\newline
-
-Pour faciliter la lecture de notre code, et permettre à d’autres développeurs de travailler dessus par la suite, nous l’avons commenté.
+- **Style** : la norme PEP 8 de Python (indentation de 4 espaces, deux lignes vides entre les fonctions et les classes, imports en haut du fichier regroupés dans l'ordre : bibliothèque standard, bibliothèques tierces, modules du projet), avec des lignes de 100 caractères au maximum ;
+- **Vérification automatique** : ruff contrôle le style et l'ordre des imports, et pylint la qualité du code. Leurs règles sont définies une seule fois dans le fichier `pyproject.toml`, pour que le code de chacun soit contrôlé de la même façon ;
+- **Nommage** : des noms en français et explicites (`EvolutionService`, `ObservationDAO`, `lister_classif1`), en CamelCase pour les classes et en snake_case pour les fonctions et les variables ;
+- **Documentation** : chaque module, classe et fonction publique a une docstring au format Google (son rôle, puis les sections Args, Returns et Raises), et les paramètres sont annotés avec leur type ;
+- **Commentaires** : réservés aux passages qui ne s'expliquent pas d'eux-mêmes, par exemple un choix de traitement des données.
 
 \newpage
 
@@ -426,7 +459,7 @@ Le tableau suivant montre les colonnes que nous gardons et leur nouveau nom :
 
 : Colonnes conservées et renommées lors du traitement des données
 
-\![Graphe simplifié du chemin des données](images/chemin_donnees.png)
+![Graphe simplifié du chemin des données](images/chemin_donnees.png){width="100%"}
 
 ```{=latex}
 \subsectiontitre{Stockage, business objects et DAO}
@@ -439,6 +472,8 @@ La structure de la base est définie dans le fichier `data/init_db.sql`, à la r
 Cette organisation correspond à un modèle en étoile : « observation » est la table de faits, au centre, et « indicateur » et « pays » sont des tables de dimensions qui la complètent. Chaque observation fait référence à un indicateur et à un pays grâce à des clés étrangères. Le dossier `data/` contient aussi un second fichier, `pop_db.sql`, qui fournit un petit jeu de données de secours si l'API est injoignable.
 
 ![Schéma de la base de données](images/schema_bdd.png){width="100%"}
+
+Ce schéma montre les deux groupes de tables de la base, qui ne sont pas reliés entre eux. À gauche, le modèle en étoile stocke les données ILOSTAT : chaque observation renvoie à un pays et à un indicateur, et un pays ou un indicateur peut avoir plusieurs observations. À droite, les tables des comptes : le mot de passe n'y est stocké que sous forme de hash, et le jeton de session est vide quand l'utilisateur est déconnecté. Quand un compte est supprimé, ses actions restent dans le journal : `utilisateur_id` passe à NULL, mais le pseudo copié permet de savoir qui les a faites. La dernière colonne de chaque table donne un exemple de valeur.
 
 Une observation est identifiée par une clé primaire composée de six colonnes : l'indicateur, le pays, la source, la période, le sexe et la modalité. Cette clé nous permet de relancer l'import autant de fois que nécessaire sans créer de doublons : grâce à la commande SQL `INSERT ... ON CONFLICT`, une observation déjà présente n'est pas ajoutée une deuxième fois, mais sa valeur est mise à jour.
 
