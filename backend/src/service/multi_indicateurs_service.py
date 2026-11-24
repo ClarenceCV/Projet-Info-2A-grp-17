@@ -1,5 +1,5 @@
 """
-Logique métier de F5 : comparaison de plusieurs indicateurs sur un même même graphique
+Logique métier de F5 : comparaison de plusieurs indicateurs sur un même graphique.
 """
 
 import pandas as pd

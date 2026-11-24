@@ -35,12 +35,12 @@ class EvolutionService:
         Les variations sont calculées AVANT de couper : sinon la première période
         conservée n'aurait pas de variation.
 
-        params:
-            code_indicateur: code de l'indicateur, ex : 'EMP_5WAP_SEX_AGE_RT_Q'
-            pays: codes ISO, ex : ['FRA', 'ESP']
-            classif1: profession ou tranche d'âge, ex : '15+'
-            sexe: 'Total', 'Male' ou 'Female'
-            n_periodes: nombre de périodes conservées par pays
+        Args:
+            code_indicateur (str): code de l'indicateur, ex : 'EMP_5WAP_SEX_AGE_RT_Q'
+            pays (list[str]): codes ISO, ex : ['FRA', 'ESP']
+            classif1 (str): profession ou tranche d'âge, ex : '15+'
+            sexe (str): 'Total', 'Male' ou 'Female'
+            n_periodes (int): nombre de périodes conservées par pays
 
         Returns:
             pd.DataFrame: colonnes code_iso, nom_pays, periode, valeur, unite,

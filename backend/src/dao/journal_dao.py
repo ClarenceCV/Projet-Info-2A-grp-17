@@ -19,6 +19,9 @@ class JournalDAO:
         """
         Ajoute une action au journal (la date est remplie par la base).
 
+        Args:
+            action (ActionJournal): action à ajouter (son id et sa date sont remplis par la base)
+
         Returns:
             bool: True si l'action a été enregistrée
         """
@@ -39,10 +42,11 @@ class JournalDAO:
         Lit les actions du journal, les plus récentes d'abord. 
         Chaque filtre laissé à None est ignoré.
 
-        params:
-            action: mot-clé exact, ex : 'connexion'
-            pseudo: début du pseudo, sans tenir compte des majuscules, ex : 'ad' trouve 'admin'
-            limite: nombre maximum d'actions renvoyées
+        Args:
+            action (str | None): mot-clé exact, ex : 'connexion'
+            pseudo (str | None): début du pseudo, sans tenir compte des majuscules, ex : 'ad' trouve
+                'admin'
+            limite (int): nombre maximum d'actions renvoyées
 
         Returns:
             list[ActionJournal]

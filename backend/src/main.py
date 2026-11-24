@@ -65,7 +65,15 @@ async def redirect_to_docs():
 
 @app.get("/hello/{name}", tags=["Test"])
 async def hello_name(name: str):
-    """Renvoie un message de bienvenue (pour tester que le webservice fonctionne)"""
+    """
+    Renvoie un message de bienvenue (pour tester que le webservice fonctionne)
+
+    Args:
+        name (str): nom à saluer (dans l'adresse : /hello/{name})
+
+    Returns:
+        dict: ex {'message': 'Hello Marie'}
+    """
     return {"message": f"Hello {name}"}
 
 

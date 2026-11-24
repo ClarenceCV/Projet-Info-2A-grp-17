@@ -25,6 +25,9 @@ class IndicateurService:
         """
         Cherche un indicateur par son code.
 
+        Args:
+            code (str): code de l'indicateur, ex : 'EMP_5WAP_SEX_AGE_RT_Q'
+
         Returns:
             Indicateur | None: l'indicateur, ou None s'il n'existe pas
         """

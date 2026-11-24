@@ -29,7 +29,12 @@ if "message_donnees" in st.session_state:
 
 
 def afficher_erreur(reponse_api: dict):
-    """Affiche l'erreur d'une réponse de api_client (backend injoignable ou réponse en erreur)."""
+    """
+    Affiche l'erreur d'une réponse de api_client (backend injoignable ou réponse en erreur).
+
+    Args:
+        reponse_api (dict): réponse de api_client ({'status_code', 'data'})
+    """
     st.error(message_erreur(reponse_api))
 
 
@@ -97,7 +102,12 @@ description = f"{ligne['nom_pays']}, {ligne['periode']}, {ligne['sexe']}, {ligne
 
 
 def apres_action(message: str):
-    """Garde le message pour l'afficher après le rerun, et décoche la ligne (nouveau tableau)."""
+    """
+    Garde le message pour l'afficher après le rerun, et décoche la ligne (nouveau tableau).
+
+    Args:
+        message (str): message de succès à afficher après le rechargement de la page
+    """
     st.session_state["message_donnees"] = message
     st.session_state["version_tableau"] = version + 1
     st.rerun()

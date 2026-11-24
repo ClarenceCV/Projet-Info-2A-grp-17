@@ -25,10 +25,11 @@ class UtilisateurDAO:
         """
         Enregistre un nouvel utilisateur.
 
-        params:
-            pseudo: identifiant de connexion
-            mdp_hash: hash bcrypt du mot de passe (calculé par le service, jamais le mot de passe)
-            role: 'utilisateur' ou 'admin'
+        Args:
+            pseudo (str): identifiant de connexion
+            mdp_hash (str): hash bcrypt du mot de passe (calculé par le service, jamais le mot de
+                passe)
+            role (str): 'utilisateur' ou 'admin'
 
         Returns:
             Utilisateur | None: l'utilisateur créé (avec son id), ou None si le pseudo est déjà pris
@@ -56,6 +57,11 @@ class UtilisateurDAO:
     @log
     def trouver_par_pseudo(self, pseudo: str) -> Utilisateur | None:
         """
+        Cherche un utilisateur par son pseudo.
+
+        Args:
+            pseudo (str): pseudo exact, ex : 'jdupont'
+
         Returns:
             Utilisateur | None: l'utilisateur, ou None s'il n'existe pas
         """
@@ -65,6 +71,9 @@ class UtilisateurDAO:
     def trouver_par_token(self, token: str | None) -> Utilisateur | None:
         """
         Retrouve l'utilisateur connecté à partir de son token (utilisé à chaque requête protégée).
+
+        Args:
+            token (str | None): token de session (None si la requête n'en contient pas)
 
         Returns:
             Utilisateur | None: l'utilisateur, ou None si le token est absent ou inconnu
@@ -76,6 +85,9 @@ class UtilisateurDAO:
     def lire_mdp_hash(self, pseudo: str) -> str | None:
         """
         Lit le hash du mot de passe d'un utilisateur (seulement pour vérifier une connexion).
+
+        Args:
+            pseudo (str): pseudo de l'utilisateur qui se connecte
 
         Returns:
             str | None: le hash bcrypt, ou None si le pseudo n'existe pas
@@ -111,6 +123,10 @@ class UtilisateurDAO:
         Enregistre le token de session d'un utilisateur (connexion),
         ou l'efface avec token=None (déconnexion).
 
+        Args:
+            id_utilisateur (int): id de l'utilisateur
+            token (str | None): nouveau token, ou None pour l'effacer
+
         Returns:
             bool: True si l'utilisateur existe (une ligne modifiée)
         """
@@ -129,6 +145,9 @@ class UtilisateurDAO:
     def supprimer(self, id_utilisateur: int) -> bool:
         """
         Supprime un utilisateur. Ses lignes de journal sont gardées (utilisateur_id passe à NULL).
+
+        Args:
+            id_utilisateur (int): id du compte à supprimer
 
         Returns:
             bool: True si un utilisateur a été supprimé, False si l'id n'existe pas

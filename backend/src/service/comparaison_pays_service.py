@@ -36,13 +36,15 @@ class ComparaisonPaysService:
         Si une période est choisie (ex : '2025Q2'), on prend pour chaque pays sa dernière
         période AVANT ou ÉGALE à celle choisie (jamais une donnée plus récente).
 
-        params:
-            code_indicateur: code de l'indicateur, ex : 'EMP_5WAP_SEX_AGE_RT_Q'
-            classif1: tranche d'âge ou profession, ex : '15+'
-            pays: codes ISO, ex : ['FRA', 'DEU'] (None -> tous les pays de la base)
-            sexe: 'Total', 'Male' ou 'Female'
-            top: nombre de pays dans plus_hauts et plus_bas
-            periode: période choisie, ex : '2025Q2' (None -> dernière période de chaque pays)
+        Args:
+            code_indicateur (str): code de l'indicateur, ex : 'EMP_5WAP_SEX_AGE_RT_Q'
+            classif1 (str): tranche d'âge ou profession, ex : '15+'
+            pays (list[str] | None): codes ISO, ex : ['FRA', 'DEU'] (None -> tous les pays de la
+                base)
+            sexe (str): 'Total', 'Male' ou 'Female'
+            top (int): nombre de pays dans plus_hauts et plus_bas
+            periode (str | None): période choisie, ex : '2025Q2' (None -> dernière période de chaque
+                pays)
 
         Returns:
             dict: {"periode_reference": str | None (période la plus récente du classement),

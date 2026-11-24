@@ -61,6 +61,9 @@ def choisir_indicateur(cle: str = "") -> str | None:
     """
     Menu de choix d'un indicateur (affiche le libellé, renvoie le code).
 
+    Args:
+        cle (str): suffixe de la clé Streamlit (si le menu apparaît deux fois sur une page)
+
     Returns:
         str | None: code de l'indicateur, ex 'EMP_5WAP_SEX_AGE_RT_Q' (None si la liste est vide)
     """
@@ -81,12 +84,15 @@ def choisir_pays(multiple: bool = True, defaut: list[str] | None = None, cle: st
     """
     Menu de choix d'un ou plusieurs pays (affiche le nom, renvoie le code ISO).
 
-    params:
-        multiple: True → plusieurs pays (liste), False → un seul pays
-        defaut: codes ISO présélectionnés, ex ['FRA'] (par défaut : la France si elle existe)
+    Args:
+        multiple (bool): True → plusieurs pays (liste), False → un seul pays
+        defaut (list[str] | None): codes ISO présélectionnés, ex ['FRA']
+            (par défaut : la France si elle existe)
+        cle (str): suffixe de la clé Streamlit (si le menu apparaît deux fois sur une page)
 
     Returns:
-        list[str] si multiple (ex ['FRA', 'ESP']), sinon str (ex 'FRA') ; None si la liste est vide
+        list[str] | str | None: liste de codes si multiple (ex ['FRA', 'ESP']), sinon un code
+            (ex 'FRA') ; None si la liste des pays est vide
     """
     pays = _lire_ou_afficher_erreur("/pays")
     if not pays:
@@ -112,6 +118,9 @@ def choisir_sexe(cle: str = "") -> str:
     """
     Choix du sexe (affiché en français, renvoie la valeur de la base).
 
+    Args:
+        cle (str): suffixe de la clé Streamlit (si le menu apparaît deux fois sur une page)
+
     Returns:
         str: 'Total', 'Male' ou 'Female'
     """
@@ -126,6 +135,10 @@ def choisir_classif1(code_indicateur: str | None, cle: str = "") -> str | None:
     """
     Choix d'une modalité de classif1 pour un indicateur : une profession ou une tranche d'âge.
     Le « total » de l'indicateur ('Total' ou '15+') est présélectionné.
+
+    Args:
+        code_indicateur (str | None): indicateur choisi (None : aucun menu n'est affiché)
+        cle (str): suffixe de la clé Streamlit (si le menu apparaît deux fois sur une page)
 
     Returns:
         str | None: ex '15+' ou '22 - Health professionals' (None si pas d'indicateur choisi)
@@ -150,6 +163,9 @@ def choisir_filtres(cle: str = "") -> dict:
     """
     Les 4 menus (indicateur, pays, modalité, sexe) côte à côte sur deux colonnes.
     Si un choix manque, affiche un message et arrête la page (st.stop()).
+
+    Args:
+        cle (str): suffixe de la clé Streamlit (si le menu apparaît deux fois sur une page)
 
     Returns:
         dict: les filtres, prêts à envoyer à l'API, ex :

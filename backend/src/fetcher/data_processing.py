@@ -64,8 +64,8 @@ class DataProcessing:
         Télécharge un indicateur pour les pays suivis (c.f. config_import.py),
         un appel à l'API par pays.
 
-        params:
-            indicator: code de l'indicateur, ex : 'EMP_5EMP_SEX_OC2_NB_Q'
+        Args:
+            indicator (str): code de l'indicateur, ex : 'EMP_5EMP_SEX_OC2_NB_Q'
 
         Returns:
             pd.DataFrame: données brutes de tous les pays réunies (colonnes de l'API ILOSTAT)
@@ -109,8 +109,8 @@ class DataProcessing:
             3. retrait des préfixes ILOSTAT ('Age (Youth, adults): 15-24' -> '15-24')
             4. suppression des doublons sur la clé (sinon l'insertion en base échoue)
 
-        params:
-            df: DataFrame brut issu de fetch_data()
+        Args:
+            df (pd.DataFrame): DataFrame brut issu de fetch_data()
 
         Returns:
             pd.DataFrame: colonnes code_iso, nom_pays, source, periode,
@@ -159,9 +159,9 @@ class DataProcessing:
             2. les pays (la table observation fait référence à la table pays)
             3. les observations
 
-        params:
-            indicateur: indicateur auquel appartiennent les données
-            df: DataFrame propre issu de parse_data()
+        Args:
+            indicateur (Indicateur): indicateur auquel appartiennent les données
+            df (pd.DataFrame): DataFrame propre issu de parse_data()
 
         Returns:
             int: nombre d'observations enregistrées
@@ -178,8 +178,8 @@ class DataProcessing:
         Peut être relancé autant de fois que voulu : les observations existantes
         sont mises à jour, pas dupliquées.
 
-        params:
-            indicateurs: indicateurs à charger (c.f. config_import.INDICATEURS)
+        Args:
+            indicateurs (list[Indicateur]): indicateurs à charger (c.f. config_import.INDICATEURS)
 
         Returns:
             int: nombre total d'observations enregistrées

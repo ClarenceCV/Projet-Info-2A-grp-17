@@ -19,12 +19,11 @@ import streamlit as st
 # racine)
 dotenv.load_dotenv()
 
-# Adresse du backend. Streamlit et l'API tournent sur la même machine (le service VSCode Onyxia pour
-# nous) :
-# c'est le serveur Streamlit, et non le navigateur, qui appelle l'API, donc localhost fonctionne (on
-# fait pas une vrai app en ligne).
+# Adresse du backend. Streamlit et l'API tournent sur la même machine (pour nous, le service VSCode
+# Onyxia) : c'est le serveur Streamlit, et non le navigateur, qui appelle l'API, donc localhost
+# fonctionne (l'application n'est pas mise en ligne).
 API_URL = os.getenv("BACKEND_URL", "http://localhost:5000")
-# 10 secondes d.v. si ce n'est pas rensigné dans le .env
+# 10 secondes par défaut si ce n'est pas renseigné dans le .env
 DEFAULT_TIMEOUT = int(os.getenv("BACKEND_TIMEOUT") or 10)
 
 
@@ -62,9 +61,9 @@ class APIClient:
         Méthode commune à toutes les requêtes (GET, POST, PUT, DELETE).
         Ne lève jamais d'exception : les erreurs sont renvoyées dans le dictionnaire.
 
-        params:
-            method: 'GET', 'POST', 'PUT' ou 'DELETE'
-            path: chemin de l'endpoint, ex : '/indicateurs'
+        Args:
+            method (str): 'GET', 'POST', 'PUT' ou 'DELETE'
+            path (str): chemin de l'endpoint, ex : '/indicateurs'
             **kwargs: autres arguments de requests (params, json, timeout...)
 
         Returns:
@@ -100,19 +99,55 @@ class APIClient:
 
     def get(self, path: str, params: dict | None = None, **kwargs) -> dict:
         """Envoie une requête GET (lecture). params : paramètres d'URL, ex {'pays': ['FRA',
+        Envoie une requête GET (lecture).
+
+        Args:
+            path (str): chemin de l'endpoint, ex : '/observations'
+            params (dict | None): paramètres d'URL, ex : {'pays': ['FRA', 'ESP']}
+
+        Returns:
+            dict: {'status_code': ..., 'data': ...} (c.f. _request)
+
         'ESP']}"""
         return self._request("GET", path, params=params, **kwargs)
 
     def post(self, path: str, json=None, **kwargs) -> dict:
-        """Envoie une requête POST (création / action). json : corps de la requête"""
+        """
+        Envoie une requête POST (création ou action).
+
+        Args:
+            path (str): chemin de l'endpoint, ex : '/login'
+            json (dict | None): corps de la requête
+
+        Returns:
+            dict: {'status_code': ..., 'data': ...} (c.f. _request)
+        """
         return self._request("POST", path, json=json, **kwargs)
 
     def put(self, path: str, json=None, **kwargs) -> dict:
-        """Envoie une requête PUT (modification). json : corps de la requête"""
+        """
+        Envoie une requête PUT (modification).
+
+        Args:
+            path (str): chemin de l'endpoint
+            json (dict | None): corps de la requête
+
+        Returns:
+            dict: {'status_code': ..., 'data': ...} (c.f. _request)
+        """
         return self._request("PUT", path, json=json, **kwargs)
 
     def delete(self, path: str, json=None, **kwargs) -> dict:
-        """Envoie une requête DELETE (suppression)."""
+        """
+        Envoie une requête DELETE (suppression).
+
+        Args:
+            path (str): chemin de l'endpoint
+            json (dict | None): corps de la requête
+
+        Returns:
+            dict: {'status_code': ..., 'data': ...} (c.f. _request)
+        """
         return self._request("DELETE", path, json=json, **kwargs)
 
     def telecharger_rapport(
@@ -125,6 +160,13 @@ class APIClient:
     ) -> dict:
         """
         Appelle l'endpoint GET /rapport pour récupérer le contenu binaire du PDF (FO3).
+
+        Args:
+            code_indicateur (str): code de l'indicateur
+            pays (list[str]): codes ISO des pays du rapport
+            classif1 (str): profession ou tranche d'âge, ex : '15+'
+            sexe (str): 'Total', 'Male' ou 'Female'
+            n_periodes (int): nombre de dernières périodes analysées
 
         Returns:
             dict: {'status_code': 200, 'data': b'%PDF...'} ou dictionnaire d'erreur

@@ -28,6 +28,15 @@ class ObservationService:
         Liste les observations d'un indicateur selon les filtres donnés
         (c.f. ObservationDAO.lire pour le détail des filtres).
 
+        Args:
+            code_indicateur (str): code de l'indicateur (obligatoire)
+            pays (list[str] | None): codes ISO, ex : ['FRA', 'DEU'] (None = tous les pays)
+            periode_min (str | None): première période incluse, ex : '2024Q1'
+            periode_max (str | None): dernière période incluse, ex : '2024Q4'
+            sexe (str | None): 'Total', 'Male' ou 'Female'
+            classif1 (str | None): profession ou tranche d'âge, ex : '15+'
+            limite (int | None): nombre maximum de lignes renvoyées (None = toutes)
+
         Returns:
             pd.DataFrame: une ligne par observation
         """
@@ -37,12 +46,12 @@ class ObservationService:
 
     def lister_classif1(self, code_indicateur: str) -> pd.DataFrame:
         """
-        Liste toutes les modalités disctinctes d'un indictauyr contenues dans
-        les observations de la base (tranche d'age / profession).
+        Liste toutes les modalités distinctes d'un indicateur contenues dans
+        les observations de la base (tranche d'âge / profession).
 
-        Params:
-            code_indicateur: (obligatoire) code de l'indicateur étudier
-        Return:
+        Args:
+            code_indicateur (str): (obligatoire) code de l'indicateur étudier
+        Returns:
             DataFrame avec toutes les modalités.
         """
         return ObservationDAO().lister_classif1(code_indicateur)
@@ -52,8 +61,8 @@ class ObservationService:
         Modifie la valeur d'une observation à partir de sa clé primaire.
 
         Args:
-            cle: tuple contenant les 6 éléments de la clé primaire.
-            nouvelle_valeur: nouvelle valeur de l'observation.
+            cle (CleObservationModel): tuple contenant les 6 éléments de la clé primaire.
+            nouvelle_valeur (float): nouvelle valeur de l'observation.
 
         Returns:
             bool: True si la modification a réussi, False sinon.
@@ -63,6 +72,10 @@ class ObservationService:
     def supprimer(self, cle: CleObservationModel) -> bool:
         """
         Supprime une observation à partir de sa clé primaire.
+
+        Args:
+            cle (CleObservationModel): clé primaire de l'observation (indicateur, pays, source,
+                période, sexe, classif1)
 
         Returns:
             bool: True si la suppression a réussi, False sinon.

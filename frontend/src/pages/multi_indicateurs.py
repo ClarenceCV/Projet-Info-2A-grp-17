@@ -15,7 +15,7 @@ exiger_connexion()
 
 st.title("Comparaison Multi-Indicateurs (F5)")
 st.markdown(
-    "Configurez jusqu'a 4 series simultanement. Cochez ou decochez chaque serie "
+    "Configurez jusqu'à 4 séries simultanément. Cochez ou décochez chaque série "
     "pour l'ajouter ou la retirer du graphique."
 )
 
@@ -45,8 +45,8 @@ def charger_metadonnees() -> tuple[dict[str, str], list[str]]:
     if not dict_ind:
         dict_ind = {
             "EMP_5WAP_SEX_AGE_RT_Q": "Taux d'emploi (15+)",
-            "UNE_5UAP_SEX_AGE_RT_Q": "Taux de chomage (15+)",
-            "EAP_5EAP_SEX_AGE_RT_Q": "Taux d'activite (15+)",
+            "UNE_5UAP_SEX_AGE_RT_Q": "Taux de chômage (15+)",
+            "EAP_5EAP_SEX_AGE_RT_Q": "Taux d'activité (15+)",
             "EMP_5EMP_SEX_OC2_NB_Q": "Emploi total par profession",
         }
 
@@ -60,7 +60,15 @@ def charger_metadonnees() -> tuple[dict[str, str], list[str]]:
 
 @st.cache_data(ttl=3600)
 def charger_classif1(code_indicateur: str) -> list[str]:
-    """Modalités de classif1 disponibles pour un indicateur donné."""
+    """
+    Modalités de classif1 disponibles pour un indicateur donné.
+
+    Args:
+        code_indicateur (str): code de l'indicateur, ex : 'EMP_5WAP_SEX_AGE_RT_Q'
+
+    Returns:
+        list[str]: les modalités (liste vide si l'API est en erreur)
+    """
     res = api_client.get(f"/indicateurs/{code_indicateur}/classif1")
     if res.get("status_code") != 200 or not isinstance(res.get("data"), dict):
         return []
@@ -81,11 +89,11 @@ codes_dispo = list(dict_indicateurs.keys())
 # 2. Panneau central : 4 series visibles et configurables directement
 # ------------------------------------------------------------------------------
 with st.container(border=True):
-    st.subheader("Configuration des 4 Series")
+    st.subheader("Configuration des 4 séries")
 
     # Option globale en haut du panneau central
     base_100 = st.checkbox(
-        "Normaliser les series en Base 100 (recommande pour comparer des unites differentes)",
+        "Normaliser les séries en base 100 (recommandé pour comparer des unités différentes)",
         value=True,
         key="f5_base_100",
     )
@@ -98,10 +106,10 @@ with st.container(border=True):
         idx_defaut_pays = liste_pays.index("FRA") if "FRA" in liste_pays else 0
 
         with cols[i]:
-            st.markdown(f"**Serie {i + 1}**")
+            st.markdown(f"**Série {i + 1}**")
             # L'utilisateur coche ou decoche explicitement la serie
             active = st.checkbox(
-                f"Afficher la serie {i + 1}",
+                f"Afficher la série {i + 1}",
                 value=True,
                 key=f"f5_active_{i}",
             )
@@ -162,7 +170,7 @@ with st.container(border=True):
 # 3. Affichage immediat du graphique comparatif
 # ------------------------------------------------------------------------------
 if not selections_actives:
-    st.info("Cochez au moins une serie ci-dessus pour afficher le graphique.")
+    st.info("Cochez au moins une série ci-dessus pour afficher le graphique.")
 else:
     with st.spinner("Actualisation du graphique..."):
         reponse = api_client.post(
@@ -190,10 +198,10 @@ else:
                 y=colonne_y,
                 color="serie",
                 markers=True,
-                title="Evolution Comparative Multi-Indicateurs",
+                title="Évolution comparée des indicateurs",
                 labels={
-                    "periode": "Periode",
-                    colonne_y: "Indice (Base 100)" if base_100 else "Valeur brute",
+                    "periode": "Période",
+                    colonne_y: "Indice (base 100)" if base_100 else "Valeur brute",
                     "serie": "Serie",
                 },
             )
@@ -203,9 +211,9 @@ else:
             )
             st.plotly_chart(fig, width="stretch")
 
-            with st.expander("Afficher le tableau des donnees"):
+            with st.expander("Afficher le tableau des données"):
                 st.dataframe(df, width="stretch")
         else:
-            st.warning("Aucune donnee disponible pour les filtres selectionnes.")
+            st.warning("Aucune donnée disponible pour les filtres sélectionnés.")
     else:
-        st.error(f"Erreur lors de la recuperation des donnees : {reponse.get('data')}")
+        st.error(f"Erreur lors de la récupération des données : {reponse.get('data')}")

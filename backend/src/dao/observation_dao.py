@@ -30,9 +30,9 @@ class ObservationDAO:
         sont mis à jour : relancer l'import ne crée pas de doublons.
         Les pays des observations doivent déjà être dans la table pays.
 
-        params:
-            indicateur_id: id de l'indicateur dans la base (c.f. IndicateurDAO.enregistrer)
-            df: DataFrame propre issu de DataProcessing.parse_data
+        Args:
+            indicateur_id (int): id de l'indicateur dans la base (c.f. IndicateurDAO.enregistrer)
+            df (pd.DataFrame): DataFrame propre issu de DataProcessing.parse_data
 
         Returns:
             int: nombre d'observations insérées ou mises à jour
@@ -77,13 +77,13 @@ class ObservationDAO:
             lire("EMP_5WAP_SEX_AGE_RT_Q", ["FRA"], periode_min="2024Q1",
                  sexe="Female", classif1="15-24")
 
-        params:
-            code_indicateur: code de l'indicateur (obligatoire)
-            pays: codes ISO, ex : ['FRA', 'DEU']
-            periode_min, periode_max: bornes incluses, ex : '2024Q1'
-            sexe: 'Total', 'Male' ou 'Female'
-            classif1: ex '15-24' ou '22 - Health professionals'
-            limite: nombre maximum de lignes renvoyées
+        Args:
+            code_indicateur (str): code de l'indicateur (obligatoire)
+            pays (list[str] | None): codes ISO, ex : ['FRA', 'DEU']
+            periode_min, periode_max (str | None): bornes incluses, ex : '2024Q1'
+            sexe (str | None): 'Total', 'Male' ou 'Female'
+            classif1 (str | None): ex '15-24' ou '22 - Health professionals'
+            limite (int | None): nombre maximum de lignes renvoyées
 
         Returns:
             pd.DataFrame: une ligne par observation (colonnes COLONNES_LECTURE),
@@ -140,14 +140,14 @@ class ObservationDAO:
 
     def lister_classif1(self, code_indicateur: str) -> list[str]:
         """
-        Liste les données spécifiques d'un indicateur (tranche d'âge ou
-        la profession par ex)
+        Liste les modalités de classif1 d'un indicateur (tranches d'âge ou professions).
 
-        Params:
-            code_indicateur: le code de l'indicateur (obligatoire)
+        Args:
+            code_indicateur (str): le code de l'indicateur (obligatoire)
+
         Returns:
-            Liste des modalités propres à l'indicateur (comme la tranche d'âge
-            ou les professions)
+            list[str]: les modalités présentes dans la base, triées
+                (ex : ['15+', '15-24', '25+'])
         """
         with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:
@@ -171,6 +171,11 @@ class ObservationDAO:
     ) -> bool:
         """
         Modifie la valeur d'une observation identifiée par sa clé primaire.
+
+        Args:
+            cle (CleObservationModel): clé primaire de l'observation (indicateur, pays, source,
+                période, sexe, classif1)
+            nouvelle_valeur (float): valeur qui remplace l'ancienne
 
         Returns:
             bool: True si une observation a été modifiée, False sinon.
@@ -201,6 +206,10 @@ class ObservationDAO:
     def supprimer(self, cle: CleObservationModel) -> bool:
         """
         Supprime une observation identifiée par sa clé primaire.
+
+        Args:
+            cle (CleObservationModel): clé primaire de l'observation (indicateur, pays, source,
+                période, sexe, classif1)
 
         Returns:
             bool: True si une observation a été supprimée, False sinon.

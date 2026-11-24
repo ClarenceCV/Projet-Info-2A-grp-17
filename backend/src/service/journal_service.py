@@ -29,11 +29,13 @@ class JournalService:
         Ne fait JAMAIS échouer l'action principale : si l'écriture dans le journal échoue,
         un avertissement est affiché et l'application continue.
 
-        params:
-            utilisateur: qui fait l'action (None si inconnu, ex : échec de connexion)
-            action: mot-clé, ex : 'connexion' (c.f. ACTIONS)
-            detail: précision libre
-            pseudo: pseudo à noter quand il n'y a pas d'utilisateur (ex : pseudo essayé)
+        Args:
+            utilisateur (Utilisateur | None): qui fait l'action (None si inconnu, ex : échec de
+                connexion)
+            action (str): mot-clé, ex : 'connexion' (c.f. ACTIONS)
+            detail (str | None): précision libre
+            pseudo (str | None): pseudo à noter quand il n'y a pas d'utilisateur (ex : pseudo
+                essayé)
 
         Returns:
             bool: True si l'action a été enregistrée
@@ -55,6 +57,13 @@ class JournalService:
         self, action: str | None = None, pseudo: str | None = None, limite: int = 200
     ) -> list[ActionJournal]:
         """
+        Liste les actions du journal, avec des filtres facultatifs.
+
+        Args:
+            action (str | None): mot-clé exact de l'action, ex : 'connexion' (None = toutes)
+            pseudo (str | None): début du pseudo, sans tenir compte des majuscules (None = tous)
+            limite (int): nombre maximum d'actions renvoyées
+
         Returns:
             list[ActionJournal]: les actions, les plus récentes d'abord (c.f. JournalDAO.lister)
         """

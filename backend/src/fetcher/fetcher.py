@@ -1,7 +1,6 @@
 """
-Ce fichier permet de créer l'URL ilostat correspondant à un indicateur et
-permet de récuperer les données qui sont sur cette API pour les mettre sous forme
-de dataframe
+Construit l'URL ILOSTAT d'un indicateur et récupère les données de cette API
+sous forme de DataFrame.
 """
 
 
@@ -18,30 +17,36 @@ URL_ILOSTAT = "https://rplumber.ilo.org/data/indicator"
 
 
 @log
-def construire_url(code_indicateur, annee_debut=2020):
-    '''
+def construire_url(code_indicateur: str, annee_debut: int = 2020) -> str:
+    """
     Construit l'url de l'API ILOSTAT pour un indicateur.
     type=both : on récupère à la fois les codes (ex : 'FRA') et les libellés (ex : 'France')
 
-    params:
-        code_indicateur: str
-            code ILOSTAT de l'indicateur (ex : 'EMP_5EMP_SEX_OC2_NB_Q')
-        annee_debut: int
-            première année récupérée
-    '''
+    Args:
+        code_indicateur (str): code ILOSTAT de l'indicateur, ex : 'EMP_5EMP_SEX_OC2_NB_Q'
+        annee_debut (int): première année récupérée
+
+    Returns:
+        str: l'url du fichier CSV de l'indicateur
+    """
     return f"{URL_ILOSTAT}?id={code_indicateur}&timefrom={annee_debut}&type=both&format=.csv"
 
 
 @log
-def load_data(url):
-    '''
-    permet de récupérer des fichiers de données venant de ILOSTAT
-    pour les mettre sous forme de dataframe
+def load_data(url: str) -> pd.DataFrame:
+    """
+    Télécharge un fichier de données ILOSTAT et le met sous forme de DataFrame.
 
-    params:
-        url: chr
-            API venant de ILOSTAT
-    '''
+    Args:
+        url (str): url de l'API ILOSTAT (c.f. construire_url)
+
+    Returns:
+        pd.DataFrame: les données brutes, avec les colonnes de l'API ILOSTAT
+
+    Raises:
+        requests.HTTPError: l'API a répondu par une erreur (code HTTP différent de 200)
+        ValueError: l'API a renvoyé une réponse vide
+    """
     reponse = requests.get(url, timeout=300)
     reponse.raise_for_status()  # erreur si le code HTTP n'est pas 200
     if not reponse.text.strip():
@@ -51,15 +56,17 @@ def load_data(url):
     return data
 
 
-def get_columns_info(data):
-    '''
-    Affiche les colonnes disponibles dans le dataframe ainsi que
+def get_columns_info(data: pd.DataFrame) -> list[str]:
+    """
+    Affiche les colonnes disponibles dans le DataFrame ainsi que
     quelques infos utiles pour décider lesquelles garder.
 
-    params:
-        data: pd.DataFrame
-            dataframe issu de load_data()
-    '''
+    Args:
+        data (pd.DataFrame): DataFrame issu de load_data()
+
+    Returns:
+        list[str]: les noms des colonnes
+    """
     print(f"Nombre de colonnes : {len(data.columns)}")
     print(f"Nombre de lignes : {len(data)}\n")
 
@@ -71,20 +78,25 @@ def get_columns_info(data):
     return list(data.columns)
 
 
-def filter_columns(data, colonnes_a_garder, renommage=None):
-    '''
-    Filtre les colonnes d'un dataframe pour ne garder que celles spécifiées,
+def filter_columns(
+    data: pd.DataFrame, colonnes_a_garder: list[str], renommage: list[str] | None = None
+) -> pd.DataFrame:
+    """
+    Filtre les colonnes d'un DataFrame pour ne garder que celles spécifiées,
     avec possibilité de les renommer.
 
-    params:
-        data: pd.DataFrame
-            dataframe issu de load_data()
-        colonnes_a_garder: list[str]
-            liste des colonnes à conserver
-        renommage: list[str], optionnel
-            liste des nouveaux noms, dans le même ordre que colonnes_a_garder
-            (doit avoir la même longueur)
-    '''
+    Args:
+        data (pd.DataFrame): DataFrame issu de load_data()
+        colonnes_a_garder (list[str]): colonnes à conserver
+        renommage (list[str] | None): nouveaux noms, dans le même ordre que colonnes_a_garder
+            (même longueur obligatoire)
+
+    Returns:
+        pd.DataFrame: copie de data avec les seules colonnes présentes, éventuellement renommées
+
+    Raises:
+        ValueError: renommage n'a pas la même longueur que colonnes_a_garder
+    """
     manquantes = [c for c in colonnes_a_garder if c not in data.columns]
     if manquantes:
         print(f"Attention, colonnes absentes du dataframe : {manquantes}")

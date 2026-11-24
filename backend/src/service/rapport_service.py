@@ -5,10 +5,6 @@ import unicodedata
 from typing import Any
 
 import matplotlib
-
-# "Agg" : dessine directement en image, sans fenêtre. Indispensable dans une API, où le graphique
-# est créé hors du fil principal (sous Windows, le moteur par défaut Tk refuse et plante).
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 from fpdf import FPDF
@@ -16,6 +12,11 @@ from fpdf import FPDF
 from service.comparaison_pays_service import ComparaisonPaysService
 from service.evolution_service import EvolutionService
 from service.indicateur_service import IndicateurService
+
+# "Agg" : dessine directement en image, sans fenêtre. Indispensable dans une API, où le graphique
+# est créé hors du fil principal (sous Windows, le moteur par défaut Tk refuse et plante).
+# Placé après les imports (règle pylint) : matplotlib ne choisit son moteur qu'à la 1re figure.
+matplotlib.use("Agg")
 
 MAPPING_SEXE = {
     "F": "Female",
@@ -77,7 +78,17 @@ class RapportService:
         return code_indicateur, ""
 
     def resume_statistique(self, df_evolution: pd.DataFrame) -> dict[str, dict[str, Any]]:
-        """Calcule min, max, moyenne et évolution globale par pays."""
+        """
+        Calcule min, max, moyenne et évolution globale par pays.
+
+        Args:
+            df_evolution (pd.DataFrame): séries du rapport (colonnes code_iso, nom_pays, periode,
+                valeur)
+
+        Returns:
+            dict[str, dict[str, Any]]: par code ISO, le nom du pays, min, max, moyenne,
+                évolution (dernière - première valeur), première et dernière périodes
+        """
         stats = {}
         if df_evolution.empty:
             return stats
@@ -102,7 +113,16 @@ class RapportService:
         return stats
 
     def conclusion(self, stats: dict[str, dict[str, Any]], comparaison: Any) -> str:
-        """Génère des phrases automatiques d'analyse à partir des chiffres calculés."""
+        """
+        Génère des phrases automatiques d'analyse à partir des chiffres calculés.
+
+        Args:
+            stats (dict[str, dict[str, Any]]): résultat de resume_statistique
+            comparaison (Any): résultat de ComparaisonPaysService.comparer_pays (classement)
+
+        Returns:
+            str: une phrase par pays, puis le pays en tête du classement s'il est connu
+        """
         if not stats:
             return "Aucune donnee disponible pour etablir une conclusion."
 
@@ -242,7 +262,20 @@ class RapportService:
         sexe: str = "Total",
         n_periodes: int = 8,
     ) -> bytes:
-        """Renvoie le contenu binaire du fichier PDF généré."""
+        """
+        Génère le rapport PDF : graphique d'évolution, résumé statistique,
+        classement des pays et conclusion.
+
+        Args:
+            code_indicateur (str): code de l'indicateur, ex : 'EMP_5WAP_SEX_AGE_RT_Q'
+            pays (list[str]): codes ISO des pays du rapport, ex : ['FRA', 'DEU']
+            classif1 (str): profession ou tranche d'âge, ex : '15+'
+            sexe (str): 'Total', 'Male' ou 'Female'
+            n_periodes (int): nombre de dernières périodes analysées
+
+        Returns:
+            bytes: le contenu du fichier PDF (commence par b'%PDF')
+        """
         sexe_db = MAPPING_SEXE.get(sexe.upper(), sexe)
         intitule_indicateur, unite_indicateur = self._infos_indicateur(code_indicateur)
 

@@ -16,6 +16,9 @@ def message_erreur(reponse: dict) -> str:
     """
     Extrait un message lisible d'une réponse en erreur de api_client.
 
+    Args:
+        reponse (dict): réponse de api_client ({'status_code', 'data'})
+
     Returns:
         str: le message « backend injoignable » (status_code 0), sinon le message du backend
         (champ 'detail'), ou à défaut le contenu de la réponse
@@ -35,6 +38,12 @@ def donnees_ou_arret(reponse: dict) -> Any:
 
     Utilisation dans une page :
         donnees = donnees_ou_arret(api_client.get("/analyses/evolution", params=...))
+
+    Args:
+        reponse (dict): réponse de api_client ({'status_code', 'data'})
+
+    Returns:
+        Any: reponse['data'] (liste, dictionnaire...) si le code est 200
     """
     if reponse["status_code"] != 200:
         st.error(message_erreur(reponse))
@@ -45,6 +54,10 @@ def donnees_ou_arret(reponse: dict) -> Any:
 def connecter(pseudo: str, mot_de_passe: str) -> str | None:
     """
     Demande une connexion à l'API et, si elle réussit, garde l'utilisateur dans la session.
+
+    Args:
+        pseudo (str): pseudo saisi
+        mot_de_passe (str): mot de passe saisi
 
     Returns:
         str | None: None si la connexion a réussi, sinon le message d'erreur à afficher
@@ -60,7 +73,13 @@ def connecter(pseudo: str, mot_de_passe: str) -> str | None:
 
 
 def connecter_et_ouvrir_accueil(pseudo: str, mot_de_passe: str):
-    """Connecte l'utilisateur puis ouvre l'accueil ; en cas d'échec, affiche l'erreur."""
+    """
+    Connecte l'utilisateur puis ouvre l'accueil ; en cas d'échec, affiche l'erreur.
+
+    Args:
+        pseudo (str): pseudo saisi
+        mot_de_passe (str): mot de passe saisi
+    """
     erreur = connecter(pseudo, mot_de_passe)
     if erreur:
         st.error(erreur)

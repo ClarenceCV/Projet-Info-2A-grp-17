@@ -30,11 +30,12 @@ class UtilisateurService:
         """
         Crée un compte : vérifie le pseudo et le mot de passe, hache le mot de passe, enregistre.
 
-        params:
-            pseudo: identifiant de connexion (espaces au début et à la fin retirés)
-            mot_de_passe: mot de passe en clair (jamais enregistré tel quel)
-            role: 'utilisateur' (par défaut) ou 'admin' (seul un admin pourra créer un admin)
-            auteur: l'administrateur qui crée le compte (None : la personne crée son propre compte)
+        Args:
+            pseudo (str): identifiant de connexion (espaces au début et à la fin retirés)
+            mot_de_passe (str): mot de passe en clair (jamais enregistré tel quel)
+            role (str): 'utilisateur' (par défaut) ou 'admin' (seul un admin pourra créer un admin)
+            auteur (Utilisateur | None): l'administrateur qui crée le compte (None : la personne
+                crée son propre compte)
 
         Returns:
             Utilisateur | None: le compte créé, ou None si le pseudo est déjà pris
@@ -68,6 +69,10 @@ class UtilisateurService:
         """
         Vérifie les identifiants et, s'ils sont bons, ouvre une session (nouveau token).
 
+        Args:
+            pseudo (str): pseudo saisi (les espaces autour sont ignorés)
+            mot_de_passe (str): mot de passe saisi, en clair (comparé au hash bcrypt)
+
         Returns:
             tuple[Utilisateur, str] | None: l'utilisateur et son token,
                 ou None si le pseudo n'existe pas OU si le mot de passe est faux
@@ -90,6 +95,9 @@ class UtilisateurService:
         """
         Ferme la session : le token est effacé, il ne fonctionnera plus.
 
+        Args:
+            utilisateur (Utilisateur): l'utilisateur connecté (c.f. controller/auth.py)
+
         Returns:
             bool: True si la déconnexion a été enregistrée
         """
@@ -100,6 +108,9 @@ class UtilisateurService:
         """
         Retrouve l'utilisateur connecté à partir de son token
         utilisé par les gardes de controller/auth.py).
+
+        Args:
+            token (str | None): token envoyé dans l'en-tête X-Auth-Token (None s'il manque)
 
         Returns:
             Utilisateur | None: None si le token est absent, inconnu ou effacé (déconnexion)
@@ -121,9 +132,9 @@ class UtilisateurService:
         Supprime un compte. Un administrateur ne peut pas supprimer son propre compte
         (sinon il pourrait ne plus rester aucun administrateur pour gérer l'application).
 
-        params:
-            admin: l'administrateur qui fait la demande
-            id_utilisateur: id du compte à supprimer
+        Args:
+            admin (Utilisateur): l'administrateur qui fait la demande
+            id_utilisateur (int): id du compte à supprimer
 
         Returns:
             bool: True si le compte a été supprimé, False s'il n'existe pas

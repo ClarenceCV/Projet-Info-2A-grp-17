@@ -16,6 +16,9 @@ class IndicateurDAO:
         Enregistre un indicateur. S'il existe déjà (même code), ses informations
         sont mises à jour avec celles de la configuration.
 
+        Args:
+            indicateur (Indicateur): indicateur à enregistrer (c.f. config_import.INDICATEURS)
+
         Returns:
             int: id de l'indicateur dans la base (utile pour enregistrer ses observations)
         """
@@ -59,8 +62,8 @@ class IndicateurDAO:
         """
         Cherche un indicateur par son code.
 
-        params:
-            code: ex 'EMP_5EMP_SEX_OC2_NB_Q'
+        Args:
+            code (str): ex 'EMP_5EMP_SEX_OC2_NB_Q'
 
         Returns:
             Indicateur | None: l'indicateur, ou None s'il n'est pas dans la base

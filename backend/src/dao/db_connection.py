@@ -9,8 +9,7 @@ from psycopg2.extras import (
 
 from utils.log_utils import log
 from utils.singleton import (
-    Singleton,  # pour bloquer la possibiliter de créer plus d'une instance de
-    # la classe DB connxion (on en veut qu'une seule)
+    Singleton,  # empêche de créer plus d'une instance de DBConnection (on n'en veut qu'une)
 )
 
 
@@ -18,6 +17,9 @@ def parametres_connexion() -> dict[str, str]:
     """
     Paramètres de connexion à PostgreSQL, lus dans les variables d'environnement (fichier .env).
     Utilisée aussi par les tests DAO pour vérifier que la base répond.
+
+    Returns:
+        dict[str, str]: host, port, database, user et password (pour psycopg2.connect)
 
     Raises:
         KeyError: si une variable POSTGRES_* est absente

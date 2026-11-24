@@ -19,7 +19,13 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def initialize_logs(name: str):
-    """Initialize logging from a configuration file"""
+    """
+    Initialise les logs à partir de logging_config.yml (crée le dossier
+    backend/logs s'il n'existe pas).
+
+    Args:
+        name (str): nom de l'application, écrit dans le fichier au démarrage
+    """
 
     # Chemin absolu vers le dossier backend
     backend_dir = Path(__file__).resolve().parents[2]
@@ -48,8 +54,16 @@ def initialize_logs(name: str):
 
 def get_logger(module_name: str, max_size: int = 25):
     """
-    Returns a logger with a shortened name based on the module path.
-    If the path exceeds max_size, it uses initials for the prefix parts.
+    Renvoie un logger au nom raccourci : si le nom du module dépasse max_size,
+    les parties avant le dernier point sont remplacées par leur initiale
+    (ex : 'service.utilisateur_service' -> 's.utilisateur_service').
+
+    Args:
+        module_name (str): nom du module, ex : 'service.utilisateur_service'
+        max_size (int): longueur au-delà de laquelle le nom est raccourci
+
+    Returns:
+        logging.Logger: le logger du module
     """
     if len(module_name) <= max_size:
         return logging.getLogger(module_name)
@@ -117,7 +131,15 @@ def _resumer(resultat) -> str:
 
 
 def log(func):
-    """Log automatiquement l'entrée, la sortie et les erreurs d'une fonction."""
+    """
+    Log automatiquement l'entrée, la sortie et les erreurs d'une fonction.
+
+    Args:
+        func (Callable): fonction à décorer (écrire @log au-dessus de la fonction)
+
+    Returns:
+        Callable: la fonction décorée, qui écrit START, END ou l'erreur dans les logs
+    """
 
     @wraps(func)
     def wrapper(*args, **kwargs):

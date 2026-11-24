@@ -89,6 +89,12 @@ def decouper_logs(lignes: list[str]) -> pd.DataFrame:
     Transforme les lignes brutes du fichier de logs en tableau (date, niveau, source, message).
     Une ligne qui ne suit pas le format (ex : les lignes d'une erreur Python, le « traceback »)
     est rattachée au message de la ligne précédente.
+
+    Args:
+        lignes (list[str]): lignes du fichier de logs, renvoyées par GET /admin/logs
+
+    Returns:
+        pd.DataFrame: une ligne par entrée, colonnes Date, Niveau, Source, Message
     """
     entrees = []
     for ligne in lignes:

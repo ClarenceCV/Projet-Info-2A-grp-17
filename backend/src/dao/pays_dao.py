@@ -20,8 +20,8 @@ class PaysDAO:
         """
         Enregistre des pays. Ceux qui existent déjà (même code ISO) sont ignorés.
 
-        params:
-            df_pays: DataFrame avec les colonnes code_iso et nom_pays
+        Args:
+            df_pays (pd.DataFrame): DataFrame avec les colonnes code_iso et nom_pays
                      ex : FRA | France
 
         Returns:
@@ -46,8 +46,8 @@ class PaysDAO:
         """
         Liste tous les pays enregistrés dans la base.
 
-        Return:
-            list[Pays]: liste des pays de la base ordonné par nom.
+        Returns:
+            list[Pays]: les pays de la base, triés par nom
         """
         with DBConnection().connection as connection:  # noqa: SIM117
             with connection.cursor() as cursor:

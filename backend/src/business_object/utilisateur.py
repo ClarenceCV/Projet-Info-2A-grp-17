@@ -37,7 +37,12 @@ class Utilisateur:
 
     @property
     def est_admin(self) -> bool:
-        """True si l'utilisateur est administrateur"""
+        """
+        True si l'utilisateur est administrateur
+
+        Returns:
+            bool: True si le rôle est 'admin'
+        """
         return self.role == "admin"
 
     def __str__(self):

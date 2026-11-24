@@ -13,8 +13,8 @@ def hacher_mdp(mot_de_passe: str) -> str:
     Calcule le hash bcrypt d'un mot de passe, avec un sel aléatoire.
     Le même mot de passe donne un hash différent à chaque appel.
 
-    params:
-        mot_de_passe: mot de passe en clair (72 octets maximum, limite de bcrypt)
+    Args:
+        mot_de_passe (str): mot de passe en clair (72 octets maximum, limite de bcrypt)
 
     Returns:
         str: hash de 60 caractères, ex : '$2b$12$jBH8ATehxGBD...' (contient aussi le sel)
@@ -26,9 +26,9 @@ def verifier_mdp(mot_de_passe: str, mdp_hash: str) -> bool:
     """
     Vérifie qu'un mot de passe correspond à un hash enregistré.
 
-    params:
-        mot_de_passe: mot de passe saisi, en clair
-        mdp_hash: hash lu dans la base
+    Args:
+        mot_de_passe (str): mot de passe saisi, en clair
+        mdp_hash (str): hash lu dans la base
 
     Returns:
         bool: True si le mot de passe est le bon

@@ -20,8 +20,8 @@ exiger_connexion()
 
 st.title("Rapport d'Analyse PDF (FO3)")
 st.markdown(
-    "Configurez vos filtres ci-dessous, previsualisez le rapport genere directement a l'ecran, "
-    "puis telechargez-le uniquement s'il vous convient."
+    "Configurez vos filtres ci-dessous, prévisualisez le rapport généré directement à l'écran, "
+    "puis téléchargez-le uniquement s'il vous convient."
 )
 
 # ------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ st.markdown(
 #    à cause d'une faute de frappe ou d'une modalité qui n'existe pas pour l'indicateur.
 # ------------------------------------------------------------------------------
 with st.container(border=True):
-    st.subheader("Configuration du Rapport")
+    st.subheader("Configuration du rapport")
 
     col_top1, col_top2 = st.columns([2, 2])
     with col_top1:
@@ -44,22 +44,22 @@ with st.container(border=True):
     with col_bot2:
         sexe = choisir_sexe(cle="rapport")
     with col_bot3:
-        n_periodes = st.slider("Nombre de periodes", min_value=2, max_value=20, value=8)
+        n_periodes = st.slider("Nombre de périodes", min_value=2, max_value=20, value=8)
 
-    generer_clic = st.button("Generer l'apercu du rapport", type="primary", width="stretch")
+    generer_clic = st.button("Générer l'aperçu du rapport", type="primary", width="stretch")
 
 # ------------------------------------------------------------------------------
-# 2. Generation, Previsualisation et Telechargement
+# 2. Génération, prévisualisation et téléchargement
 # ------------------------------------------------------------------------------
 if generer_clic:
     if not code_indicateur or not classif1:
         st.error(
-            "Aucun indicateur disponible : importez d'abord les donnees (page administration)."
+            "Aucun indicateur disponible : importez d'abord les données (page administration)."
         )
     elif not pays_selectionnes:
-        st.error("Veuillez selectionner au moins un pays.")
+        st.error("Veuillez sélectionner au moins un pays.")
     else:
-        with st.spinner("Generation de l'apercu du rapport PDF..."):
+        with st.spinner("Génération de l'aperçu du rapport PDF..."):
             reponse = api_client.telecharger_rapport(
                 code_indicateur=code_indicateur,
                 pays=pays_selectionnes,
@@ -79,10 +79,10 @@ if "fo3_pdf_bytes" in st.session_state:
     st.divider()
     col_titre, col_dl = st.columns([3, 1])
     with col_titre:
-        st.subheader("Previsualisation du document")
+        st.subheader("Prévisualisation du document")
     with col_dl:
         st.download_button(
-            label="Telecharger ce PDF",
+            label="Télécharger ce PDF",
             data=st.session_state["fo3_pdf_bytes"],
             file_name=st.session_state["fo3_pdf_filename"],
             mime="application/pdf",
