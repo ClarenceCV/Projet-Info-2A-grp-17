@@ -427,6 +427,69 @@ Cette chaîne d'import a tout de même quelques limites :
 \newpage
 
 ```{=latex}
+\sectiontitre{Fiabilité et traçabilité de l'application}
+```
+
+```{=latex}
+\subsectiontitre{Logs techniques et journalisation}
+```
+
+Pour suivre ce qui se passe dans l'application, nous avons mis en place deux systèmes différents : les logs techniques, destinés aux développeurs, et le journal des actions, destiné à l'administrateur.
+
+**Les logs techniques**
+
+Les logs techniques enregistrent le fonctionnement interne du code. Ils sont gérés par le fichier `src/utils/log_utils.py` et configurés dans le fichier `backend/logging_config.yml`. Au lancement de l'application, les logs sont affichés dans la console et écrits dans le fichier `backend/logs/laborscope.log`. Quand ce fichier dépasse 10 Mo, un nouveau fichier est créé, et on garde au maximum les cinq derniers.
+
+Plutôt que d'écrire des lignes de log à la main dans chaque méthode, nous avons créé un décorateur `@log`. Il suffit de l'ajouter au-dessus d'une méthode pour que trois choses soient enregistrées automatiquement : l'entrée dans la méthode avec ses paramètres, la sortie avec un résumé du résultat, et l'erreur si la méthode échoue. Nous l'utilisons en particulier dans les DAO et dans la chaîne d'import des données.
+
+Pour l’implémentation nous nous sommes basé sur celle du template de l’application initiale.
+Deux choix nous ont permis de garder des logs lisibles :
+
+- les résultats volumineux sont résumés : pour un DataFrame, on écrit seulement son nombre de lignes et de colonnes, pas tout son contenu ;
+- les appels imbriqués sont indentés, ce qui permet de voir quelle méthode en appelle une autre.
+
+Enfin, comme les logs contiennent les paramètres des méthodes, il fallait éviter d'y écrire des informations sensibles. Ainsi, la valeur de tout paramètre dont le nom contient un mot comme « mdp », « password » ou « token » est remplacée par `*****`.
+
+**Le journal des actions**
+
+Le journal répond à une demande du cahier des charges : l'administrateur doit pouvoir suivre l'activité des utilisateurs. Contrairement aux logs techniques, il est stocké dans la base de données, dans la table « journal ».
+
+Chaque action enregistrée contient le pseudo et l'identifiant de l'utilisateur, le type d'action, un détail libre et la date. Les types d'action possibles sont définis dans le business object `ActionJournal` :
+
+- les actions sur les comptes : connexion, échec de connexion, déconnexion, création et suppression de compte ;
+- les actions sur les données : import des données ILOSTAT, modification et suppression d'une donnée.
+
+L'objet `ActionJournal` vérifie à sa création que l'action fait bien partie de cette liste, ce qui évite d'enregistrer des actions mal écrites.
+
+Le journal suit la même architecture que le reste de l'application : `JournalDAO` écrit et lit dans la table, `JournalService` est appelé par les autres services (par exemple `UtilisateurService` lors d'une connexion), et `journal_controller.py` met le journal à disposition de l'administrateur, avec des filtres par action et par pseudo. L'accès est réservé aux administrateurs.
+
+Deux choix méritent d'être expliqués :
+
+- le pseudo est copié dans le journal au moment de l'action : si le compte est supprimé plus tard, on sait toujours qui a fait l'action ;
+- une erreur dans le journal ne fait jamais échouer l'action principale : si l'enregistrement échoue, un avertissement est affiché, mais l'utilisateur peut quand même se connecter.
+
+```{=latex}
+\subsectiontitre{Tests}
+```
+
+Pour vérifier que notre code fonctionne, et qu'il continue de fonctionner quand on le modifie, nous avons écrit des tests unitaires avec la librairie `pytest`. Ils sont rangés dans le dossier `src/tests/`, avec un sous-dossier par couche de l'application.
+
+Au total, l'application compte 218 tests. Certains tests sont lancés plusieurs fois avec des données différentes. Ils se lancent tous avec la commande `uv run pytest`.
+
+Nos tests sont écrits selon la méthode *Given / When / Then* : on prépare une situation (*Given*), on appelle la méthode testée (*When*), puis on vérifie le résultat (*Then*).
+
+Pour que chaque test ne vérifie qu'une seule couche, nous remplaçons les autres couches par des faux grâce à `unittest.mock` :
+
+- dans les tests du fetcher, l'API ILOSTAT est remplacée : aucun appel réseau n'est fait ;
+- dans les tests des services, le DAO est remplacé par un faux qui renvoie un petit tableau écrit à la main. On connaît donc à l'avance le résultat attendu, par exemple un classement de pays ;
+- dans les tests des controllers, on utilise le `TestClient` de FastAPI, qui envoie de vraies requêtes HTTP à l'application. On vérifie ainsi qu'un utilisateur non connecté ou non administrateur est bien refusé.
+
+Les tests des DAO sont différents : ils utilisent une vraie base PostgreSQL, car c'est la seule façon de vérifier les requêtes SQL. Pour ne pas abîmer les vraies données, ils n'utilisent que des données de test faciles à reconnaître (le pays « ZZZ », l'indicateur « TEST_DAO »), qui sont supprimées avant et après chaque test. Si la base est injoignable, par exemple sur un ordinateur personnel, ces tests sont ignorés au lieu d'échouer, et la raison est affichée. Les autres tests restent utilisables.
+
+Ces tests ont tout de même une limite : ils ne testent pas le frontend Streamlit, que nous avons vérifié nous même à l'implémentation de chaque fonction ou détail supplémentaire.
+
+\newpage
+```{=latex}
 \mychapter{Fonctionnement de l'application}
 ```
 
