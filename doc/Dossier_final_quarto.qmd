@@ -221,7 +221,15 @@ A la suite du dépot du rapport intermédiare,notre tuteur nous a fais des remar
 \subsectiontitre{Diagramme d'architecture}
 ```
 
-Voilà ci contre le diagramme d'architecture qui montre la structure globale de l'API:
+Voilà ci contre le diagramme d'architecture qui montre la structure globale de l'API:  
+
+Afin d'offrir une expérience utilisateur optimale et de valoriser pleinement les analyses statistiques produites, nous avons retenu une architecture découplée associant une **API REST** (FastAPI) et une **interface web interactive** (Streamlit). Ce choix architectural présente trois avantages majeurs pour le projet :
+
+- **un meilleur impact visuel et ergonomique** : l'interface Streamlit permet de restituer directement les résultats sous forme de graphiques interactifs, de cartes choroplèthes et de comparaisons multi-séries accessibles sans manipulation technique ;
+- **un pipeline de données complet et maîtrisé** : la chaîne couvre l'ensemble du cycle de vie de la donnée, depuis la collecte sur l'API externe ILOSTAT jusqu'à la visualisation finale, en passant par le nettoyage, le stockage relationnel et l'exposition via notre propre API ;
+- **une couverture optimale des fonctionnalités attendues** : la séparation entre la logique métier côté serveur et l'affichage côté client facilite l'intégration de traitements avancés (normalisation en Base 100, génération de rapports PDF, gestion des rôles utilisateurs) tout en garantissant la maintenabilité du code.
+
+![Diagramme d'architecture générale de l'application LaborScope](images/diagramme_architecture.PNG){width=85%}
 
 ```{=latex}
 \subsectiontitre{Diagramme de classes}
