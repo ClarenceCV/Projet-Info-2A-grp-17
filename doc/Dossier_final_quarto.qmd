@@ -221,7 +221,7 @@ A la suite du dépot du rapport intermédiare,notre tuteur nous a fais des remar
 \subsectiontitre{Diagramme d'architecture}
 ```
 
-Voilà ci contre le diagramme d'architecture qui montre la structure globale de l'API:  
+Voilà ci contre le diagramme d'architecture qui montre la structure globale de l'API:
 
 Afin d'offrir une expérience utilisateur optimale et de valoriser pleinement les analyses statistiques produites, nous avons retenu une architecture découplée associant une **API REST** (FastAPI) et une **interface web interactive** (Streamlit). Ce choix architectural présente trois avantages majeurs pour le projet :
 
@@ -229,7 +229,7 @@ Afin d'offrir une expérience utilisateur optimale et de valoriser pleinement le
 - **un pipeline de données complet et maîtrisé** : la chaîne couvre l'ensemble du cycle de vie de la donnée, depuis la collecte sur l'API externe ILOSTAT jusqu'à la visualisation finale, en passant par le nettoyage, le stockage relationnel et l'exposition via notre propre API ;
 - **une couverture optimale des fonctionnalités attendues** : la séparation entre la logique métier côté serveur et l'affichage côté client facilite l'intégration de traitements avancés (normalisation en Base 100, génération de rapports PDF, gestion des rôles utilisateurs) tout en garantissant la maintenabilité du code.
 
-![Diagramme d'architecture générale de l'application LaborScope](images/diagramme_architecture.PNG){width=85%}
+![Diagramme d'architecture générale de l'application LaborScope](images/diagramme_architecture.PNG){width="85%"}
 
 ```{=latex}
 \subsectiontitre{Diagramme de classes}
@@ -261,9 +261,9 @@ Pour bien comprendre l'application **Laborscope**, nous expliquons ici l'ensembl
 
 L'application distingue trois acteurs :
 
--   le **visiteur**, qui n'est pas connecté : il peut seulement créer un compte ou se connecter ;
--   l'**utilisateur**, connecté avec un compte classique : il a accès à toutes les analyses de l'application ;
--   l'**administrateur** : il peut faire tout ce que fait un utilisateur (flèche d'héritage sur le diagramme) et dispose en plus des fonctions de gestion de l'application.
+- le **visiteur**, qui n'est pas connecté : il peut seulement créer un compte ou se connecter ;
+- l'**utilisateur**, connecté avec un compte classique : il a accès à toutes les analyses de l'application ;
+- l'**administrateur** : il peut faire tout ce que fait un utilisateur (flèche d'héritage sur le diagramme) et dispose en plus des fonctions de gestion de l'application.
 
 ![Diagramme de cas d'utilisation de l'application](images/diagramme_cas_utilisation.png){width="42%"}
 
@@ -289,12 +289,12 @@ Avant la première connexion, il faut créer un compte à l'aide d'un pseudo et 
 
 Une fois connecté, l'utilisateur retrouve la page d'accueil, qui l'invite à choisir une analyse dans le menu. Celui-ci contient une rubrique « Analyses » avec six pages :
 
--   **Explorer les données** : consulter les observations brutes d'un indicateur sous forme de tableau ;
--   **Évolution (F3)** : suivre l'évolution d'un indicateur au cours du temps ;
--   **Comparaison pays (F4)** : classer plusieurs pays selon un indicateur ;
--   **Carte du monde (FO2)** : afficher un indicateur sur une carte du monde ;
--   **Multi-indicateurs (F5)** : comparer plusieurs indicateurs sur un même graphique ;
--   **Rapport PDF (FO3)** : générer un rapport synthétique au format PDF.
+- **Explorer les données** : consulter les observations brutes d'un indicateur sous forme de tableau ;
+- **Évolution (F3)** : suivre l'évolution d'un indicateur au cours du temps ;
+- **Comparaison pays (F4)** : classer plusieurs pays selon un indicateur ;
+- **Carte du monde (FO2)** : afficher un indicateur sur une carte du monde ;
+- **Multi-indicateurs (F5)** : comparer plusieurs indicateurs sur un même graphique ;
+- **Rapport PDF (FO3)** : générer un rapport synthétique au format PDF.
 
 Ces pages fonctionnent toutes de la même façon : l'utilisateur choisit un indicateur, puis les filtres qui l'intéressent (pays, sexe, tranche d'âge ou profession selon l'indicateur), et le résultat s'affiche sous forme de tableau, de graphique ou de carte. Elles sont détaillées dans le chapitre « Fonctionnement de l'application ».
 
@@ -306,9 +306,9 @@ En bas du menu, l'utilisateur voit le pseudo et le rôle avec lesquels il est co
 
 L'administrateur voit le même menu que l'utilisateur, avec en plus une rubrique « Administration » composée de trois pages :
 
--   **Utilisateurs** : afficher la liste des comptes, ajouter un compte en choisissant son rôle (utilisateur ou administrateur) et supprimer un compte ;
--   **Données** : forcer un nouvel import des données ILOSTAT, et modifier ou supprimer manuellement une observation ;
--   **Logs et historique** : consulter, dans deux onglets, l'historique des actions (connexions, créations et suppressions de comptes, imports et modifications des données...) et les logs techniques de l'application.
+- **Utilisateurs** : afficher la liste des comptes, ajouter un compte en choisissant son rôle (utilisateur ou administrateur) et supprimer un compte ;
+- **Données** : forcer un nouvel import des données ILOSTAT, et modifier ou supprimer manuellement une observation ;
+- **Logs et historique** : consulter, dans deux onglets, l'historique des actions (connexions, créations et suppressions de comptes, imports et modifications des données...) et les logs techniques de l'application.
 
 Les actions difficiles à annuler (suppression d'un compte ou d'une observation, nouvel import qui écrase les modifications manuelles) ne sont possibles qu'après avoir coché une case de confirmation.
 
@@ -340,9 +340,9 @@ L'application se base sur les données ouvertes de l'API ILOSTAT. Dans un premie
 
 Le site donne accès à de nombreux indicateurs. Le cahier des charges nous en imposait deux, et nous en avons choisi trois :
 
--   le taux de chômage par sexe et âge ;
--   le taux d'emploi par sexe et âge ;
--   l'emploi par sexe et profession.
+- le taux de chômage par sexe et âge ;
+- le taux d'emploi par sexe et âge ;
+- l'emploi par sexe et profession.
 
 Chaque indicateur a son propre identifiant dans l'URL de l'API (par exemple `EMP_5EMP_SEX_OC2_NB_Q` pour l'emploi par sexe et profession). Nous avons choisi de reconstruire chaque URL à partir de cet identifiant plutôt que de coder les URL en dur. Une URL contient quatre paramètres : `id`, le code de l'indicateur ; `timefrom`, la première année récupérée ; `type=both`, qui permet d'obtenir à la fois le code d'un pays (« FRA ») et son nom (« France ») ; et `format=.csv`, pour recevoir les données sous forme de tableau.
 
@@ -358,10 +358,10 @@ Le problème est que les tableaux récupérés depuis l'API ne sont pas propres 
 
 Le dossier qui contient tous les fichiers de traitement est `src/fetcher/`. Il contient en particulier quatre fichiers :
 
--   `fetcher.py` : construit les URL nécessaires et télécharge les données de l'API sous forme de tableau (DataFrame) ;
--   `parser.py` : nettoie les libellés d'ILOSTAT en retirant leurs préfixes ;
--   `data_processing.py` : utilise les méthodes des deux fichiers précédents. Il sélectionne et renomme les colonnes utiles, nettoie les tableaux, puis les enregistre dans la base ;
--   `charger_donnees.py` : script final qui lance l'ensemble : récupérer les données d'ILOSTAT, les traiter et les stocker.
+- `fetcher.py` : construit les URL nécessaires et télécharge les données de l'API sous forme de tableau (DataFrame) ;
+- `parser.py` : nettoie les libellés d'ILOSTAT en retirant leurs préfixes ;
+- `data_processing.py` : utilise les méthodes des deux fichiers précédents. Il sélectionne et renomme les colonnes utiles, nettoie les tableaux, puis les enregistre dans la base ;
+- `charger_donnees.py` : script final qui lance l'ensemble : récupérer les données d'ILOSTAT, les traiter et les stocker.
 
 Le nettoyage, fait par la méthode `parse_data` de `data_processing.py`, se déroule en quatre étapes :
 
@@ -383,7 +383,7 @@ Le tableau suivant montre les colonnes que nous gardons et leur nouveau nom :
 
 : Colonnes conservées et renommées lors du traitement des données
 
-\[Graphe simplifié du chemin des données\]
+\![Graphe simplifié du chemin des données](images/chemin_donnees.png)
 
 ```{=latex}
 \subsectiontitre{Stockage, business objects et DAO}
@@ -399,20 +399,20 @@ Une observation est identifiée par une clé primaire composée de six colonnes 
 
 Chacune de ces trois tables a son propre DAO (`IndicateurDAO`, `PaysDAO` et `ObservationDAO`, dans le dossier `src/dao/`), qui fait le lien entre PostgreSQL et l'application. Les DAO sont les seuls fichiers du projet qui contiennent des requêtes SQL. Ils fonctionnent dans les deux sens :
 
--   en écriture : ils reçoivent un tableau propre et l'insèrent dans la base. Les observations sont envoyées par paquets de 1000 lignes pour aller plus vite. L'ordre d'enregistrement est important : on enregistre d'abord l'indicateur, puis les pays, puis les observations, car une observation ne peut pas faire référence à un pays ou à un indicateur qui n'existe pas encore ;
--   en lecture : ils récupèrent les données pour le reste de l'application. Par exemple, la méthode `lire` d'`ObservationDAO` renvoie les observations d'un indicateur et peut les filtrer par pays, période, sexe et modalité.
+- en écriture : ils reçoivent un tableau propre et l'insèrent dans la base. Les observations sont envoyées par paquets de 1000 lignes pour aller plus vite. L'ordre d'enregistrement est important : on enregistre d'abord l'indicateur, puis les pays, puis les observations, car une observation ne peut pas faire référence à un pays ou à un indicateur qui n'existe pas encore ;
+- en lecture : ils récupèrent les données pour le reste de l'application. Par exemple, la méthode `lire` d'`ObservationDAO` renvoie les observations d'un indicateur et peut les filtrer par pays, période, sexe et modalité.
 
 Tous les DAO passent par une seule connexion à la base, gérée par la classe `DBConnection`. Elle utilise le patron Singleton : une seule instance de la classe peut exister, donc une seule connexion est ouverte et partagée par toute l'application. Les paramètres de connexion (adresse, nom de la base, identifiants) sont lus dans le fichier `.env`, ce qui évite de les écrire dans le code.
 
 Les DAO ne renvoient pas seulement des tableaux : ils peuvent aussi renvoyer des business objects. Ce sont des classes simples, dans le dossier `src/business_object/`, qui représentent les objets que manipule l'application :
 
--   `Indicateur` : le code, le libellé, l'unité, la fréquence et le type de modalité d'un indicateur. Ce sont ces objets qui décrivent les indicateurs dans `config_import.py`. Cette classe vérifie aussi ses attributs à la création, par exemple que la fréquence vaut bien « Q », « A » ou « M » ;
--   `Pays` : le code ISO et le nom d'un pays, avec des méthodes pour retrouver son continent et les groupes auxquels il appartient ;
--   `Selection` : un indicateur et ses filtres (pays, modalité, sexe), utilisé pour la comparaison multi-indicateurs.
+- `Indicateur` : le code, le libellé, l'unité, la fréquence et le type de modalité d'un indicateur. Ce sont ces objets qui décrivent les indicateurs dans `config_import.py`. Cette classe vérifie aussi ses attributs à la création, par exemple que la fréquence vaut bien « Q », « A » ou « M » ;
+- `Pays` : le code ISO et le nom d'un pays, avec des méthodes pour retrouver son continent et les groupes auxquels il appartient ;
+- `Selection` : un indicateur et ses filtres (pays, modalité, sexe), utilisé pour la comparaison multi-indicateurs.
 
 Par exemple, la méthode `lister` de `PaysDAO` renvoie une liste d'objets `Pays`, et celle d'`IndicateurDAO` une liste d'objets `Indicateur`. Les observations, elles, restent sous forme de tableaux pandas, car les services font leurs calculs directement dessus.
 
-\[Diagramme de classes des business objects\]
+\![Diagramme de classes des business objects](images/Buisnessdiagdivpar2.png)
 
 ```{=latex}
 \subsectiontitre{Limites}
@@ -420,9 +420,9 @@ Par exemple, la méthode `lister` de `PaysDAO` renvoie une liste d'objets `Pays`
 
 Cette chaîne d'import a tout de même quelques limites :
 
--   l'import est lent : comme on fait un appel à l'API par pays et par indicateur, il faut plusieurs centaines d'appels pour tout récupérer. Ici ce n'est pas encore très contraigant. Si la table "observation" dépasse les 500 milles ligne il faudrait travailler avec d'autres outils qui rendent l'import et la lecture plus rapide.
--   les données ne remontent qu'à 2020 ;
--   la couverture est très inégale selon les pays : certains n'ont qu'un seul trimestre dans la base, ce qui limite les comparaisons (voir la carte du monde au chapitre 4).
+- l'import est lent : comme on fait un appel à l'API par pays et par indicateur, il faut plusieurs centaines d'appels pour tout récupérer. Ici ce n'est pas encore très contraigant. Si la table "observation" dépasse les 500 milles ligne il faudrait travailler avec d'autres outils qui rendent l'import et la lecture plus rapide.
+- les données ne remontent qu'à 2020 ;
+- la couverture est très inégale selon les pays : certains n'ont qu'un seul trimestre dans la base, ce qui limite les comparaisons (voir la carte du monde au chapitre 4).
 
 \newpage
 
@@ -450,10 +450,10 @@ Chaque ligne donne le pays, la période, la valeur et son unité, mais aussi la 
 
 La page repose sur les mêmes couches que le reste de l'application :
 
--   la couche DAO (classe ObservationDAO) construit une requête SQL qui joint les tables des observations, des indicateurs et des pays, puis ajoute un filtre pour chaque choix de l'utilisateur ;
--   la couche service (classe ObservationService) transmet simplement la demande au DAO, puisqu'il n'y a pas de calcul à faire ;
--   la couche controller expose les données avec FastAPI sur l'endpoint GET /observations, réservé aux utilisateurs connectés. Elle renvoie une erreur 404 si l'indicateur n'existe pas ;
--   la page Streamlit utilise les menus de sélection communs à toutes les pages et affiche le résultat dans un tableau.
+- la couche DAO (classe ObservationDAO) construit une requête SQL qui joint les tables des observations, des indicateurs et des pays, puis ajoute un filtre pour chaque choix de l'utilisateur ;
+- la couche service (classe ObservationService) transmet simplement la demande au DAO, puisqu'il n'y a pas de calcul à faire ;
+- la couche controller expose les données avec FastAPI sur l'endpoint GET /observations, réservé aux utilisateurs connectés. Elle renvoie une erreur 404 si l'indicateur n'existe pas ;
+- la page Streamlit utilise les menus de sélection communs à toutes les pages et affiche le résultat dans un tableau.
 
 ```{=latex}
 \subsectiontitre{Exemple et interprétation}
@@ -479,9 +479,9 @@ L'évolution d'un indicateur permet de suivre comment une valeur change au cours
 
 La page affiche trois éléments :
 
--   un graphique en courbes avec une courbe par pays, pour voir la tendance de la valeur ;
--   un graphique en barres qui montre, pour chaque trimestre, la variation par rapport au trimestre précédent ;
--   un tableau détaillé avec la valeur, la variation absolue et la variation en pourcentage.
+- un graphique en courbes avec une courbe par pays, pour voir la tendance de la valeur ;
+- un graphique en barres qui montre, pour chaque trimestre, la variation par rapport au trimestre précédent ;
+- un tableau détaillé avec la valeur, la variation absolue et la variation en pourcentage.
 
 Deux difficultés ont influencé nos choix. D'une part, la base peut contenir plusieurs sources pour un même pays et un même trimestre : si on les gardait toutes, le graphique aurait deux points à la même date. Nous gardons une seule source par pays et par période (la première par ordre alphabétique). D'autre part, les pays n'ont pas tous le même nombre de trimestres disponibles : le nombre demandé est donc appliqué pays par pays, et un pays qui a moins de données que demandé affiche simplement tout ce qu'il a. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
 
@@ -491,10 +491,10 @@ Deux difficultés ont influencé nos choix. D'une part, la base peut contenir pl
 
 La fonctionnalité suit l'architecture en couches de l'application :
 
--   la couche DAO lit en base les observations de l'indicateur pour les pays, la modalité et le sexe demandés. Nous avons réutilisé la classe ObservationDAO, qui existait déjà ;
--   la couche service (classe EvolutionService) fait les calculs avec pandas ;
--   la couche controller expose le résultat avec FastAPI sur l'endpoint GET /analyses/evolution, réservé aux utilisateurs connectés. Elle vérifie les paramètres (par exemple, n_periodes doit être compris entre 1 et 40) et renvoie une erreur 404 si l'indicateur n'existe pas ;
--   la page Streamlit appelle cet endpoint et trace les graphiques avec Plotly Express.
+- la couche DAO lit en base les observations de l'indicateur pour les pays, la modalité et le sexe demandés. Nous avons réutilisé la classe ObservationDAO, qui existait déjà ;
+- la couche service (classe EvolutionService) fait les calculs avec pandas ;
+- la couche controller expose le résultat avec FastAPI sur l'endpoint GET /analyses/evolution, réservé aux utilisateurs connectés. Elle vérifie les paramètres (par exemple, n_periodes doit être compris entre 1 et 40) et renvoie une erreur 404 si l'indicateur n'existe pas ;
+- la page Streamlit appelle cet endpoint et trace les graphiques avec Plotly Express.
 
 Le calcul du service se fait en quatre étapes :
 
@@ -525,8 +525,8 @@ La comparaison entre pays permet de comparer un indicateur entre plusieurs pays 
 
 La principale subtilité vient des périodes. Tous les pays ne publient pas leurs données au même rythme : un pays peut avoir des données jusqu'en 2026 alors qu'un autre s'arrête en 2024. Par défaut, nous prenons la dernière période disponible de chaque pays. Ainsi, aucun pays n'est exclu du classement, mais les pays ne sont pas forcément comparés à la même date. Pour que l'utilisateur ne soit pas trompé, la période de chaque pays est toujours affichée, et un message prévient quand les périodes ne sont pas les mêmes. L'utilisateur peut aussi :
 
--   choisir une période précise dans un menu. Si un pays n'a pas de donnée pour cette période, on prend sa dernière période avant celle choisie, jamais une donnée plus récente ;
--   cocher une case pour utiliser la dernière période commune à tous les pays choisis. Tous les pays sont alors comparés à la même date. S'il n'existe aucune période commune, la page l'indique.
+- choisir une période précise dans un menu. Si un pays n'a pas de donnée pour cette période, on prend sa dernière période avant celle choisie, jamais une donnée plus récente ;
+- cocher une case pour utiliser la dernière période commune à tous les pays choisis. Tous les pays sont alors comparés à la même date. S'il n'existe aucune période commune, la page l'indique.
 
 Enfin, une case permet d'activer ou non la mise en couleur des pays les plus hauts (bleu foncé) et les plus bas (bleu clair). Quand elle est décochée, toutes les barres sont grises. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
 
@@ -536,10 +536,10 @@ Enfin, une case permet d'activer ou non la mise en couleur des pays les plus hau
 
 La fonctionnalité suit l'architecture en couches de l'application :
 
--   la couche DAO lit en base les observations de l'indicateur pour les pays, la modalité et le sexe demandés. Nous avons réutilisé la classe ObservationDAO, qui existait déjà ;
--   la couche service (classe ComparaisonPaysService) fait les calculs avec pandas ;
--   la couche controller expose le résultat avec FastAPI sur l'endpoint GET /analyses/comparaison-pays. Elle renvoie une erreur 404 si l'indicateur n'existe pas ;
--   la page Streamlit appelle cet endpoint et trace le graphique avec Plotly Express.
+- la couche DAO lit en base les observations de l'indicateur pour les pays, la modalité et le sexe demandés. Nous avons réutilisé la classe ObservationDAO, qui existait déjà ;
+- la couche service (classe ComparaisonPaysService) fait les calculs avec pandas ;
+- la couche controller expose le résultat avec FastAPI sur l'endpoint GET /analyses/comparaison-pays. Elle renvoie une erreur 404 si l'indicateur n'existe pas ;
+- la page Streamlit appelle cet endpoint et trace le graphique avec Plotly Express.
 
 Le service est testé avec pytest : la base est remplacée par de petites données écrites à la main, ce qui permet de vérifier le classement, le choix des périodes et les cas particuliers (aucune donnée, aucune période commune).
 
@@ -601,11 +601,11 @@ La comparaison multi-indicateurs permet de superposer jusqu'à quatre séries su
 
 Pour chaque série, l'utilisateur choisit un indicateur, un pays, une modalité (une tranche d'âge ou une profession selon l'indicateur) et le sexe. Une case à cocher permet d'activer ou de désactiver chacune des quatre séries. Chaque série est nommée en langage clair (par exemple « Taux d'emploi par sexe et âge - FRA - Total - 15+ ») plutôt qu'avec le code technique d'ILOSTAT. L'utilisateur peut aussi choisir entre deux affichages :
 
--   l'indice en base 100 : toutes les séries sont ramenées à 100 à une même date de départ $t_0$, ce qui permet de comparer leurs évolutions relatives malgré des unités différentes :
+- l'indice en base 100 : toutes les séries sont ramenées à 100 à une même date de départ $t_0$, ce qui permet de comparer leurs évolutions relatives malgré des unités différentes :
 
 $$\text{valeur}_{\text{base 100}}(t) = \frac{\text{valeur}(t)}{\text{valeur}(t_0)} \times 100$$
 
--   les valeurs brutes, plus adaptées quand les séries sont dans la même unité.
+- les valeurs brutes, plus adaptées quand les séries sont dans la même unité.
 
 Pour que la comparaison reste cohérente, la page applique deux règles. D'abord, les indicateurs choisis doivent avoir la même fréquence (trimestrielle ou annuelle) : si on mélange les deux, la page refuse la comparaison et affiche une erreur. Ensuite, les séries sont alignées sur leur fenêtre commune : la date de départ est la plus récente des premières périodes de chaque série. Sous le graphique, un tableau reprend les données affichées. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
 
@@ -615,11 +615,11 @@ Pour que la comparaison reste cohérente, la page applique deux règles. D'abord
 
 La fonctionnalité suit l'architecture en couches de l'application :
 
--   le business object `Selection` regroupe les paramètres d'une série (indicateur, pays, modalité, sexe) ;
--   la couche DAO récupère les informations de chaque indicateur (libellé, unité, fréquence) avec `IndicateurDAO`, et les observations filtrées avec `ObservationDAO`, qui existait déjà ;
--   la couche service (fichier `multi_indicateurs_service.py`) vérifie que les indicateurs existent et ont la même fréquence, supprime les doublons par période, aligne les séries sur la période de début commune et calcule la colonne en base 100 avec pandas. Elle construit aussi les intitulés lisibles des séries ;
--   la couche controller expose le résultat avec FastAPI sur l'endpoint POST /analyses/multi-indicateurs. Elle reçoit la liste des séries actives et l'option base 100, puis renvoie les séries calculées au format JSON ;
--   la page Streamlit affiche les quatre colonnes de sélection (les modalités proposées dépendent de l'indicateur choisi), met en cache les listes d'indicateurs et de pays, et trace le graphique avec Plotly Express (infobulles, zoom, légende cliquable).
+- le business object `Selection` regroupe les paramètres d'une série (indicateur, pays, modalité, sexe) ;
+- la couche DAO récupère les informations de chaque indicateur (libellé, unité, fréquence) avec `IndicateurDAO`, et les observations filtrées avec `ObservationDAO`, qui existait déjà ;
+- la couche service (fichier `multi_indicateurs_service.py`) vérifie que les indicateurs existent et ont la même fréquence, supprime les doublons par période, aligne les séries sur la période de début commune et calcule la colonne en base 100 avec pandas. Elle construit aussi les intitulés lisibles des séries ;
+- la couche controller expose le résultat avec FastAPI sur l'endpoint POST /analyses/multi-indicateurs. Elle reçoit la liste des séries actives et l'option base 100, puis renvoie les séries calculées au format JSON ;
+- la page Streamlit affiche les quatre colonnes de sélection (les modalités proposées dépendent de l'indicateur choisi), met en cache les listes d'indicateurs et de pays, et trace le graphique avec Plotly Express (infobulles, zoom, légende cliquable).
 
 Le service et le controller sont testés avec pytest, et le code est contrôlé avec ruff.
 
@@ -645,10 +645,10 @@ Il faut faire attention à la lecture d'un indice en base 100 : il mesure une va
 
 La page « Rapport PDF » permet à l'utilisateur de télécharger un rapport d'analyse comparative, sans avoir à copier lui-même les graphiques et les chiffres. Il choisit un indicateur, les pays à comparer et une période, et l'application génère automatiquement un document PDF de quatre parties :
 
--   un rappel des paramètres choisis : l'intitulé complet de l'indicateur, son unité et son code ILOSTAT entre crochets, ce qui permet de retrouver la source ;
--   un graphique de l'évolution de l'indicateur pour chaque pays ;
--   un tableau de statistiques par pays : minimum, maximum, moyenne et variation sur la période ;
--   une conclusion rédigée automatiquement à partir de ces statistiques.
+- un rappel des paramètres choisis : l'intitulé complet de l'indicateur, son unité et son code ILOSTAT entre crochets, ce qui permet de retrouver la source ;
+- un graphique de l'évolution de l'indicateur pour chaque pays ;
+- un tableau de statistiques par pays : minimum, maximum, moyenne et variation sur la période ;
+- une conclusion rédigée automatiquement à partir de ces statistiques.
 
 ```{=latex}
 \subsectiontitre{Fonctionnement technique}
