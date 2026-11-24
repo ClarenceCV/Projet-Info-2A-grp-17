@@ -776,6 +776,14 @@ En définitive, cette expérience collective m'a permis de consolider durablemen
 \sectiontitre{Témoignage de Clarence}
 ```
 
+Le but de l'application est assez proche de ce que l'on pourrait nous demander dans nos futurs travaux et projets. Mon stage de première année consistait à visualiser des données volumineuses en créant une application R Shiny, ce qui ressemble beaucoup à ce projet, hormis le volume de données (la base du stage contenait 10 millions de lignes). Je suis plus à l'aise en R et R Shiny qu'en Python, mais cette expérience m'a quand même beaucoup servi.
+
+Lors de ce projet, je me suis occupée de tout ce qui reposait sur la base de données : l'import, le traitement des données et les DAO (hormis ceux de journal.py et utilisateur.py). J'ai également écrit certains tests. Je me suis aussi chargée des logs, qui ont été moins simples à prendre en main que prévu. Même en m'appuyant sur le code du template de l'application présenté en TP, j'ai eu du mal à comprendre leur fonctionnement, mais tout fonctionne correctement aujourd'hui et j'en suis contente. Je me suis aussi occupée du workflow GitHub, où j'ai rencontré les mêmes difficultés, en m'appuyant là encore sur ce qui existait dans le template. Pour le rapport, j'ai rédigé toute la section 3. Enfin, hormis les deux premières fonctionnalités qui importent et traitent les données, je n'ai pas codé de fonctionnalité qui les exploite directement.
+
+Notre tuteur nous a conseillé de travailler avec l'IA, et nous l'avons tous utilisée, moi y compris. J'ai personnellement du mal à m'attribuer le travail réalisé avec son aide. Je l'utilise surtout quand je suis perdue face à des bugs qui commencent à me décourager, ou pour refaire quelque chose de déjà fait (comme les tests). Je m'en sers aussi pour vérifier que je n'ai rien oublié, notamment lors de la rédaction de ma partie du rapport. Évidemment, je vérifie et je relis ce qu'elle produit, mais j'ai quand même du mal à me l'approprier. Je me demande toujours si c'est réellement un outil qui nous rend plus efficaces en tant qu'étudiants.
+
+Concernant notre groupe, mis à part notre problème de suivi, je trouve qu'il a bien fonctionné : tout le monde s'est impliqué et a fait preuve de sérieux. Nous ne nous connaissions pas tous au départ, et je trouve que nous avons réussi à rendre un bon travail, même s'il reste, et restera toujours, améliorable.
+
 ```{=latex}
 \sectiontitre{Témoignage d'Antifa}
 ```
