@@ -505,6 +505,15 @@ Le service est testé avec pytest : la base est remplacée par de petites donné
 \subsectiontitre{Exemple et interprètation}
 ```
 
+Nous avons suivi l’emploi total en France (tous sexes et toutes professions confondus) sur les huit derniers trimestres, de 2023Q1 à 2024Q4. L’emploi passe d’environ 28,45 millions à 28,94 millions de personnes, soit une hausse d’environ 1,7 %. L’année 2023 est marquée par une quasi-stagnation, tandis que 2024 connaît une forte progression aux deux premiers trimestres (environ +225 000 puis +330 000 emplois), jusqu’à un maximum d’environ 29,2 millions au troisième trimestre. Le quatrième trimestre 2024 enregistre en revanche un recul d’environ 285 000 emplois. Le graphique en barres met en évidence ces variations d’un trimestre à l’autre, que la courbe ne rend pas aussi lisibles. L’axe de la courbe ne commençant pas à zéro, les écarts paraissent plus marqués qu’ils ne le sont : l’ensemble des valeurs reste dans une fourchette inférieure à 3 %.
+
+![Evolution du taux d'emploi par sexe et profession en France pour les hommes et femmes](images/Evolution_indicateur(F3).png){width="95%"}
+
+La variation se présente comme suit:
+
+![Variation du taux d'emploi par sexe et profession en France pour les hommes et femmes](images/Variation_demploi_total(F3).png){width="95%"}
+
+
 ```{=latex}
 \sectiontitre{Comparaison entre pays (F4)}
 ```
