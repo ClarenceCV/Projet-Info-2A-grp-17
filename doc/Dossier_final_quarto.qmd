@@ -656,6 +656,9 @@ Nous avons suivi l’emploi total en France (tous sexes et toutes professions co
 
 ![Evolution du taux d'emploi par sexe et profession en France pour les hommes et femmes](images/Evolution_indicateur(F3).png){width="95%"}
 
+
+ewpage
+
 La variation se présente comme suit:
 
 ![Variation du taux d'emploi par sexe et profession en France pour les hommes et femmes](images/Variation_demploi_total(F3).png){width="95%"}
