@@ -249,7 +249,7 @@ Le projet a été réalisé par cinq membres. Pour avancer en parallèle sans se
 
 \textbf{•Les fonctionnalités}
 
--Antifa Badarou (rôle C : évolution d’un indicateur, F3). Elle a codé le calcul de l’évolution d’un indicateur sur les N derniers trimestres : service, schéma, controller, tests, puis la page d’affichage des graphiques. Elle a fournit le template pour la rédaction du dossier final et effectué des mises en formes et réglages global du document.Elle a aussi rédigé avec l'aide des autres memebres le dossier final.\newline
+-Antifa Badarou (rôle C : évolution d’un indicateur, F3). Elle a codé le calcul de l’évolution d’un indicateur sur les N derniers trimestres : service, schéma, controller, tests, puis la page d’affichage des graphiques. Elle a fournit le template pour la rédaction du dossier final et effectué des mises en formes et réglages global du document.Elle a aussi rédigé avec l'aide des autres membres le dossier final.\newline
 
 -William Margerand (rôle D : comparaison entre pays, F4, et carte du monde, FO2). Il a codé le classement des pays pour la période la plus récente (valeurs les plus hautes et les plus basses) avec ses tests, puis la carte choroplèthe. Il a ensuite amélioré le choix de la période, la période commune et les couleurs. Il a rédigé les sections du dossier consacrées à F4 et FO2, à l’exploration des données, ainsi que le chapitre 2 de modélisation et le diagramme de cas d’utilisation.\newline
 
@@ -263,7 +263,7 @@ Chacun a rédigé ses propres sections du dossier final et tenu un compte rendu 
 \sectiontitre{Réadaptation des diagrammes}
 ```
 
-A la suite du dépot du rapport intermédiare,notre tuteur nous a fais des remarques concernants le diagramme d'architecture et le diagramme de classe. Nous avons donc intégrer ses remarques et amélioré les diagrammes concernés.
+A la suite du dépôt du rapport intermédiaire,notre tuteur nous a fait des remarques concernant le diagramme d'architecture et le diagramme de classe. Nous avons donc intégré ses remarques et amélioré les diagrammes concernés.
 
 ```{=latex}
 \subsectiontitre{Diagramme d'architecture}
@@ -465,7 +465,7 @@ Le tableau suivant montre les colonnes que nous gardons et leur nouveau nom :
 
 Comme nous ne souhaitions pas stocker chaque tableau dans notre environnement, nous avons décidé de travailler avec PostgreSQL. L'objectif est d'avoir nos données sous forme de tables SQL pour pouvoir les utiliser plus facilement. Les DAO (Data Access Objects) nous permettent de communiquer avec la base SQL et d'utiliser les données récupérées.
 
-La structure de la base est définie dans le fichier `data/init_db.sql`, à la racine du projet. Il crée nos trois tables principales, « indicateur », « pays » et « observation ». Ces trois tables fonctionnent de manière très simple : « indicateur » recense tous les indicateurs (3 ici), « pays » recense tous les pays utilisés, et « observation » contient toutes les lignes des tableaux provenant d'ILOSTAT, quel que soit l'indicateur. C'est la table la plus importante de l'application : elle contient toutes les données.
+La structure de la base est définie dans le fichier `data/init_db.sql`, à la racine du projet. Il crée nos trois tables pour les données ILOSTAT, « indicateur », « pays » et « observation ». Ces trois tables fonctionnent de manière très simple : « indicateur » recense tous les indicateurs (3 ici), « pays » recense tous les pays utilisés, et « observation » contient toutes les lignes des tableaux provenant d'ILOSTAT, quel que soit l'indicateur. C'est la table la plus importante de l'application : elle contient toutes les données.
 
 Cette organisation correspond à un modèle en étoile : « observation » est la table de faits, au centre, et « indicateur » et « pays » sont des tables de dimensions qui la complètent. Chaque observation fait référence à un indicateur et à un pays grâce à des clés étrangères. Le dossier `data/` contient aussi un second fichier, `pop_db.sql`, qui fournit un petit jeu de données de secours si l'API est injoignable.
 
@@ -498,8 +498,7 @@ Ces classes sont représentées dans le diagramme de classes de la partie « Ré
 
 Cette chaîne d'import a tout de même quelques limites :
 
-- l'import est lent : comme on fait un appel à l'API par pays et par indicateur, il faut plusieurs centaines d'appels pour tout récupérer. Ici ce n'est pas encore très contraigant. Si la table "observation" dépasse les 500 milles ligne il faudrait travailler avec d'autres outils qui rendent l'import et la lecture plus rapide.
-- les données ne remontent qu'à 2020 ;
+- l'import est lent : comme on fait un appel à l'API par pays et par indicateur, il faut plusieurs centaines d'appels pour tout récupérer. Ici ce n'est pas encore très contraignant. Si la table "observation" dépasse les 500 milles lignes il faudrait travailler avec d'autres outils qui rendent l'import et la lecture plus rapide.
 - la couverture est très inégale selon les pays : certains n'ont qu'un seul trimestre dans la base, ce qui limite les comparaisons (voir la carte du monde au chapitre 4).
 
 \newpage
@@ -650,7 +649,7 @@ Deux cas particuliers sont traités. La première période de chaque pays n'a pa
 Le service est testé avec pytest : la base est remplacée par de petites données écrites à la main, ce qui permet de vérifier les variations, la coupe aux N dernières périodes pays par pays, le choix d'une seule source, le tri chronologique, la division par zéro et le cas où aucune donnée n'existe. L'endpoint est aussi testé (réponse 200, erreur 404, erreur 422, résultat vide).
 
 ```{=latex}
-\subsectiontitre{Exemple et interprètation}
+\subsectiontitre{Exemple et interprétation}
 ```
 
 Nous avons suivi l’emploi total en France (tous sexes et toutes professions confondus) sur les huit derniers trimestres, de 2023Q1 à 2024Q4. L’emploi passe d’environ 28,45 millions à 28,94 millions de personnes, soit une hausse d’environ 1,7 %. L’année 2023 est marquée par une quasi-stagnation, tandis que 2024 connaît une forte progression aux deux premiers trimestres (environ +225 000 puis +330 000 emplois), jusqu’à un maximum d’environ 29,2 millions au troisième trimestre. Le quatrième trimestre 2024 enregistre en revanche un recul d’environ 285 000 emplois. Le graphique en barres met en évidence ces variations d’un trimestre à l’autre, que la courbe ne rend pas aussi lisibles. L’axe de la courbe ne commençant pas à zéro, les écarts paraissent plus marqués qu’ils ne le sont : l’ensemble des valeurs reste dans une fourchette inférieure à 3 %.
@@ -878,7 +877,7 @@ Dans ce projet, j'ai codé la fonctionnalité d'évolution d'un indicateur (F3) 
 
 Pour être honnête, mon investissement n'a pas été régulier. Au début, j'ai surtout travaillé sur les documents, alors que le code est arrivé plus tard, à partir de la semaine 6. Ensuite, certaines semaines n'ont pas laissé de trace dans nos suivis (charge de travail d'autres matières, examens, etc). Avec le recul, j'aurais dû commencer la partie code plus tôt, car F3 s'est retrouvée codée en plusieurs étapes espacées dans le temps, et le dossier s'est écrit en fin de projet.
 
-Je n'ai jamis été très à l'aise en programmation, et la fiche de tâches de Laurent m'a été très utile : elle expliquait les étapes, les fichiers à écrire et les pièges à éviter. Je reconnais que sans elle, j'aurais eu du mal à avancer seule. Ce qui m'a vraiment fait comprendre l'application, c'est de suivre le trajet d'une requête, de l'URL jusqu'à la base de données, puis le retour sous forme de graphique. Les outils d'IA m'ont beaucoup aidée pour comprendre les erreurs et les pièges de pandas, comme les valeurs vides ou la division par zéro, mais j'ai dû vérifier moi-même le résultat avec les tests et avec des exemples.
+Je n'ai jamais été très à l'aise en programmation, et la fiche de tâches de Laurent m'a été très utile : elle expliquait les étapes, les fichiers à écrire et les pièges à éviter. Je reconnais que sans elle, j'aurais eu du mal à avancer seule. Ce qui m'a vraiment fait comprendre l'application, c'est de suivre le trajet d'une requête, de l'URL jusqu'à la base de données, puis le retour sous forme de graphique. Les outils d'IA m'ont beaucoup aidée pour comprendre les erreurs et les pièges de pandas, comme les valeurs vides ou la division par zéro, mais j'ai dû vérifier moi-même le résultat avec les tests et avec des exemples.
 
 Les principales difficultés ont été techniques. Git m'a posé beaucoup de problèmes : push refusé, conflits sur un même fichier, fichiers modifiés que je ne reconnaissais pas. J'ai aussi eu du mal avec l'organisation des tests et les imports du backend. Certains de mes commits ont un message trop vague, et Clarence a dû relire et corriger une partie de mon code (par exemple la structure du schéma), ce qui est normal pour la qualité du projet, mais montre que j'ai encore des progrès à faire en rigueur.
 
