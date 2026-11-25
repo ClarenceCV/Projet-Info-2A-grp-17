@@ -169,13 +169,38 @@ C’est une application sécurisée (avec gestion des utilisateurs et administra
 
 L'objectif final est de transformer des données statistiques brutes et complexes en un outil simple qui permet de comprendre, comment évolue l'emploi dans le monde et comment les pays se comparent entre eux.
 
+**Fonctionnalités retenues**
+
+| Code | Fonctionnalité | Type |
+|------|----------------|------|
+| F1 | Téléchargement des indicateurs depuis l'API ILOSTAT | Obligatoire |
+| F2 | Nettoyage et stockage des données dans PostgreSQL | Obligatoire |
+| F3 | Évolution d'un indicateur sur les derniers trimestres | Obligatoire |
+| F4 | Comparaison d'un indicateur entre pays (valeurs les plus hautes et les plus basses) | Obligatoire |
+| F5 | Comparaison de plusieurs indicateurs sur un même graphique | Obligatoire |
+| F6 | Comptes utilisateurs, rôles et administration | Obligatoire |
+| FO2 | Carte du monde interactive | Optionnelle |
+| FO3 | Rapport d'analyse au format PDF | Optionnelle |
+
+: Fonctionnalités retenues
+
+**Hypothèses de fonctionnement**
+
+L'application repose sur quelques hypothèses :
+
+- les données sont importées à la demande (par un administrateur ou en ligne de commande), et ne sont pas mises à jour en temps réel ;
+- elles portent sur trois indicateurs trimestriels, pour environ 80 pays, depuis 2020 ;
+- quand plusieurs sources existent pour un même pays et une même période, les analyses qui suivent une série dans le temps n'en gardent qu'une ;
+- les analyses sont réservées aux personnes connectées ;
+- l'application et sa base de données fonctionnent sur Onyxia, l'environnement de travail de l'ENSAI.
+
 ```{=latex}
 \subsectiontitre{Identification des utilisateurs}
 ```
 
-On distingue deux types de profils dans l’accès aux fonctionnalités de l’application: les utilisateurs et les administrateurs.
+On distingue trois profils dans l’accès aux fonctionnalités de l’application : les visiteurs, les utilisateurs et les administrateurs.
 
-Les utilisateurs disposent d’un compte classique leur permettant de consulter des analyses, et de visualiser les données. Ils peuvent également générer de manière automatique des rapports d’analyse au format PDF contenant les données qu’ils ont consultées. Les administrateurs sont chargés de la gestion des comptes utilisateurs classiques et peuvent modifier ou supprimer des données. Ils peuvent également faire un suivi des activités. Les utilisateurs de l’application ne peuvent pas obtenir le statut d’administrateur. Ceci permet de mieux contrôler l’accès aux modifications des données.
+Les visiteurs ne sont pas connectés : ils peuvent seulement créer un compte ou se connecter. Les utilisateurs disposent d’un compte classique leur permettant de consulter des analyses, et de visualiser les données. Ils peuvent également générer de manière automatique des rapports d’analyse au format PDF contenant les données qu’ils ont consultées. Les administrateurs sont chargés de la gestion des comptes utilisateurs classiques et peuvent modifier ou supprimer des données. Ils peuvent également faire un suivi des activités. Les utilisateurs de l’application ne peuvent pas obtenir le statut d’administrateur. Ceci permet de mieux contrôler l’accès aux modifications des données.
 
 ```{=latex}
 \sectiontitre{Méthodologie de travail et organisation de l'équipe}
@@ -185,9 +210,32 @@ Les utilisateurs disposent d’un compte classique leur permettant de consulter 
 \subsectiontitre{Méthode de travail}
 ```
 
-Pour livrer notre application à temps, nous avons réalisé un diagramme de GANTT. C’est un calendrier prévisionnel avec les différentes tâches à réaliser et leur durée estimée. Ce type de diagramme est indispensable pour avoir une bonne vision de l’avancement du projet et ne pas perdre de vue les dates de rendus. \newline Dans le cadre de notre projet, nous pouvons distinguer cinq grandes étapes :\newline • « Diagramme UML » : il s’agit ici de modéliser l’ensemble du projet en respectant le cahier des charges que nous avons établi. Il y a pour cela deux phases. La première est la phase d’étude. Elle permet de construire le diagramme de cas d’utilisation. Vient ensuite la phase de conception. Il s’agit alors de créer les diagrammes d’activités correspondant aux cas d'utilisation du premier diagramme, le diagramme de classes et celui de la base de données. Cette étape est cruciale car sans elle, l’implémentation ne pourra être faite correctement.\newline • « Dossier d’analyse » : pour s’assurer du bon démarrage du projet, nous avons réalisé un dossier d’analyse qui regroupe l’ensemble de la planification et de la modélisation. Chacun d’entre nous ayant participé à la rédaction de ce rapport, il était important de consacrer du temps à sa conception. Cela permet d’assurer la cohérence du contenu et d’en faire des relectures.\newline • « Implémentation » : c’est le temps de la réalisation du projet. Cette étape comporte l'importation des données à partir de l'ILOSTAT,la création de la base de données, le développement de la DAO et la mise en place des différentes fonctionnalités du projet. C’est la partie la plus longue du projet. Nous avions prévu d’y consacrer environ 1 mois après le dépot du rapport intermédiaire, or nous avons eu besoin de 10 jours supplémentaires pour que tout fonctionne correctement.\newline • « Rapport et code » : Afin de gagner du temps, nous voulions rédiger le rapport parallèlement à l’étape d’implémentaion. Cette dernière plus complexe et chronophage que prévu, nous avons décidé de, finalement, repousser l’écriture au.... Tout comme pour le dossier d’analyse, nous avons accordé deux jours à la relecture. Le code final étant à rendre pour le 25 novembre, nous consacrerons la dernière semaine au dossier final.\newline • « Soutenance » : pour finir, nous aurons une semaine pour créer un diaporama afin de présenter notre projet le 09 décembre devant un jury composé d’un professionnel de l’informatique, de notre encadrant et d’un représentant de l’ENSAI.\newline
+Pour livrer l'application à temps, nous avons suivi un diagramme de Gantt (figure ci-dessous). Il découpe le projet en tâches datées, regroupées en cinq phases, et fait apparaître en rouge les dates de rendu. Il nous a servi à vérifier chaque semaine l'avancement du projet, en lien avec nos comptes rendus hebdomadaires.
 
-(diagramme de GANTT)
+- **Analyse et conception** (fin août à mi-septembre) : prise en main du sujet et des outils de travail. Nous avons cadré le projet ensemble puis réalisé des diagrammes (cas d'utilisation, activité, classes, architecture, Gantt). Ces éléments ont été rassemblés dans le dossier d'analyse. Ils nous ont permis de nous mettre d'accord sur une vision du projet et des différentes fonctionnalités.
+- **Socle technique** (septembre à début octobre) : structure du code, classes métier, script SQL et premiers DAO, puis import des données ILOSTAT (F1, F2). C'est aussi à ce moment que le travail a été réparti en fiches de tâches, une par rôle. Nous avions ainsi un réel socle pour l'application, des premiers jeux de données et une projection du travail de chacun. Tout était alors prêt pour la phase de développement.
+- **Développement des fonctionnalités** (octobre à mi-novembre) : comptes, sécurité et administration (F6), analyses (F3, F4, F5), puis carte du monde (FO2) et rapport PDF (FO3). C'est la phase la plus longue : chacun codait sa fonctionnalité en parallèle, sur toutes les couches de l'application. Nous nous sommes entraidés en permanence afin d'éviter les pertes de temps inutiles et de profiter de l'expertise de chacun.
+- **Finalisation du code** (novembre) : tests, corrections suite aux remarques du tuteur, harmonisation du code (pylint, docstrings) et README, jusqu'au rendu du code le 25 novembre.
+- **Dossier final et soutenance** : la rédaction du dossier a commencé début novembre, une fois les fonctionnalités stabilisées, et s'est terminée avec le rendu du 25 novembre. La préparation du diaporama occupera ensuite les deux dernières semaines, avant la soutenance du 9 décembre.
+
+Le planning a globalement été respecté, chacun a pu coder à son rythme lors du troisième volet.
+
+![Diagramme de Gantt du projet (en rouge : les dates de rendu)](images/diagramme_gantt.png){width="100%"}
+
+Pour travailler ensemble, nous nous sommes appuyés sur les outils suivants :
+
+| Outil | Utilisation dans le projet |
+|-------|----------------------------|
+| GitHub | Dépôt commun du code et du dossier, historique de toutes les modifications |
+| WhatsApp | Échanges quotidiens, questions rapides et organisation des séances |
+| Comptes rendus hebdomadaires | Suivi de l'avancement semaine par semaine (12 semaines), dans le dossier `doc/suivi` du dépôt |
+| Fiches de tâches | Une fiche par rôle : objectifs, fichiers à écrire, étapes et tutoriels |
+| Onyxia | Environnement de travail commun : service VSCode pour coder, service PostgreSQL pour la base |
+| Réunions avec le tuteur | Validation des choix de conception et retours sur l'avancement |
+| IA générative | Aide à la compréhension des erreurs, à la rédaction des fiches et à la relecture, conseillée par l'équipe enseignante |
+| Quarto | Rédaction du dossier final à plusieurs, dans le dépôt |
+
+: Outils de travail utilisés par l'équipe
 
 ```{=latex}
 \subsectiontitre{Organisation de l'équipe}
@@ -197,7 +245,7 @@ Le projet a été réalisé par cinq membres. Pour avancer en parallèle sans se
 
 \textbf{•Le socle commun}
 
--Clarence Chemla-Vidaud (rôle A : données et administration). Elle est responsable de tout ce qui touche aux données : import depuis ILOSTAT (fetcher), base de données, gestion des pays et des modalités, actions d’administration sur les données (F1, F2 et la partie données de F6). Elle assure aussi la qualité du projet : infrastructure de tests, journalisation (logs), intégration continue et README. En fin de projet, elle a relu l’ensemble du backend, harmonisé le code avec pylint et simplifié plusieurs fichiers (schémas, controllers).\newline -Laurent Khaouli (rôle B : utilisateurs, sécurité et squelette frontend). Il gère les comptes (création, connexion, rôles utilisateur et administrateur, historique des actions, partie comptes de F6) et construit le squelette de l’application Streamlit dans lequel chacun a ajouté sa page. Il a aussi conçu l’organisation du travail en fiches et testé le fonctionnement des endpoints.
+-Clarence Chemla-Vidaud (rôle A : données et administration). Elle est responsable de tout ce qui touche aux données : import depuis ILOSTAT (fetcher), base de données, gestion des pays et des modalités, actions d’administration sur les données (F1, F2 et la partie données de F6). Elle assure aussi la qualité du projet : infrastructure de tests, journalisation (logs) et README. En fin de projet, elle a relu l’ensemble du backend, harmonisé le code avec pylint et simplifié plusieurs fichiers (schémas, controllers).\newline -Laurent Khaouli (rôle B : utilisateurs, sécurité et squelette frontend). Il gère les comptes (création, connexion, rôles utilisateur et administrateur, historique des actions, partie comptes de F6) et construit le squelette de l’application Streamlit dans lequel chacun a ajouté sa page. Il a aussi conçu l’organisation du travail en fiches et testé le fonctionnement des endpoints.
 
 \textbf{•Les fonctionnalités}
 
@@ -221,23 +269,57 @@ A la suite du dépot du rapport intermédiare,notre tuteur nous a fais des remar
 \subsectiontitre{Diagramme d'architecture}
 ```
 
-Voilà ci contre le diagramme d'architecture qui montre la structure globale de l'API:
+Afin d'offrir une expérience utilisateur optimale et de valoriser pleinement les analyses statistiques produites, nous avons retenu une architecture découplée associant une **API REST** (FastAPI) et une **interface web interactive** (Streamlit). Ce choix architectural présente trois avantages majeurs pour le projet :
+
+- **un meilleur impact visuel et ergonomique** : l'interface Streamlit permet de restituer directement les résultats sous forme de graphiques interactifs, de cartes choroplèthes et de comparaisons multi-séries accessibles sans manipulation technique ;
+- **un pipeline de données complet et maîtrisé** : la chaîne couvre l'ensemble du cycle de vie de la donnée, depuis la collecte sur l'API externe ILOSTAT jusqu'à la visualisation finale, en passant par le nettoyage, le stockage relationnel et l'exposition via notre propre API ;
+- **une couverture optimale des fonctionnalités attendues** : la séparation entre la logique métier côté serveur et l'affichage côté client facilite l'intégration de traitements avancés (normalisation en Base 100, génération de rapports PDF, gestion des rôles utilisateurs) tout en garantissant la maintenabilité du code.
+
+![Diagramme d'architecture générale de l'application LaborScope](images/diagramme_architecture.PNG){width="85%"}
+
+Le tableau suivant présente les technologies utilisées dans chaque couche de l'application, et la raison de leur choix :
+
+| Couche | Outils | Rôle et raison du choix |
+|--------|--------|-------------------------|
+| Langage et environnement | Python 3.12, uv | Langage commun à tout le groupe ; uv installe les mêmes versions des bibliothèques chez chacun (fichier `uv.lock`) |
+| Récupération des données | requests | Téléchargement des fichiers CSV de l'API ILOSTAT |
+| Traitement des données | pandas | Nettoyage des données et calculs des analyses (variations, classements, base 100) directement sur des tableaux |
+| Base de données | PostgreSQL, psycopg2 | Base relationnelle fournie par Onyxia ; clés et contraintes garantissent la cohérence des données |
+| API | FastAPI, uvicorn | Vérification automatique des paramètres des requêtes et documentation interactive générée seule (page `/docs`) |
+| Interface | Streamlit, Plotly | Interface web écrite entièrement en Python, sans HTML ni JavaScript ; graphiques interactifs et carte du monde |
+| Rapport PDF | Matplotlib, fpdf2 | Graphique tracé côté serveur, puis assemblé avec les statistiques dans un document PDF |
+| Sécurité | bcrypt | Hachage des mots de passe : ils ne sont jamais stockés en clair |
+| Référentiels de pays | pycountry_convert, worldcountrygroups | Continent et groupes de chaque pays, sans les écrire à la main |
+| Configuration | python-dotenv, PyYAML | Identifiants de connexion lus dans le fichier `.env` (absents du code) ; configuration des logs |
+| Qualité | pytest, ruff, pylint | Tests unitaires, vérification du style et de la qualité du code |
+
+: Stack technique de l'application
 
 ```{=latex}
 \subsectiontitre{Diagramme de classes}
 ```
 
-Voila ci après le diagramme de classe corrigé:
+Le diagramme de classes a presque entièrement changé depuis le rapport intermédiaire. L'ancien modèle comportait quatre classes : `Observation`, reliée par agrégation à `Pays`, `Indicateur` et `Profession`. En codant l'application, nous l'avons revu sur trois points.
+
+- **Les observations ne sont plus des objets.** Une analyse porte sur des milliers de lignes : créer un objet par ligne aurait été lent, alors que pandas calcule directement sur un tableau (variations, classements, base 100). Les DAO renvoient donc les observations sous forme de DataFrame, et la classe `Observation` a disparu.
+- **La classe `Profession` a été supprimée.** Selon l'indicateur, la ventilation est une profession ou une tranche d'âge. Plutôt qu'une classe par type de ventilation, une seule colonne générique, `classif1`, contient la valeur, et l'attribut `nom_classif1` d'`Indicateur` indique ce qu'elle représente. Ajouter un indicateur avec une autre ventilation ne demande donc aucune nouvelle classe.
+- **Les classes restantes ont été adaptées.** `Indicateur` et `Pays` sont identifiés par leur code (code ILOSTAT, code ISO) plutôt que par un identifiant numérique. `Indicateur` gagne son unité et sa fréquence, et vérifie ses attributs à sa création. `Pays` sait retrouver son continent et ses groupes de pays.
+
+Trois classes sont apparues avec les fonctionnalités : `Selection`, qui décrit une courbe de la comparaison multi-indicateurs (F5), `Utilisateur`, pour les comptes et les rôles (F6), et `ActionJournal`, pour le journal des actions. `Utilisateur` ne contient ni le mot de passe ni le jeton de session : ils restent en base, ce qui évite de les faire circuler dans le reste du code.
+
+![Diagramme de classes des business objects](images/diagramme_classes.png){width="100%"}
 
 ```{=latex}
 \sectiontitre{Normes de codage utilisées}
 ```
 
-Pour que n’importe quel programme soit facilement compréhensible par tous les développeurs informatiques, il existe des conventions de nommage en python. Ainsi le projet **Laborscope**, développée en python suit les règles suivantes :\newline
+Pour que le code reste lisible par les cinq membres du groupe, et par d'autres développeurs après nous, nous avons suivi des conventions communes, vérifiées automatiquement :
 
-•Indentation : 4 espaces par niveau (jamais de tabulations mélangées avec des espaces)\newline •Longueur de ligne : 79 caractères maximum pour le code (72 pour les commentaires et docstrings). Certaines lignes s'étendent à 88 ou 100.\newline •Lignes vides : 2 lignes entre les fonctions et classes de niveau supérieur, 1 ligne entre les méthodes\newline •Imports : un par ligne, en haut du fichier, regroupés dans l’ordre : bibliothèque standard, bibliothèques tierces, modules locaux\newline •Espaces : autour des opérateurs, pas d’espace avant les parenthèses d’un appel (f(x)), pas d’espace superflu à l’intérieur des crochets.\newline
-
-Pour faciliter la lecture de notre code, et permettre à d’autres développeurs de travailler dessus par la suite, nous l’avons commenté.
+- **Style** : la norme PEP 8 de Python (indentation de 4 espaces, deux lignes vides entre les fonctions et les classes, imports en haut du fichier regroupés dans l'ordre : bibliothèque standard, bibliothèques tierces, modules du projet), avec des lignes de 100 caractères au maximum ;
+- **Vérification automatique** : ruff contrôle le style et l'ordre des imports, et pylint la qualité du code. Leurs règles sont définies une seule fois dans le fichier `pyproject.toml`, pour que le code de chacun soit contrôlé de la même façon ;
+- **Nommage** : des noms en français et explicites (`EvolutionService`, `ObservationDAO`, `lister_classif1`), en CamelCase pour les classes et en snake_case pour les fonctions et les variables ;
+- **Documentation** : chaque module, classe et fonction publique a une docstring au format Google (son rôle, puis les sections Args, Returns et Raises), et les paramètres sont annotés avec leur type ;
+- **Commentaires** : réservés aux passages qui ne s'expliquent pas d'eux-mêmes, par exemple un choix de traitement des données.
 
 \newpage
 
@@ -375,7 +457,7 @@ Le tableau suivant montre les colonnes que nous gardons et leur nouveau nom :
 
 : Colonnes conservées et renommées lors du traitement des données
 
-\[Graphe simplifié du chemin des données\]
+![Graphe simplifié du chemin des données](images/chemin_donnees.png){width="100%"}
 
 ```{=latex}
 \subsectiontitre{Stockage, business objects et DAO}
@@ -386,6 +468,10 @@ Comme nous ne souhaitions pas stocker chaque tableau dans notre environnement, n
 La structure de la base est définie dans le fichier `data/init_db.sql`, à la racine du projet. Il crée nos trois tables principales, « indicateur », « pays » et « observation ». Ces trois tables fonctionnent de manière très simple : « indicateur » recense tous les indicateurs (3 ici), « pays » recense tous les pays utilisés, et « observation » contient toutes les lignes des tableaux provenant d'ILOSTAT, quel que soit l'indicateur. C'est la table la plus importante de l'application : elle contient toutes les données.
 
 Cette organisation correspond à un modèle en étoile : « observation » est la table de faits, au centre, et « indicateur » et « pays » sont des tables de dimensions qui la complètent. Chaque observation fait référence à un indicateur et à un pays grâce à des clés étrangères. Le dossier `data/` contient aussi un second fichier, `pop_db.sql`, qui fournit un petit jeu de données de secours si l'API est injoignable.
+
+![Schéma de la base de données](images/schema_bdd.png){width="100%"}
+
+Ce schéma montre les deux groupes de tables de la base, qui ne sont pas reliés entre eux. À gauche, le modèle en étoile stocke les données ILOSTAT : chaque observation renvoie à un pays et à un indicateur, et un pays ou un indicateur peut avoir plusieurs observations. À droite, les tables des comptes : le mot de passe n'y est stocké que sous forme de hash, et le jeton de session est vide quand l'utilisateur est déconnecté. Quand un compte est supprimé, ses actions restent dans le journal : `utilisateur_id` passe à NULL, mais le pseudo copié permet de savoir qui les a faites. La dernière colonne de chaque table donne un exemple de valeur.
 
 Une observation est identifiée par une clé primaire composée de six colonnes : l'indicateur, le pays, la source, la période, le sexe et la modalité. Cette clé nous permet de relancer l'import autant de fois que nécessaire sans créer de doublons : grâce à la commande SQL `INSERT ... ON CONFLICT`, une observation déjà présente n'est pas ajoutée une deuxième fois, mais sa valeur est mise à jour.
 
@@ -404,7 +490,7 @@ Les DAO ne renvoient pas seulement des tableaux : ils peuvent aussi renvoyer des
 
 Par exemple, la méthode `lister` de `PaysDAO` renvoie une liste d'objets `Pays`, et celle d'`IndicateurDAO` une liste d'objets `Indicateur`. Les observations, elles, restent sous forme de tableaux pandas, car les services font leurs calculs directement dessus.
 
-\[Diagramme de classes des business objects\]
+Ces classes sont représentées dans le diagramme de classes de la partie « Réadaptation des diagrammes ».
 
 ```{=latex}
 \subsectiontitre{Limites}
@@ -419,10 +505,72 @@ Cette chaîne d'import a tout de même quelques limites :
 \newpage
 
 ```{=latex}
+\sectiontitre{Fiabilité et traçabilité de l'application}
+```
+
+```{=latex}
+\subsectiontitre{Logs techniques et journalisation}
+```
+
+Pour suivre ce qui se passe dans l'application, nous avons mis en place deux systèmes différents : les logs techniques, destinés aux développeurs, et le journal des actions, destiné à l'administrateur.
+
+**Les logs techniques**
+
+Les logs techniques enregistrent le fonctionnement interne du code. Ils sont gérés par le fichier `src/utils/log_utils.py` et configurés dans le fichier `backend/logging_config.yml`. Au lancement de l'application, les logs sont affichés dans la console et écrits dans le fichier `backend/logs/laborscope.log`. Quand ce fichier dépasse 10 Mo, un nouveau fichier est créé, et on garde au maximum les cinq derniers.
+
+Plutôt que d'écrire des lignes de log à la main dans chaque méthode, nous avons créé un décorateur `@log`. Il suffit de l'ajouter au-dessus d'une méthode pour que trois choses soient enregistrées automatiquement : l'entrée dans la méthode avec ses paramètres, la sortie avec un résumé du résultat, et l'erreur si la méthode échoue. Nous l'utilisons en particulier dans les DAO et dans la chaîne d'import des données.
+
+Pour l’implémentation nous nous sommes basé sur celle du template de l’application initiale.
+Deux choix nous ont permis de garder des logs lisibles :
+
+- les résultats volumineux sont résumés : pour un DataFrame, on écrit seulement son nombre de lignes et de colonnes, pas tout son contenu ;
+- les appels imbriqués sont indentés, ce qui permet de voir quelle méthode en appelle une autre.
+
+Enfin, comme les logs contiennent les paramètres des méthodes, il fallait éviter d'y écrire des informations sensibles. Ainsi, la valeur de tout paramètre dont le nom contient un mot comme « mdp », « password » ou « token » est remplacée par `*****`.
+
+**Le journal des actions**
+
+Le journal répond à une demande du cahier des charges : l'administrateur doit pouvoir suivre l'activité des utilisateurs. Contrairement aux logs techniques, il est stocké dans la base de données, dans la table « journal ».
+
+Chaque action enregistrée contient le pseudo et l'identifiant de l'utilisateur, le type d'action, un détail libre et la date. Les types d'action possibles sont définis dans le business object `ActionJournal` :
+
+- les actions sur les comptes : connexion, échec de connexion, déconnexion, création et suppression de compte ;
+- les actions sur les données : import des données ILOSTAT, modification et suppression d'une donnée.
+
+L'objet `ActionJournal` vérifie à sa création que l'action fait bien partie de cette liste, ce qui évite d'enregistrer des actions mal écrites.
+
+Le journal suit la même architecture que le reste de l'application : `JournalDAO` écrit et lit dans la table, `JournalService` est appelé par les autres services (par exemple `UtilisateurService` lors d'une connexion), et `journal_controller.py` met le journal à disposition de l'administrateur, avec des filtres par action et par pseudo. L'accès est réservé aux administrateurs.
+
+Deux choix méritent d'être expliqués :
+
+- le pseudo est copié dans le journal au moment de l'action : si le compte est supprimé plus tard, on sait toujours qui a fait l'action ;
+- une erreur dans le journal ne fait jamais échouer l'action principale : si l'enregistrement échoue, un avertissement est affiché, mais l'utilisateur peut quand même se connecter.
+
+```{=latex}
+\subsectiontitre{Tests}
+```
+
+Pour vérifier que notre code fonctionne, et qu'il continue de fonctionner quand on le modifie, nous avons écrit des tests unitaires avec la librairie `pytest`. Ils sont rangés dans le dossier `src/tests/`, avec un sous-dossier par couche de l'application.
+
+Au total, l'application compte 218 tests. Certains tests sont lancés plusieurs fois avec des données différentes. Ils se lancent tous avec la commande `uv run pytest`.
+
+Nos tests sont écrits selon la méthode *Given / When / Then* : on prépare une situation (*Given*), on appelle la méthode testée (*When*), puis on vérifie le résultat (*Then*).
+
+Pour que chaque test ne vérifie qu'une seule couche, nous remplaçons les autres couches par des faux grâce à `unittest.mock` :
+
+- dans les tests du fetcher, l'API ILOSTAT est remplacée : aucun appel réseau n'est fait ;
+- dans les tests des services, le DAO est remplacé par un faux qui renvoie un petit tableau écrit à la main. On connaît donc à l'avance le résultat attendu, par exemple un classement de pays ;
+- dans les tests des controllers, on utilise le `TestClient` de FastAPI, qui envoie de vraies requêtes HTTP à l'application. On vérifie ainsi qu'un utilisateur non connecté ou non administrateur est bien refusé.
+
+Les tests des DAO sont différents : ils utilisent une vraie base PostgreSQL, car c'est la seule façon de vérifier les requêtes SQL. Pour ne pas abîmer les vraies données, ils n'utilisent que des données de test faciles à reconnaître (le pays « ZZZ », l'indicateur « TEST_DAO »), qui sont supprimées avant et après chaque test. Si la base est injoignable, par exemple sur un ordinateur personnel, ces tests sont ignorés au lieu d'échouer, et la raison est affichée. Les autres tests restent utilisables.
+
+Ces tests ont tout de même une limite : ils ne testent pas le frontend Streamlit, que nous avons vérifié nous même à l'implémentation de chaque fonction ou détail supplémentaire.
+
+\newpage
+```{=latex}
 \mychapter{Fonctionnement de l'application}
 ```
 
-(Détails sur les fonctionnalités de l'application)
 
 ```{=latex}
 \sectiontitre{Explorer les données}
@@ -714,6 +862,14 @@ En définitive, cette expérience collective m'a permis de consolider durablemen
 \sectiontitre{Témoignage de Clarence}
 ```
 
+Le but de l'application est assez proche de ce que l'on pourrait nous demander dans nos futurs travaux et projets. Mon stage de première année consistait à visualiser des données volumineuses en créant une application R Shiny, ce qui ressemble beaucoup à ce projet, hormis le volume de données (la base du stage contenait 10 millions de lignes). Je suis plus à l'aise en R et R Shiny qu'en Python, mais cette expérience m'a quand même beaucoup servi.
+
+Lors de ce projet, je me suis occupée de tout ce qui reposait sur la base de données : l'import, le traitement des données et les DAO (hormis ceux de journal.py et utilisateur.py). J'ai également écrit certains tests. Je me suis aussi chargée des logs, qui ont été moins simples à prendre en main que prévu. Même en m'appuyant sur le code du template de l'application présenté en TP, j'ai eu du mal à comprendre leur fonctionnement, mais tout fonctionne correctement aujourd'hui et j'en suis contente. Je me suis aussi occupée du workflow GitHub, où j'ai rencontré les mêmes difficultés, en m'appuyant là encore sur ce qui existait dans le template. Pour le rapport, j'ai rédigé toute la section 3. Enfin, hormis les deux premières fonctionnalités qui importent et traitent les données, je n'ai pas codé de fonctionnalité qui les exploite directement.
+
+Notre tuteur nous a conseillé de travailler avec l'IA, et nous l'avons tous utilisée, moi y compris. J'ai personnellement du mal à m'attribuer le travail réalisé avec son aide. Je l'utilise surtout quand je suis perdue face à des bugs qui commencent à me décourager, ou pour refaire quelque chose de déjà fait (comme les tests). Je m'en sers aussi pour vérifier que je n'ai rien oublié, notamment lors de la rédaction de ma partie du rapport. Évidemment, je vérifie et je relis ce qu'elle produit, mais j'ai quand même du mal à me l'approprier. Je me demande toujours si c'est réellement un outil qui nous rend plus efficaces en tant qu'étudiants.
+
+Concernant notre groupe, mis à part notre problème de suivi, je trouve qu'il a bien fonctionné : tout le monde s'est impliqué et a fait preuve de sérieux. Nous ne nous connaissions pas tous au départ, et je trouve que nous avons réussi à rendre un bon travail, même s'il reste, et restera toujours, améliorable.
+
 ```{=latex}
 \sectiontitre{Témoignage d'Antifa}
 ```
@@ -733,6 +889,18 @@ Si c'était à refaire, je répartirais mon temps de façon plus régulière, je
 ```{=latex}
 \sectiontitre{Témoignage de Laurent}
 ```
+
+Dès le début, je me suis fortement investi dans ce projet. Les TP m'avaient fait découvrir l'architecture complète d'une application en couches (objets métier, DAO, services, API), que je ne connaissais que de loin. Le projet m'a permis de faire le lien entre ces différentes séances et de les assembler dans une application qui fonctionne de bout en bout.
+
+Le groupe était motivé. Nos niveaux en programmation étaient très différents, mais cela n'a pas freiné notre progression. Assez tôt, j'ai proposé une structure du code et une répartition du travail en cinq rôles, selon les envies et les compétences de chacun. Pour chaque rôle, j'ai rédigé avec l'aide de l'IA une fiche de tâches détaillée : objectifs, fichiers à écrire, étapes et tutoriels. Chacun pouvait ainsi avancer de façon autonome, sans attendre les autres.
+
+Ma partie technique portait sur les comptes utilisateurs et la sécurité (F6) : la création de compte et la connexion, le hachage des mots de passe avec bcrypt, le jeton de session, deux rôles (utilisateur et administrateur) dont les droits sont vérifiés par l'API, et un journal des actions importantes. J'ai aussi construit le squelette de l'interface Streamlit : le client de l'API, le menu qui dépend du rôle et les pages d'administration. J'ai ensuite participé à la finalisation, avec la protection des routes d'analyse, le README et la documentation du code. J'ai beaucoup appris sur la gestion des utilisateurs. Je n'imaginais pas le nombre de cas à prévoir : un jeton qui n'est plus valide, un administrateur qui veut supprimer son propre compte, ou un message d'erreur qui ne doit pas révéler si un pseudo existe.
+
+L'équipe enseignante a recommandé d'utiliser l'IA, et c'était selon moi un excellent choix. Nous avons pu consacrer notre temps à l'organisation du travail, aux choix de modélisation et aux choix techniques, plutôt qu'à l'écriture de code répétitif ou à la recherche d'erreurs. Cela m'a aussi appris à garder un regard critique : il fallait toujours relire le code proposé, le tester et l'adapter à notre architecture. J'apprécie d'autant plus ce choix qu'il correspond, je pense, aux attentes actuelles des entreprises. Elles cherchent moins des personnes qui écrivent chaque ligne de code que des data scientists capables d'organiser un projet et de travailler efficacement avec l'IA.
+
+La principale difficulté a été de garder un code cohérent entre cinq personnes qui avancent en parallèle. Il fallait s'accorder sur les noms des fonctions et sur les formats de données échangés entre le backend et l'interface, et gérer les conflits Git. Nous avons passé une partie de la dernière semaine à harmoniser le code (tests, documentation, qualité). Ce travail aurait été plus léger si nous avions fixé ces règles communes dès le départ.
+
+Ce que je retiens surtout, ce sont les compétences d'organisation d'un projet. J'ai toujours à cœur de garder une vision globale sur mes projets, et j'ai pu le faire ici en proposant à l'équipe une structure, une répartition des tâches et une organisation générale. Si c'était à refaire, je fixerais dès le début des règles communes pour le code et les tests, afin d'avoir moins de reprises en fin de projet.
 
 ```{=latex}
 \sectiontitre{Témoignage de William}
