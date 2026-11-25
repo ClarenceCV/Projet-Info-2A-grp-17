@@ -263,7 +263,7 @@ Chacun a rédigé ses propres sections du dossier final et tenu un compte rendu 
 \sectiontitre{Réadaptation des diagrammes}
 ```
 
-A la suite du dépôt du rapport intermédiaire,notre tuteur nous a fait des remarques concernant le diagramme d'architecture et le diagramme de classe. Nous avons donc intégré ses remarques et amélioré les diagrammes concernés.
+A la suite du dépôt du rapport intermédiaire, notre tuteur nous a fait des remarques concernant le diagramme d'architecture et le diagramme de classe. Nous avons donc intégré ses remarques et amélioré les diagrammes concernés.
 
 ```{=latex}
 \subsectiontitre{Diagramme d'architecture}
@@ -769,7 +769,7 @@ La fonctionnalité suit l'architecture en couches de l'application :
 - la couche DAO récupère les informations de chaque indicateur (libellé, unité, fréquence) avec `IndicateurDAO`, et les observations filtrées avec `ObservationDAO`, qui existait déjà ;
 - la couche service (fichier `multi_indicateurs_service.py`) vérifie que les indicateurs existent et ont la même fréquence, supprime les doublons par période, aligne les séries sur la période de début commune et calcule la colonne en base 100 avec pandas. Elle construit aussi les intitulés lisibles des séries ;
 - la couche controller expose le résultat avec FastAPI sur l'endpoint POST /analyses/multi-indicateurs. Elle reçoit la liste des séries actives et l'option base 100, puis renvoie les séries calculées au format JSON ;
-- la page Streamlit affiche les quatre colonnes de sélection (les modalités proposées dépendent de l'indicateur choisi), met en cache les listes d'indicateurs et de pays, et trace le graphique avec Plotly Express (infobulles, zoom, légende cliquable).
+- la page Streamlit affiche les quatre colonnes de sélection (les modalités proposées dépendent de l'indicateur choisi), met en cache les listes d'indicateurs et de pays, et trace le graphique avec Plotly Express (infobulles, zoom, légende cliquable).  
 
 Le service et le controller sont testés avec pytest, et le code est contrôlé avec ruff.
 
@@ -803,8 +803,12 @@ La page « Rapport PDF » permet à l'utilisateur de télécharger un rapport d'
 ```{=latex}
 \subsectiontitre{Fonctionnement technique}
 ```
+La génération automatisée des rapports PDF repose sur un traitement entièrement exécuté côté serveur (FastAPI) afin de garantir la reproductibilité des documents, la rapidité de rendu et l'indépendance vis-à-vis de l'environnement client. Le pipeline technique s'articule en quatre étapes :
 
-Le graphique du rapport est tracé côté serveur avec Matplotlib en mode `Agg`, qui permet de produire une image sans affichage à l'écran. <!-- À compléter : bibliothèque utilisée pour assembler le PDF, service, endpoint et fichier de la page Streamlit -->
+- **Extraction et mise en forme des données** : à réception de la requête contenant les paramètres de sélection de l'utilisateur (indicateur, zone géographique, période), le service interroge la base PostgreSQL via la couche DAO et calcule les indicateurs synthétiques (moyenne, minimum, maximum, variation sur la période) ;
+- **Rendu graphique hors écran (*headless*) avec Matplotlib (`Agg`)** : le graphique d'évolution temporelle est généré côté serveur à l'aide de la bibliothèque **Matplotlib** configurée avec le moteur de rendu non interactif **`Agg`** (*Anti-Grain Geometry*). Ce choix technique est indispensable dans une architecture web : contrairement aux moteurs graphiques classiques qui nécessitent un serveur d'affichage (X11 ou interface graphique locale), le mode `Agg` produit directement une image matricielle haute résolution en mémoire sans ouvrir de fenêtre à l'écran, évitant ainsi tout blocage ou erreur d'exécution sur le serveur Linux ;
+- **Sérialisation en mémoire tampon (`BytesIO`)** : plutôt que d'écrire des fichiers images temporaires sur le disque — ce qui ralentirait les entrées/sorties et poserait des problèmes de concurrence entre utilisateurs simultanés — le graphique est enregistré directement dans un flux binaire en mémoire vive (`io.BytesIO` au format PNG) ;
+- **Composition et exposition du document avec FPDF2** : la bibliothèque **FPDF2** assemble dynamiquement le document en intégrant l'en-tête institutionnel, les métadonnées de la requête, le tableau récapitulatif des statistiques et l'image extraite du flux mémoire. Le fichier PDF final est ensuite renvoyé sous forme de flux binaire (`StreamingResponse`) à l'interface Streamlit, qui le met immédiatement à disposition de l'utilisateur via un bouton de téléchargement.
 
 ```{=latex}
 \subsectiontitre{Exemple et interprétation}
@@ -814,10 +818,11 @@ On génère le rapport pour l'indicateur « Emploi par sexe et profession (milli
 
 ![Exemple de rapport PDF généré par LaborScope](images/telechargement.PNG){width="100%"}
 
-Le graphique met tout d'abord en évidence un écart de niveau structurel important entre les deux marchés du travail : sur l'ensemble de la période étudiée (2023Q1 à 2024Q4), l'emploi total en Allemagne oscille entre 42 338,85 et 43 504,96 milliers de personnes (soit environ 42,3 à 43,5 millions d'actifs occupés), contre 28 448,00 à 29 216,59 milliers en France (environ 28,4 à 29,2 millions). Cet écart de près de 14 millions d'emplois s'explique d'abord par la différence de taille démographique entre les deux pays (environ 84 millions d'habitants en Allemagne contre 68 millions en France), mais aussi par un taux d'emploi structurellement plus élevé , notamment chez les seniors et dans le recours au temps partiel.
+Le graphique met tout d'abord en évidence un écart de niveau structurel important entre les deux marchés du travail : sur l'ensemble de la période étudiée (2023Q1 à 2024Q4), l'emploi total en Allemagne oscille entre $42\,338{,}85$ et $43\,504{,}96$ milliers de personnes (soit environ $42{,}3$ à $43{,}5$ millions d'actifs occupés), contre $28\,448{,}00$ à $29\,216{,}59$ milliers en France (environ $28{,}4$ à $29{,}2$ millions). On observe ainsi un écart de niveau d'environ $14$ millions d'emplois entre les deux pays sur toute la fenêtre d'observation.
 
-Au-delà de ce décalage de volume, l'analyse des variations permet d'apprécier le dynamisme respectif des créations nettes d'emplois sur la période : l'emploi total progresse de +1 166,11 milliers en Allemagne (soit une hausse relative d'environ +2,75 % entre début 2023 et fin 2024), contre +485,16 milliers en France (soit environ +1,71 %). Sur cette fenêtre temporelle, le marché du travail allemand affiche donc un volume de créations nettes plus de deux fois supérieur à celui de la France, porté notamment par la croissance des emplois dans le secteur des services (santé, action sociale, éducation et administration publique) et par les flux d'immigration active qui soutiennent l'offre de travail face au vieillissement démographique.\
-L'utilisateur dispose ainsi, en un seul document PDF, des ordres de grandeur absolus et des amplitudes de variation pour appuyer son diagnostic économique..
+Au-delà de ce décalage de volume, l'analyse des variations calculées automatiquement dans le rapport PDF permet d'apprécier le dynamisme respectif des créations nettes d'emplois sur la période : l'emploi total progresse de $+1\,166{,}11$ milliers en Allemagne (soit une hausse relative de $+2{,}75\,\%$ entre début 2023 et fin 2024), contre $+485{,}16$ milliers en France (soit $+1{,}71\,\%$). Sur cette fenêtre temporelle, le marché du travail allemand enregistre ainsi un volume de créations nettes plus de deux fois supérieur à celui de la France, ainsi qu'un rythme de croissance relative environ $1{,}6$ fois plus élevé.
+
+L'utilisateur dispose ainsi, en un seul document PDF, des ordres de grandeur absolus et des amplitudes de variation nécessaires pour appuyer son diagnostic économique.
 
 Comme pour la comparaison entre pays (F4), cet indicateur est un nombre de personnes et non un taux : l'écart entre les deux pays reflète surtout leur taille, et non la situation de leur marché du travail. Le rapport est surtout utile pour garder une trace des paramètres et des chiffres consultés, avec la source de chaque donnée.
 
