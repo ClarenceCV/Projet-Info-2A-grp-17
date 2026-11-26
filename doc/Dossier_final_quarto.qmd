@@ -865,7 +865,7 @@ Apports techniques et travail collaboratif
 
 Sur le plan technique, ce projet m'a permis de franchir un cap important dans ma manière de concevoir, structurer et partager du code au sein d'une équipe. J'ai notamment acquis des compétences essentielles sur plusieurs plans :
 
-la maîtrise d'une architecture en couches rigoureuse : j'ai appris à bien distinguer les responsabilités de chaque composant, en séparant nettement les objets métiers (business_object) — qui modélisent les concepts fondamentaux du domaine comme une sélection d'analyse — des couches d'accès aux données (DAO) et de la logique applicative (services) ;
+la maîtrise d'une architecture en couches rigoureuse : j'ai appris à bien distinguer les responsabilités de chaque composant, en séparant nettement les objets métiers (business_object), qui modélisent les concepts fondamentaux du domaine comme une sélection d'analyse, des couches d'accès aux données (DAO) et de la logique applicative (services) ;
 
 l'utilisation quotidienne de Git et GitHub : le travail en équipe sur un dépôt commun m'a permis de me familiariser concrètement avec le versionnement du code, la gestion des branches par fonctionnalité, les fusions (merges), la résolution de conflits et la synchronisation régulière avec les avancées des autres membres du groupe ;
 
