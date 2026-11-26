@@ -123,7 +123,7 @@ Nous remercions tout particulièrement **M. Anas KNEFATI**, notre tuteur, pour s
 
 Nous adressons également nos remerciements à l'ensemble de l'équipe pédagogique de l'École nationale de la statistique et de l'analyse de l'information (ENSAI) pour la qualité de la formation dispensée et les ressources mises à notre disposition.
 
-Enfin, nous félicitons les membres du groupe pour leur investissement, leur esprit d'équipe et leur bonne humeur durant ces mois de travail. \newpage
+Enfin, nous remercions les membres du groupe pour leur investissement, leur esprit d'équipe et leur bonne humeur durant ces mois de travail. \newpage
 
 ```{=latex}
 \mychapterstar{Résumé} 
@@ -145,13 +145,15 @@ L’application obtenue permet d’explorer rapidement les données ILOSTAT et d
 
 Le marché du travail est au cœur des préoccupations économiques et sociales contemporaines. Chômage, emploi informel, inégalités entre les sexes ou encore évolution des secteurs d’activité : ces indicateurs conditionnent les politiques publiques et les décisions des organisations internationales, des entreprises et des chercheurs. **L’Organisation internationale du Travail (OIT) en assure le suivi à l’échelle mondiale grâce à sa base de données ILOSTAT**, qui rassemble des milliers d’indicateurs harmonisés couvrant la plupart des pays du monde.
 
-Cette richesse constitue pourtant une difficulté. Le volume et la diversité des données rendent leur exploration fastidieuse pour un utilisateur non spécialiste : il faut identifier les bons indicateurs, comprendre leurs définitions, gérer les valeurs manquantes et les différences de couverture entre pays et entre années, puis produire des comparaisons lisibles.Il manque ainsi un outil simple, accessible et interactif permettant d’explorer ces données et d’en dégager rapidement des enseignements.
+Cette richesse constitue pourtant une difficulté. Le volume et la diversité des données rendent leur exploration fastidieuse pour un utilisateur non spécialiste : il faut identifier les bons indicateurs, comprendre leurs définitions, gérer les valeurs manquantes et les différences de couverture entre pays et entre années, puis produire des comparaisons lisibles. Il manque ainsi un outil simple, accessible et interactif permettant d’explorer ces données et d’en dégager rapidement des enseignements.
 
 C’est dans ce contexte que s’inscrit le projet **LaborScope**, réalisé dans le cadre de notre formation à l’École nationale de la statistique et de l’analyse de l’information (ENSAI). Son objectif est de concevoir et de développer une application d’analyse interactive du marché du travail mondial à partir des données ILOSTAT. Elle doit permettre à l’utilisateur de sélectionner un pays, une période et un indicateur, de visualiser les évolutions sous forme de graphiques et de cartes et de comparer plusieurs pays, le tout au sein d’une interface claire et ergonomique.
 
 Dans le rapport intermédiaire, nous avons posé les bases du projet : cahier des charges,identification des utilisateurs, fonctionnalités attendues, structure de la base de données et organisation du travail en équipe. Le présent rapport final en constitue l’aboutissement.Il présente la conception détaillée de l’application, sa réalisation, les choix techniques effectués ainsi que les résultats obtenus.
 
-Ce document s’organise en cinq (05) chapitres. Le premier décrit au préalable le projet(cahier des charges, architecture générale et méthodologie de travail). Le deuxième modélise l’application en expliquant l’ensemble des possibilités qu’offre l’application à ces utilisateurs. Le troisième décrit l’implémentation de l’application depuis la récupération des données jusqu’aux principaux points du fonctionnement du DAO. Le quatrième chapitre explique en détail les différentes fonctionnalités présentes dans l’application ainsi que quelques exemples pratiques.Enfin, le dernier chapitre évoque les retours de chaque membre du groupe par rapport au projet.
+Dans le rapport intermédiaire, nous avons posé les bases du projet :  cahier des charges, identification des utilisateurs, fonctionnalités attendues, structure de la base de données et organisation du travail en équipe. Le présent rapport final en constitue l’aboutissement. Il présente la conception détaillée de l’application, sa réalisation, les choix techniques effectués ainsi que les résultats obtenus.  
+
+Ce document s’organise en cinq (05) chapitres. Le premier décrit au préalable le projet (cahier des charges, architecture générale et méthodologie de travail). Le deuxième modélise l’application en expliquant l’ensemble des possibilités qu’offre l’application à ses utilisateurs. Le troisième décrit l’implémentation de l’application depuis la récupération des données jusqu’aux principaux points du fonctionnement du DAO. Le quatrième chapitre explique en détail les différentes fonctionnalités présentes dans l’application ainsi que quelques exemples pratiques. Enfin, le dernier chapitre évoque les retours de chaque membre du groupe par rapport au projet.
 
 \newpage
 
@@ -160,18 +162,18 @@ Ce document s’organise en cinq (05) chapitres. Le premier décrit au préalabl
 ```
 
 ```{=latex}
-\sectiontitre{Le cahier de charges}
+\sectiontitre{Le cahier des charges}
 ```
 
 ```{=latex}
 \subsectiontitre{Présentation d’ensemble du projet}
 ```
 
-Le “LaborScope” est une application dédiée à l’analyse des statistiques mondiales du marché du travail. C’est une application interactive alimentée par les données ouvertes de l'Organisation Internationale du Travail (ILOSTAT). L’objectif de cette application est dans un premier temps, de récupérer des données brutes (des indicateurs) comme l'emploi par sexe et profession, ou la population en âge de travailler depuis le site, de les extraire et de les stocker localement pour des fins d’analyse et de visualisation.
+Le “LaborScope” est une application dédiée à l’analyse des statistiques mondiales du marché du travail. C’est une application interactive alimentée par les données ouvertes de l'Organisation internationale du Travail (ILOSTAT). L’objectif de cette application est dans un premier temps, de récupérer des données brutes (des indicateurs) comme l'emploi par sexe et profession, ou le taux d'emploi par sexe et âge depuis le site, de les extraire et de les stocker localement pour des fins d’analyse et de visualisation.
 
 C’est une application sécurisée (avec gestion des utilisateurs et administrateurs) disposant de différentes fonctionnalités permettant de suivre l’évolution des indicateurs dans le temps, faire une comparaison entre plusieurs pays ou croiser plusieurs indicateurs sur un même graphique. Elle peut être complétée par une interface web interactive (Streamlit) pour visualiser les résultats sans avoir à coder et générer automatiquement un rapport d’analyse au format PDF.
 
-L'objectif final est de transformer des données statistiques brutes et complexes en un outil simple qui permet de comprendre, comment évolue l'emploi dans le monde et comment les pays se comparent entre eux.
+L'objectif final est de transformer des données statistiques brutes et complexes en un outil simple qui permet de comprendre comment évolue l'emploi dans le monde et comment les pays se comparent entre eux.
 
 **Fonctionnalités retenues**
 
@@ -199,12 +201,14 @@ L'application repose sur quelques hypothèses :
 - l'application et sa base de données fonctionnent sur Onyxia, l'environnement de travail de l'ENSAI.
 
 ```{=latex}
-\subsectiontitre{Identification des utilisateurs}
+\subsectiontitre{Identification des utilisateurs et cas d'usage}
 ```
 
 On distingue trois profils dans l’accès aux fonctionnalités de l’application : les visiteurs, les utilisateurs et les administrateurs.
 
 Les visiteurs ne sont pas connectés : ils peuvent seulement créer un compte ou se connecter. Les utilisateurs disposent d’un compte classique leur permettant de consulter des analyses, et de visualiser les données. Ils peuvent également générer de manière automatique des rapports d’analyse au format PDF contenant les données qu’ils ont consultées. Les administrateurs sont chargés de la gestion des comptes utilisateurs classiques et peuvent modifier ou supprimer des données. Ils peuvent également faire un suivi des activités. Les utilisateurs de l’application ne peuvent pas obtenir le statut d’administrateur. Ceci permet de mieux contrôler l’accès aux modifications des données.
+
+Pour illustrer l'usage de l'application, prenons le cas d'une étudiante en économie qui prépare un exposé sur le chômage des jeunes. Sans LaborScope, elle devrait télécharger plusieurs fichiers depuis ILOSTAT, repérer les bons indicateurs, supprimer les colonnes inutiles et gérer elle-même les valeurs manquantes. Avec l'application, elle se connecte, choisit l'indicateur et les pays qui l'intéressent, et obtient en quelques clics un classement, une carte ou un graphique d'évolution. Elle peut ensuite télécharger un rapport PDF qui garde la trace des paramètres choisis et de la source des données. Un journaliste qui compare deux pays pour un article, ou un agent d'une collectivité qui suit l'emploi dans le temps, suivrait le même parcours.
 
 ```{=latex}
 \sectiontitre{Méthodologie de travail et organisation de l'équipe}
@@ -222,7 +226,7 @@ Pour livrer l'application à temps, nous avons suivi un diagramme de Gantt (figu
 - **Finalisation du code** (novembre) : tests, corrections suite aux remarques du tuteur, harmonisation du code (pylint, docstrings) et README, jusqu'au rendu du code le 25 novembre.
 - **Dossier final et soutenance** : la rédaction du dossier a commencé début novembre, une fois les fonctionnalités stabilisées, et s'est terminée avec le rendu du 25 novembre. La préparation du diaporama occupera ensuite les deux dernières semaines, avant la soutenance du 9 décembre.
 
-Le planning a globalement été respecté, chacun a pu coder à son rythme lors du troisième volet.
+Le planning a globalement été respecté. Chacun a pu coder à son rythme lors du troisième volet.
 
 ![Diagramme de Gantt du projet (en rouge : les dates de rendu)](images/diagramme_gantt.png){width="100%"}
 
@@ -253,7 +257,7 @@ Le projet a été réalisé par cinq membres. Pour avancer en parallèle sans se
 
 \textbf{•Les fonctionnalités}
 
--Antifa Badarou (rôle C : évolution d’un indicateur, F3). Elle a codé le calcul de l’évolution d’un indicateur sur les N derniers trimestres : service, schéma, controller, tests, puis la page d’affichage des graphiques. Elle a fournit le template pour la rédaction du dossier final et effectué des mises en formes et réglages global du document.Elle a aussi rédigé avec l'aide des autres membres le dossier final.\newline
+-Antifa Badarou (rôle C : évolution d’un indicateur, F3). Elle a codé le calcul de l’évolution d’un indicateur sur les N derniers trimestres : service, schéma, controller, tests, puis la page d’affichage des graphiques. Elle a fourni le template pour la rédaction du dossier final et effectué des mises en forme et réglages globaux du document. Elle a aussi rédigé avec l'aide des autres membres le dossier final.\newline
 
 -William Margerand (rôle D : comparaison entre pays, F4, et carte du monde, FO2). Il a codé le classement des pays pour la période la plus récente (valeurs les plus hautes et les plus basses) avec ses tests, puis la carte choroplèthe. Il a ensuite amélioré le choix de la période, la période commune et les couleurs. Il a rédigé les sections du dossier consacrées à F4 et FO2, à l’exploration des données, ainsi que le chapitre 2 de modélisation et le diagramme de cas d’utilisation.\newline
 
@@ -267,7 +271,7 @@ Chacun a rédigé ses propres sections du dossier final et tenu un compte rendu 
 \sectiontitre{Réadaptation des diagrammes}
 ```
 
-A la suite du dépôt du rapport intermédiaire, notre tuteur nous a fait des remarques concernant le diagramme d'architecture et le diagramme de classe. Nous avons donc intégré ses remarques et amélioré les diagrammes concernés.
+À la suite du dépôt du rapport intermédiaire, notre tuteur nous a fait des remarques concernant le diagramme d'architecture et le diagramme de classes. Nous avons donc intégré ses remarques et amélioré les diagrammes concernés.
 
 ```{=latex}
 \subsectiontitre{Diagramme d'architecture}
@@ -328,10 +332,10 @@ Pour que le code reste lisible par les cinq membres du groupe, et par d'autres d
 \newpage
 
 ```{=latex}
-\mychapter{Modelisation de l'application}
+\mychapter{Modélisation de l'application}
 ```
 
-Pour bien comprendre l'application **Laborscope**, nous expliquons ici l'ensemble des possibilités qu'elle offre selon le type de personne qui l'utilise, puis la façon de naviguer entre ses différentes pages. Pour une meilleure conceptualisation, nous nous appuyons sur un diagramme UML de cas d'utilisation.
+Pour bien comprendre l'application **LaborScope**, nous expliquons ici l'ensemble des possibilités qu'elle offre selon le type de personne qui l'utilise, puis la façon de naviguer entre ses différentes pages. Pour une meilleure conceptualisation, nous nous appuyons sur un diagramme UML de cas d'utilisation.
 
 ```{=latex}
 \sectiontitre{Diagramme de cas d'utilisation}
@@ -357,7 +361,7 @@ L'application se présente sous la forme d'un site web. Un menu latéral, à gau
 \subsectiontitre{Accueil et accès au compte}
 ```
 
-À l'ouverture de l'application, le visiteur arrive sur la page d'accueil, qui présente brièvement Laborscope et les données ILOSTAT sur lesquelles elle s'appuie. Son menu ne contient que trois pages : « Accueil », « Se connecter » et « Créer un compte ». Deux boutons de la page d'accueil mènent aussi directement à ces deux dernières pages.
+À l'ouverture de l'application, le visiteur arrive sur la page d'accueil, qui présente brièvement LaborScope et les données ILOSTAT sur lesquelles elle s'appuie. Son menu ne contient que trois pages : « Accueil », « Se connecter » et « Créer un compte ». Deux boutons de la page d'accueil mènent aussi directement à ces deux dernières pages.
 
 Avant la première connexion, il faut créer un compte à l'aide d'un pseudo et d'un mot de passe d'au moins 8 caractères, saisi deux fois pour éviter les fautes de frappe. Deux utilisateurs ne peuvent pas avoir le même pseudo, ce dernier se doit d'être unique. Une fois le compte créé, l'utilisateur est connecté automatiquement. Si son compte existe déjà, il se connecte grâce à son pseudo et son mot de passe.
 
@@ -402,9 +406,7 @@ Cacher les pages dans le menu ne suffit pas à protéger l'application. Chaque p
 \mychapter{Implémentation}
 ```
 
-(obtention des données et fonctionnement du DAO)
-
-Ce chapitre décrit la manière dont LaborScope a été réalisé, depuis les données brutes d’ILOSTAT jusqu’à l’application interactive utilisée par l’utilisateur final. Il présente les choix techniques retenus, l’organisation de la base de donnée et les principaux points de fonctionnement du DAO.
+Ce chapitre décrit la manière dont LaborScope a été réalisé, depuis les données brutes d’ILOSTAT jusqu’à l’application interactive utilisée par l’utilisateur final. Il présente les choix techniques retenus, l’organisation de la base de données et les principaux points de fonctionnement du DAO.
 
 ```{=latex}
 \sectiontitre{Des données ILOSTAT à la base de données}
@@ -502,7 +504,7 @@ Ces classes sont représentées dans le diagramme de classes de la partie « Ré
 
 Cette chaîne d'import a tout de même quelques limites :
 
-- l'import est lent : comme on fait un appel à l'API par pays et par indicateur, il faut plusieurs centaines d'appels pour tout récupérer. Ici ce n'est pas encore très contraignant. Si la table "observation" dépasse les 500 milles lignes il faudrait travailler avec d'autres outils qui rendent l'import et la lecture plus rapide.
+- l'import est lent : comme on fait un appel à l'API par pays et par indicateur, il faut plusieurs centaines d'appels pour tout récupérer. Ici ce n'est pas encore très contraignant. Si la table « observation » dépasse les 500 000 lignes il faudrait travailler avec d'autres outils qui rendent l'import et la lecture plus rapide.
 - la couverture est très inégale selon les pays : certains n'ont qu'un seul trimestre dans la base, ce qui limite les comparaisons (voir la carte du monde au chapitre 4).
 
 \newpage
@@ -523,7 +525,9 @@ Les logs techniques enregistrent le fonctionnement interne du code. Ils sont gé
 
 Plutôt que d'écrire des lignes de log à la main dans chaque méthode, nous avons créé un décorateur `@log`. Il suffit de l'ajouter au-dessus d'une méthode pour que trois choses soient enregistrées automatiquement : l'entrée dans la méthode avec ses paramètres, la sortie avec un résumé du résultat, et l'erreur si la méthode échoue. Nous l'utilisons en particulier dans les DAO et dans la chaîne d'import des données.
 
-Pour l’implémentation nous nous sommes basé sur celle du template de l’application initiale. Deux choix nous ont permis de garder des logs lisibles :
+Pour l’implémentation, nous nous sommes basés sur celle du template de l’application initiale.
+Deux choix nous ont permis de garder des logs lisibles :
+
 
 - les résultats volumineux sont résumés : pour un DataFrame, on écrit seulement son nombre de lignes et de colonnes, pas tout son contenu ;
 - les appels imbriqués sont indentés, ce qui permet de voir quelle méthode en appelle une autre.
@@ -566,7 +570,7 @@ Pour que chaque test ne vérifie qu'une seule couche, nous remplaçons les autre
 
 Les tests des DAO sont différents : ils utilisent une vraie base PostgreSQL, car c'est la seule façon de vérifier les requêtes SQL. Pour ne pas abîmer les vraies données, ils n'utilisent que des données de test faciles à reconnaître (le pays « ZZZ », l'indicateur « TEST_DAO »), qui sont supprimées avant et après chaque test. Si la base est injoignable, par exemple sur un ordinateur personnel, ces tests sont ignorés au lieu d'échouer, et la raison est affichée. Les autres tests restent utilisables.
 
-Ces tests ont tout de même une limite : ils ne testent pas le frontend Streamlit, que nous avons vérifié nous même à l'implémentation de chaque fonction ou détail supplémentaire.
+Ces tests ont tout de même une limite : ils ne testent pas le frontend Streamlit, que nous avons vérifié nous-même à l'implémentation de chaque fonction ou détail supplémentaire.
 
 \newpage
 
@@ -610,7 +614,7 @@ Le tableau ne contient que trois lignes. Pour le Botswana, on a deux observation
 Cet exemple montre l'intérêt de la page : avant de comparer ces deux pays, on voit tout de suite que leurs données datent d'années très différentes et viennent de deux types d'enquêtes. Une comparaison directe entre 25 % et 6 % doit donc être faite avec prudence. C'est aussi pour cette raison que les autres fonctionnalités affichent toujours la période de chaque pays.
 
 ```{=latex}
-\sectiontitre{Evolution d'un indicateur (F3)}
+\sectiontitre{Évolution d'un indicateur (F3)}
 ```
 
 ```{=latex}
@@ -625,7 +629,7 @@ La page affiche trois éléments :
 - un graphique en barres qui montre, pour chaque trimestre, la variation par rapport au trimestre précédent ;
 - un tableau détaillé avec la valeur, la variation absolue et la variation en pourcentage.
 
-Deux difficultés ont influencé nos choix. D'une part, la base peut contenir plusieurs sources pour un même pays et un même trimestre : si on les gardait toutes, le graphique aurait deux points à la même date. Nous gardons une seule source par pays et par période (la première par ordre alphabétique). D'autre part, les pays n'ont pas tous le même nombre de trimestres disponibles : le nombre demandé est donc appliqué pays par pays, et un pays qui a moins de données que demandé affiche simplement tout ce qu'il a. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
+Deux difficultés ont influencé nos choix. D'une part, la base peut contenir plusieurs sources pour un même pays et un même trimestre : si on les gardait toutes, le graphique aurait deux points à la même date. Nous gardons une seule source par pays et par période (la première par ordre alphabétique). D'autre part, les pays n'ont pas tous le même nombre de trimestres disponibles : le nombre demandé est donc appliqué pays par pays, et un pays qui a moins de données que demandé affiche simplement tout ce qu'il a ; ainsi les pays avec des trimestres manquants ne sont pas directement signalés. Comme le reste de l'application, cette page n'est accessible qu'aux utilisateurs connectés.
 
 ```{=latex}
 \subsectiontitre{Fonctionnement technique de la fonctionnalité}
@@ -657,13 +661,13 @@ Le service est testé avec pytest : la base est remplacée par de petites donné
 
 Nous avons suivi l’emploi total en France (tous sexes et toutes professions confondus) sur les huit derniers trimestres, de 2023Q1 à 2024Q4. L’emploi passe d’environ 28,45 millions à 28,94 millions de personnes, soit une hausse d’environ 1,7 %. L’année 2023 est marquée par une quasi-stagnation, tandis que 2024 connaît une forte progression aux deux premiers trimestres (environ +225 000 puis +330 000 emplois), jusqu’à un maximum d’environ 29,2 millions au troisième trimestre. Le quatrième trimestre 2024 enregistre en revanche un recul d’environ 285 000 emplois. Le graphique en barres met en évidence ces variations d’un trimestre à l’autre, que la courbe ne rend pas aussi lisibles. L’axe de la courbe ne commençant pas à zéro, les écarts paraissent plus marqués qu’ils ne le sont : l’ensemble des valeurs reste dans une fourchette inférieure à 3 %.
 
-![Evolution du taux d'emploi par sexe et profession en France pour les hommes et femmes](images/Evolution_indicateur(F3).png){width="95%"}
+![Évolution de l'emploi par sexe et profession en France pour les hommes et femmes](images/Evolution_indicateur(F3).png){width="95%"}
 
 \newpage
 
-La variation se présente comme suit:
+La variation se présente comme suit :
 
-![Variation du taux d'emploi par sexe et profession en France pour les hommes et femmes](images/Variation_demploi_total(F3).png){width="95%"}
+![Variation de l'emploi par sexe et profession en France pour les hommes et femmes](images/Variation_demploi_total(F3).png){width="95%"}
 
 ```{=latex}
 \sectiontitre{Comparaison entre pays (F4)}
@@ -705,7 +709,7 @@ On compare le nombre de personnes en emploi (indicateur « Emploi par sexe et pr
 
 ![Tableaux des valeurs les plus hautes, les plus basses et du classement complet](images/f4_tableaux.png){width="95%"}
 
-Les quatre pays ont tous leur dernière donnée en 2024Q4 : ils sont donc comparés à la même date et la page n'affiche pas de message d'avertissement. L'Allemagne arrive en tête avec environ 43,5 millions de personnes en emploi (en bleu foncé), devant la France (28,9 millions) et l'Italie (24,0 millions). L'Espagne est en dernière position avec 21,9 millions (en bleu clair), soit à peu près deux fois moins que l'Allemagne.
+Les quatre pays ont tous leur dernière donnée en 2024Q4 (dernière période publiée par ILOSTAT) : ils sont donc comparés à la même date et la page n'affiche pas de message d'avertissement. L'Allemagne arrive en tête avec environ 43,5 millions de personnes en emploi (en bleu foncé), devant la France (28,9 millions) et l'Italie (24,0 millions). L'Espagne est en dernière position avec 21,9 millions (en bleu clair), soit à peu près deux fois moins que l'Allemagne.
 
 Il faut faire attention à l'interprétation : cet indicateur donne un nombre de personnes et non un taux. Le classement dépend donc beaucoup de la taille de chaque pays. Pour comparer la situation de l'emploi entre pays, il est plus pertinent de choisir un indicateur en pourcentage, comme le taux d'emploi.
 
@@ -735,7 +739,7 @@ On affiche le taux de chômage des 15 ans et plus (hommes et femmes confondus), 
 
 ![Taux de chômage des 15 ans et plus, dernière période disponible de chaque pays](images/fo2_carte_chomage.png){width="100%"}
 
-La carte montre 79 pays. Sur la capture, la souris est placée sur l'Afrique du Sud : l'info-bulle indique son taux de chômage (32,9 %) et la période utilisée (2026Q2). Les taux les plus élevés sont à Djibouti (39,0 %, 2025Q4) et en Afrique du Sud (32,9 %, 2026Q2), suivis du Botswana, de l'Angola et du Zimbabwe, tous au-dessus de 20 %. Les plus bas sont en Thaïlande (0,7 %, 2026Q1), au Belize (1,9 %) et au Viêt Nam (2,0 %). La France se situe à 7,5 % (2024Q4).
+La carte montre 79 pays (certains pays n'ont pas de données pour cet indicateur). Sur la capture, la souris est placée sur l'Afrique du Sud : l'info-bulle indique son taux de chômage (32,9 %) et la période utilisée (2026Q2). Les taux les plus élevés sont à Djibouti (39,0 %, 2025Q4) et en Afrique du Sud (32,9 %, 2026Q2), suivis du Botswana, de l'Angola et du Zimbabwe, tous au-dessus de 20 %. Les plus bas sont en Thaïlande (0,7 %, 2026Q1), au Belize (1,9 %) et au Viêt Nam (2,0 %). La France se situe à 7,5 % (2024Q4).
 
 Cet exemple montre aussi les limites de la carte. Les 79 pays ne sont pas comparés à la même date : on trouve 12 périodes différentes, de 2020Q4 pour le Botswana à 2026Q3 pour les plus récentes. La valeur du Botswana a donc près de six ans d'écart avec celles d'autres pays. Certains pays n'ont qu'une seule période dans la base, ce qui explique qu'il n'existe aucune période commune à tous les pays : la case « dernière période commune » n'est donc utile que pour un petit nombre de pays. Enfin, seuls les pays importés dans notre base apparaissent en couleur ; les autres restent en blanc.
 
@@ -783,12 +787,12 @@ On compare, pour la France, le taux d'emploi (15 ans et plus, hommes et femmes c
 
 ![Taux d'emploi et taux de chômage de la France en base 100 (2020Q1 à 2024Q4)](images/evolution-comparative-multi-indicateurs.png){width="92%"}
 
-Les deux séries démarrent à 100 en 2020Q1, ce qui permet de comparer leurs variations malgré des niveaux de départ très différents. En 2020Q2, le taux de chômage chute autour de 84, puis remonte à 110,2 en 2020Q3, tandis que le taux d'emploi baisse légèrement à 98,3 en 2020Q2. Ce mouvement du chômage s'explique en partie par un effet statistique : pendant le premier confinement, beaucoup de personnes sans emploi ont cessé de chercher du travail et ont donc été comptées comme inactives. À partir de 2021Q1, les deux courbes s'écartent : le taux d'emploi se stabilise entre 103 et 104 (soit 3 à 4 % de plus qu'au début de 2020), alors que le taux de chômage reste sous son niveau initial, entre 86 et 95.
+Les deux séries démarrent à 100 en 2020Q1, ce qui permet de comparer leurs variations malgré des niveaux de départ très différents. En 2020Q2, le taux de chômage chute autour de 84, puis remonte à 110,2 en 2020Q3, tandis que le taux d'emploi baisse légèrement à 98,3 en 2020Q2. Ce mouvement du chômage peut s'expliquer en partie par un effet statistique : pendant le premier confinement, beaucoup de personnes sans emploi ont cessé de chercher du travail et ont donc été comptées comme inactives. À partir de 2021Q1, les deux courbes s'écartent : le taux d'emploi se stabilise entre 103 et 104 (soit 3 à 4 % de plus qu'au début de 2020), alors que le taux de chômage reste sous son niveau initial, entre 86 et 95.
 
 Il faut faire attention à la lecture d'un indice en base 100 : il mesure une variation relative, pas une variation en points de pourcentage. Un taux de chômage à l'indice 90 signifie que le taux a baissé de 10 % par rapport à 2020Q1 (par exemple de 7,5 % à 6,75 %), et non de 10 points. Le résultat dépend aussi de la date de départ : un point de départ différent changerait l'allure des courbes.
 
 ```{=latex}
-\sectiontitre{Rapport PDF (F03)}
+\sectiontitre{Rapport PDF (FO3)}
 ```
 
 ```{=latex}
@@ -808,10 +812,20 @@ La page « Rapport PDF » permet à l'utilisateur de télécharger un rapport d'
 
 La génération automatisée des rapports PDF repose sur un traitement entièrement exécuté côté serveur (FastAPI) afin de garantir la reproductibilité des documents, la rapidité de rendu et l'indépendance vis-à-vis de l'environnement client. Le pipeline technique s'articule en quatre étapes :
 
-- **Extraction et mise en forme des données** : à réception de la requête contenant les paramètres de sélection de l'utilisateur (indicateur, zone géographique, période), le service interroge la base PostgreSQL via la couche DAO et calcule les indicateurs synthétiques (moyenne, minimum, maximum, variation sur la période) ;
-- **Rendu graphique hors écran (*headless*) avec Matplotlib (`Agg`)** : le graphique d'évolution temporelle est généré côté serveur à l'aide de la bibliothèque **Matplotlib** configurée avec le moteur de rendu non interactif **`Agg`** (*Anti-Grain Geometry*). Ce choix technique est indispensable dans une architecture web : contrairement aux moteurs graphiques classiques qui nécessitent un serveur d'affichage (X11 ou interface graphique locale), le mode `Agg` produit directement une image matricielle haute résolution en mémoire sans ouvrir de fenêtre à l'écran, évitant ainsi tout blocage ou erreur d'exécution sur le serveur Linux ;
-- **Sérialisation en mémoire tampon (`BytesIO`)** : plutôt que d'écrire des fichiers images temporaires sur le disque — ce qui ralentirait les entrées/sorties et poserait des problèmes de concurrence entre utilisateurs simultanés — le graphique est enregistré directement dans un flux binaire en mémoire vive (`io.BytesIO` au format PNG) ;
-- **Composition et exposition du document avec FPDF2** : la bibliothèque **FPDF2** assemble dynamiquement le document en intégrant l'en-tête institutionnel, les métadonnées de la requête, le tableau récapitulatif des statistiques et l'image extraite du flux mémoire. Le fichier PDF final est ensuite renvoyé sous forme de flux binaire (`StreamingResponse`) à l'interface Streamlit, qui le met immédiatement à disposition de l'utilisateur via un bouton de téléchargement.
+
+La fonctionnalité suit l'architecture en couches de l'application, et le rapport est entièrement construit côté serveur, par FastAPI. L'utilisateur obtient ainsi le même document quel que soit son navigateur ou son ordinateur :
+
+- la couche DAO lit en base les observations de l'indicateur pour les pays et la période demandés. Nous avons réutilisé la classe `ObservationDAO`, qui existait déjà ;
+- la couche service calcule avec pandas les statistiques de chaque pays (minimum, maximum, moyenne et variation sur la période), trace le graphique, rédige la conclusion à partir de ces statistiques, puis assemble le document ;
+- la couche controller expose le résultat avec FastAPI. Elle renvoie le fichier PDF directement à la page Streamlit (`StreamingResponse`) ;
+- la page Streamlit envoie les choix de l'utilisateur à cet endpoint, puis affiche un bouton de téléchargement.
+
+Deux choix techniques méritent d'être expliqués :
+
+- **Le graphique est tracé avec Matplotlib en mode `Agg`.** Ce mode dessine l'image en mémoire, sans ouvrir de fenêtre. C'est nécessaire ici, car le serveur Linux n'a pas d'écran : avec le mode par défaut, le tracé échouerait. Le graphique est ensuite enregistré au format PNG dans un `BytesIO`, c'est-à-dire en mémoire plutôt que dans un fichier temporaire. Cela évite d'écrire sur le disque et tout conflit entre plusieurs utilisateurs qui généreraient un rapport en même temps ;
+- **Le document est assemblé avec fpdf2.** Cette bibliothèque place dans le PDF le titre, les paramètres choisis, le graphique, le tableau de statistiques et la conclusion.
+
+Comme pour les autres fonctionnalités, le service est testé avec pytest : la base est remplacée par de petites données écrites à la main.
 
 ```{=latex}
 \subsectiontitre{Exemple et interprétation}
@@ -847,7 +861,7 @@ Au démarrage du projet, lors de sa présentation initiale, j'ai ressenti une ce
 
 L'organisation mise en place par le groupe a largement contribué à cette réussite. Le découpage clair du travail étape par étape initié par Laurent, avec des objectifs précis et des livrables attendus à chaque jalon, nous a donné un cadre rassurant et efficace pour avancer sans nous disperser. De son côté, l'appui précieux de Clarence lors des phases de débogage et de résolution de blocages techniques m'a permis de surmonter rapidement des situations complexes et de gagner en autonomie.
 
-Une vision d'ensemble grâce au développement des fonctionnalités F5 et F03
+Une vision d'ensemble grâce au développement des fonctionnalités F5 et FO3
 
 La réalisation de la comparaison multi-indicateurs (F5) et de la génération de rapport PDF (FO3) a joué un rôle charnière dans ma montée en compétence. Parce que la fonctionnalité F5 se situe au carrefour de l'application et mobilise les briques développées en amont par l'ensemble du groupe (référentiels des pays et des indicateurs, extraction des séries temporelles, gestion des classifications), je ne pouvais pas me contenter de coder de manière isolée. Il m'a fallu comprendre en profondeur le fonctionnement du code de mes camarades afin d'y raccorder proprement mes traitements et d'adapter mon implémentation à l'existant.
 
@@ -857,7 +871,7 @@ Apports techniques et travail collaboratif
 
 Sur le plan technique, ce projet m'a permis de franchir un cap important dans ma manière de concevoir, structurer et partager du code au sein d'une équipe. J'ai notamment acquis des compétences essentielles sur plusieurs plans :
 
-la maîtrise d'une architecture en couches rigoureuse : j'ai appris à bien distinguer les responsabilités de chaque composant, en séparant nettement les objets métiers (business_object) — qui modélisent les concepts fondamentaux du domaine comme une sélection d'analyse — des couches d'accès aux données (DAO) et de la logique applicative (services) ;
+la maîtrise d'une architecture en couches rigoureuse : j'ai appris à bien distinguer les responsabilités de chaque composant, en séparant nettement les objets métiers (business_object), qui modélisent les concepts fondamentaux du domaine comme une sélection d'analyse, des couches d'accès aux données (DAO) et de la logique applicative (services) ;
 
 l'utilisation quotidienne de Git et GitHub : le travail en équipe sur un dépôt commun m'a permis de me familiariser concrètement avec le versionnement du code, la gestion des branches par fonctionnalité, les fusions (merges), la résolution de conflits et la synchronisation régulière avec les avancées des autres membres du groupe ;
 
@@ -873,7 +887,7 @@ En définitive, cette expérience collective m'a permis de consolider durablemen
 
 Le but de l'application est assez proche de ce que l'on pourrait nous demander dans nos futurs travaux et projets. Mon stage de première année consistait à visualiser des données volumineuses en créant une application R Shiny, ce qui ressemble beaucoup à ce projet, hormis le volume de données (la base du stage contenait 10 millions de lignes). Je suis plus à l'aise en R et R Shiny qu'en Python, mais cette expérience m'a quand même beaucoup servi.
 
-Lors de ce projet, je me suis occupée de tout ce qui reposait sur la base de données : l'import, le traitement des données et les DAO (hormis ceux de journal.py et utilisateur.py). J'ai également écrit certains tests. Je me suis aussi chargée des logs, qui ont été moins simples à prendre en main que prévu. Même en m'appuyant sur le code du template de l'application présenté en TP, j'ai eu du mal à comprendre leur fonctionnement, mais tout fonctionne correctement aujourd'hui et j'en suis contente. Je me suis aussi occupée du workflow GitHub, où j'ai rencontré les mêmes difficultés, en m'appuyant là encore sur ce qui existait dans le template. Pour le rapport, j'ai rédigé toute la section 3. Enfin, hormis les deux premières fonctionnalités qui importent et traitent les données, je n'ai pas codé de fonctionnalité qui les exploite directement.
+Lors de ce projet, je me suis occupée de tout ce qui reposait sur la base de données : l'import, le traitement des données et les DAO (hormis ceux de journal.py et utilisateur.py). J'ai également écrit certains tests. Je me suis aussi chargée des logs, qui ont été moins simples à prendre en main que prévu. Même en m'appuyant sur le code du template de l'application présenté en TP, j'ai eu du mal à comprendre leur fonctionnement, mais tout fonctionne correctement aujourd'hui et j'en suis contente. Je me suis aussi occupée du workflow GitHub, où j'ai rencontré les mêmes difficultés, en m'appuyant là encore sur ce qui existait dans le template. Pour le rapport, j'ai rédigé tout le chapitre 3. Enfin, hormis les deux premières fonctionnalités qui importent et traitent les données, je n'ai pas codé de fonctionnalité qui les exploite directement.
 
 Notre tuteur nous a conseillé de travailler avec l'IA, et nous l'avons tous utilisée, moi y compris. J'ai personnellement du mal à m'attribuer le travail réalisé avec son aide. Je l'utilise surtout quand je suis perdue face à des bugs qui commencent à me décourager, ou pour refaire quelque chose de déjà fait (comme les tests). Je m'en sers aussi pour vérifier que je n'ai rien oublié, notamment lors de la rédaction de ma partie du rapport. Évidemment, je vérifie et je relis ce qu'elle produit, mais j'ai quand même du mal à me l'approprier. Je me demande toujours si c'est réellement un outil qui nous rend plus efficaces en tant qu'étudiants.
 
@@ -891,7 +905,7 @@ Je n'ai jamais été très à l'aise en programmation, et la fiche de tâches de
 
 Les principales difficultés ont été techniques. Git m'a posé beaucoup de problèmes : push refusé, conflits sur un même fichier, fichiers modifiés que je ne reconnaissais pas. J'ai aussi eu du mal avec l'organisation des tests et les imports du backend. Certains de mes commits ont un message trop vague, et Clarence a dû relire et corriger une partie de mon code (par exemple la structure du schéma), ce qui est normal pour la qualité du projet, mais montre que j'ai encore des progrès à faire en rigueur.
 
-Je retiens que la qualité d'un projet vient autant de l'organisation et des tests que du code lui-même : détail à première vue anodin, comme l'ordre entre le calcul des variations et la coupe aux N dernières périodes, change complètement le résultat affiché. Je retiens aussi que F3 reste imparfaite : un trimestre manquant n'est pas signalé, et la variation est alors calculée entre deux observations qui ne sont pas consécutives.
+Je retiens que la qualité d'un projet vient autant de l'organisation et des tests que du code lui-même : un détail à première vue anodin, comme l'ordre entre le calcul des variations et la coupe aux N dernières périodes, change complètement le résultat affiché. Je retiens aussi que F3 reste imparfaite : un trimestre manquant n'est pas signalé, et la variation est alors calculée entre deux observations qui ne sont pas consécutives.
 
 Si c'était à refaire, je répartirais mon temps de façon plus régulière, je commencerais le code avant les documents, et je commiterais plus souvent avec des messages clairs. Cette expérience m'a appris à travailler en équipe sur un projet de cette taille, et je m'en servirai pour les futurs projets.
 
@@ -935,14 +949,14 @@ Ce que je retiens avant tout, c'est la répartition et l'organisation du travail
 \mychapterstar{CONCLUSION}
 ```
 
-Le projet **Laborscope** avait pour objectif de concevoir une application d’analyse interactive du marché du travail mondial à partir des données ILOSTAT. Il aboutit à une application fonctionnelle de bout en bout : une base PostgreSQL alimentée par les données de l’Organisation internationale du travail, une API REST développée avec FastAPI, et une interface web (réalisée avec Streamlit) permettant d’explorer les indicateurs, de les comparer entre pays, de suivre leur évolution dans le temps ,les visualiser sur une carte du monde et surtout imprimer les informations voulues en format pdf.
+Le projet **LaborScope** avait pour objectif de concevoir une application d’analyse interactive du marché du travail mondial à partir des données ILOSTAT. Il aboutit à une application fonctionnelle de bout en bout : une base PostgreSQL alimentée par les données de l’Organisation internationale du Travail, une API REST développée avec FastAPI, et une interface web (réalisée avec Streamlit) permettant d’explorer les indicateurs, de les comparer entre pays, de suivre leur évolution dans le temps, les visualiser sur une carte du monde et surtout exporter les informations voulues en format pdf.
 
 Sur le plan technique, l’architecture en couches (controllers, services, DAO) et la séparation entre backend et frontend se sont révélées pertinentes. Elles ont permis de répartir le travail entre les membres du groupe, de développer en parallèle sans se bloquer mutuellement, et de tester chaque couche séparément. Les tests automatisés avec pytest, la gestion de l’environnement avec uv et l’utilisation de Git ont renforcé la fiabilité et la reproductibilité du projet.
 
 Ce travail nous a aussi appris à traiter des données réelles, qui sont rarement parfaites. Nous avons dû gérer des sources multiples pour une même observation, des périodes manquantes ou des valeurs nulles pouvant rendre un calcul de variation indéfini. Chaque choix de traitement a dû être justifié et documenté, car il influence directement les résultats affichés à l’utilisateur.
 
-Le projet présente néanmoins des limites.Les trimestres manquants ne sont pas signalés dans le calcul des variations, la qualité des résultats dépend de la couverture inégale des pays dans ILOSTAT, et les performances n’ont pas été optimisées pour de très gros volumes de données.
+Le projet présente néanmoins des limites. Les trimestres manquants ne sont pas signalés dans le calcul des variations, la qualité des résultats dépend de la couverture inégale des pays dans ILOSTAT, et cette couverture varie aussi beaucoup d'un pays à l'autre : la dernière période disponible est 2026Q3 pour certains pays, mais seulement 2024Q4 pour la France, ce qui empêche de comparer tous les pays à la même date. Enfin, les performances n'ont pas été optimisées pour de très gros volumes de données.
 
-Plusieurs pistes d’amélioration sont envisageables : ajouter des analyses statistiques plus poussées (tests, régressions, prévisions), mettre en cache les requêtes les plus fréquentes, signaler explicitement les périodes manquantes, enrichir l’application avec d’autres sources de données, et déployer l’ensemble sur un serveur accessible en ligne.
+Plusieurs pistes d'amélioration sont envisageables : ajouter des analyses statistiques plus poussées (tests, régressions, prévisions), mettre en cache les requêtes les plus fréquentes, signaler explicitement les périodes manquantes, tester automatiquement l'interface Streamlit, aujourd'hui vérifiée à la main, par exemple avec les tests intégrés de Streamlit (AppTest), enrichir l'application avec d'autres sources de données, et déployer l'ensemble sur un serveur accessible en ligne
 
 Enfin, ce projet a été une expérience formatrice de travail en équipe : organisation par fiches de tâches, coordination autour de conventions communes, relectures croisées et résolution de conflits Git. Il nous a permis de mettre en pratique, sur un cas concret, les compétences acquises en programmation, en bases de données et en statistiques durant notre deuxième année à l’ENSAI.
