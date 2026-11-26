@@ -23,6 +23,9 @@ format:
     pdf-engine-opts:
       - "--shell-escape"
     title-block-style: none
+    hyperrefoptions:
+      - plainpages=false
+      - pdfpagelabels=true
 lang: fr
 fontsize: 12pt
 editor: visual
@@ -107,6 +110,7 @@ kable_ise <- function(df, caption = NULL, digits = 3,
 \newpage
 \listoffigures
 \newpage
+
 ```{=latex}
 \mychapterstar{REMERCIEMENTS}
 ```
@@ -125,11 +129,9 @@ Enfin, nous félicitons les membres du groupe pour leur investissement, leur esp
 \mychapterstar{Résumé} 
 ```
 
-Le projet **LaborScope** vise à rendre accessible l’exploration des données du marché du travail mondial, issues de la base ILOSTAT de l’Organisation internationale du Travail (OIT). Cette base, très riche, rassemble de nombreux indicateurs (emploi, chômage, secteurs d’activité, inégalités entre les sexes…), mais sa taille et sa complexité en limitent l’usage
-par des utilisateurs non spécialistes.
+Le projet **LaborScope** vise à rendre accessible l’exploration des données du marché du travail mondial, issues de la base ILOSTAT de l’Organisation internationale du Travail (OIT). Cette base, très riche, rassemble de nombreux indicateurs (emploi, chômage, secteurs d’activité, inégalités entre les sexes…), mais sa taille et sa complexité en limitent l’usage par des utilisateurs non spécialistes.
 
-Pour répondre à ce besoin, nous avons conçu et développé une application interactive permettant d’effectuer des analyses sur une ou plusieurs périodes à partir des indicateurs, de visualiser les évolutions de ces indicateurs sous forme de graphiques et de faire des comparaisons entre plusieurs pays.
-La démarche suivie comprend une étude préalable (cahier des charges, identification des utilisateurs, structure de la base de données), une phase de conception de l’application, puis une phase de réalisation reposant sur le langage Python, une base de données relationnelle et une interface web réalisée avec Streamlit.
+Pour répondre à ce besoin, nous avons conçu et développé une application interactive permettant d’effectuer des analyses sur une ou plusieurs périodes à partir des indicateurs, de visualiser les évolutions de ces indicateurs sous forme de graphiques et de faire des comparaisons entre plusieurs pays. La démarche suivie comprend une étude préalable (cahier des charges, identification des utilisateurs, structure de la base de données), une phase de conception de l’application, puis une phase de réalisation reposant sur le langage Python, une base de données relationnelle et une interface web réalisée avec Streamlit.
 
 L’application obtenue permet d’explorer rapidement les données ILOSTAT et d’en dégager des tendances, tout en gérant les difficultés propres à ces données : valeurs manquantes, couverture inégale selon les pays et les années, hétérogénéité des définitions. Ce rapport présente la conception, la réalisation et les résultats du projet, puis en dresse les limites et les perspectives d’évolution.
 
@@ -141,16 +143,15 @@ L’application obtenue permet d’explorer rapidement les données ILOSTAT et d
 \mychapterstar{INTRODUCTION}
 ```
 
-Le marché du travail est au cœur des préoccupations économiques et sociales contemporaines. Chômage, emploi informel, inégalités entre les sexes ou encore évolution des secteurs d’activité : ces indicateurs conditionnent les politiques publiques et les décisions des organisations internationales, des entreprises et des chercheurs. L’Organisation internationale du Travail (OIT) en assure le suivi à l’échelle mondiale grâce à sa base de données ILOSTAT, qui rassemble des milliers d’indicateurs harmonisés couvrant la plupart des pays du monde.
+Le marché du travail est au cœur des préoccupations économiques et sociales contemporaines. Chômage, emploi informel, inégalités entre les sexes ou encore évolution des secteurs d’activité : ces indicateurs conditionnent les politiques publiques et les décisions des organisations internationales, des entreprises et des chercheurs. **L’Organisation internationale du Travail (OIT) en assure le suivi à l’échelle mondiale grâce à sa base de données ILOSTAT**, qui rassemble des milliers d’indicateurs harmonisés couvrant la plupart des pays du monde.
 
 Cette richesse constitue pourtant une difficulté. Le volume et la diversité des données rendent leur exploration fastidieuse pour un utilisateur non spécialiste : il faut identifier les bons indicateurs, comprendre leurs définitions, gérer les valeurs manquantes et les différences de couverture entre pays et entre années, puis produire des comparaisons lisibles.Il manque ainsi un outil simple, accessible et interactif permettant d’explorer ces données et d’en dégager rapidement des enseignements.
 
-C’est dans ce contexte que s’inscrit le projet LaborScope, réalisé dans le cadre de notre formation à l’École nationale de la statistique et de l’analyse de l’information (ENSAI). Son objectif est de concevoir et de développer une application d’analyse interactive du marché du travail mondial à partir des données ILOSTAT. Elle doit permettre à l’utilisateur de sélectionner un pays, une période et un indicateur, de visualiser les évolutions sous forme de graphiques et de cartes et de comparer plusieurs pays, le tout au sein d’une interface claire et ergonomique.
+C’est dans ce contexte que s’inscrit le projet **LaborScope**, réalisé dans le cadre de notre formation à l’École nationale de la statistique et de l’analyse de l’information (ENSAI). Son objectif est de concevoir et de développer une application d’analyse interactive du marché du travail mondial à partir des données ILOSTAT. Elle doit permettre à l’utilisateur de sélectionner un pays, une période et un indicateur, de visualiser les évolutions sous forme de graphiques et de cartes et de comparer plusieurs pays, le tout au sein d’une interface claire et ergonomique.
 
-Dans le rapport intermédiaire, nous avons posé les bases du projet : cahier des charges,identification des utilisateurs, fonctionnalités attendues, structure de la base de données et organisation du travail en équipe. Le présent rapport final en constitue l’aboutissement.Il présente la conception détaillée de l’application, sa réalisation, les choix techniques effectués ainsi que les résultats obtenus.  
+Dans le rapport intermédiaire, nous avons posé les bases du projet : cahier des charges,identification des utilisateurs, fonctionnalités attendues, structure de la base de données et organisation du travail en équipe. Le présent rapport final en constitue l’aboutissement.Il présente la conception détaillée de l’application, sa réalisation, les choix techniques effectués ainsi que les résultats obtenus.
 
 Ce document s’organise en cinq (05) chapitres. Le premier décrit au préalable le projet(cahier des charges, architecture générale et méthodologie de travail). Le deuxième modélise l’application en expliquant l’ensemble des possibilités qu’offre l’application à ces utilisateurs. Le troisième décrit l’implémentation de l’application depuis la récupération des données jusqu’aux principaux points du fonctionnement du DAO. Le quatrième chapitre explique en détail les différentes fonctionnalités présentes dans l’application ainsi que quelques exemples pratiques.Enfin, le dernier chapitre évoque les retours de chaque membre du groupe par rapport au projet.
-
 
 \newpage
 
@@ -175,7 +176,7 @@ L'objectif final est de transformer des données statistiques brutes et complexe
 **Fonctionnalités retenues**
 
 | Code | Fonctionnalité | Type |
-|------|----------------|------|
+|-----------------|---------------------------------------|-----------------|
 | F1 | Téléchargement des indicateurs depuis l'API ILOSTAT | Obligatoire |
 | F2 | Nettoyage et stockage des données dans PostgreSQL | Obligatoire |
 | F3 | Évolution d'un indicateur sur les derniers trimestres | Obligatoire |
@@ -228,7 +229,7 @@ Le planning a globalement été respecté, chacun a pu coder à son rythme lors 
 Pour travailler ensemble, nous nous sommes appuyés sur les outils suivants :
 
 | Outil | Utilisation dans le projet |
-|-------|----------------------------|
+|-----------------|-------------------------------------------------------|
 | GitHub | Dépôt commun du code et du dossier, historique de toutes les modifications |
 | WhatsApp | Échanges quotidiens, questions rapides et organisation des séances |
 | Comptes rendus hebdomadaires | Suivi de l'avancement semaine par semaine (12 semaines), dans le dossier `doc/suivi` du dépôt |
@@ -283,7 +284,7 @@ Afin d'offrir une expérience utilisateur optimale et de valoriser pleinement le
 Le tableau suivant présente les technologies utilisées dans chaque couche de l'application, et la raison de leur choix :
 
 | Couche | Outils | Rôle et raison du choix |
-|--------|--------|-------------------------|
+|----------------|----------------|----------------------------------------|
 | Langage et environnement | Python 3.12, uv | Langage commun à tout le groupe ; uv installe les mêmes versions des bibliothèques chez chacun (fichier `uv.lock`) |
 | Récupération des données | requests | Téléchargement des fichiers CSV de l'API ILOSTAT |
 | Traitement des données | pandas | Nettoyage des données et calculs des analyses (variations, classements, base 100) directement sur des tableaux |
@@ -522,8 +523,7 @@ Les logs techniques enregistrent le fonctionnement interne du code. Ils sont gé
 
 Plutôt que d'écrire des lignes de log à la main dans chaque méthode, nous avons créé un décorateur `@log`. Il suffit de l'ajouter au-dessus d'une méthode pour que trois choses soient enregistrées automatiquement : l'entrée dans la méthode avec ses paramètres, la sortie avec un résumé du résultat, et l'erreur si la méthode échoue. Nous l'utilisons en particulier dans les DAO et dans la chaîne d'import des données.
 
-Pour l’implémentation nous nous sommes basé sur celle du template de l’application initiale.
-Deux choix nous ont permis de garder des logs lisibles :
+Pour l’implémentation nous nous sommes basé sur celle du template de l’application initiale. Deux choix nous ont permis de garder des logs lisibles :
 
 - les résultats volumineux sont résumés : pour un DataFrame, on écrit seulement son nombre de lignes et de colonnes, pas tout son contenu ;
 - les appels imbriqués sont indentés, ce qui permet de voir quelle méthode en appelle une autre.
@@ -569,10 +569,10 @@ Les tests des DAO sont différents : ils utilisent une vraie base PostgreSQL, ca
 Ces tests ont tout de même une limite : ils ne testent pas le frontend Streamlit, que nous avons vérifié nous même à l'implémentation de chaque fonction ou détail supplémentaire.
 
 \newpage
+
 ```{=latex}
 \mychapter{Fonctionnement de l'application}
 ```
-
 
 ```{=latex}
 \sectiontitre{Explorer les données}
@@ -664,7 +664,6 @@ Nous avons suivi l’emploi total en France (tous sexes et toutes professions co
 La variation se présente comme suit:
 
 ![Variation du taux d'emploi par sexe et profession en France pour les hommes et femmes](images/Variation_demploi_total(F3).png){width="95%"}
-
 
 ```{=latex}
 \sectiontitre{Comparaison entre pays (F4)}
@@ -772,7 +771,7 @@ La fonctionnalité suit l'architecture en couches de l'application :
 - la couche DAO récupère les informations de chaque indicateur (libellé, unité, fréquence) avec `IndicateurDAO`, et les observations filtrées avec `ObservationDAO`, qui existait déjà ;
 - la couche service (fichier `multi_indicateurs_service.py`) vérifie que les indicateurs existent et ont la même fréquence, supprime les doublons par période, aligne les séries sur la période de début commune et calcule la colonne en base 100 avec pandas. Elle construit aussi les intitulés lisibles des séries ;
 - la couche controller expose le résultat avec FastAPI sur l'endpoint POST /analyses/multi-indicateurs. Elle reçoit la liste des séries actives et l'option base 100, puis renvoie les séries calculées au format JSON ;
-- la page Streamlit affiche les quatre colonnes de sélection (les modalités proposées dépendent de l'indicateur choisi), met en cache les listes d'indicateurs et de pays, et trace le graphique avec Plotly Express (infobulles, zoom, légende cliquable).  
+- la page Streamlit affiche les quatre colonnes de sélection (les modalités proposées dépendent de l'indicateur choisi), met en cache les listes d'indicateurs et de pays, et trace le graphique avec Plotly Express (infobulles, zoom, légende cliquable).
 
 Le service et le controller sont testés avec pytest, et le code est contrôlé avec ruff.
 
@@ -806,6 +805,7 @@ La page « Rapport PDF » permet à l'utilisateur de télécharger un rapport d'
 ```{=latex}
 \subsectiontitre{Fonctionnement technique}
 ```
+
 La génération automatisée des rapports PDF repose sur un traitement entièrement exécuté côté serveur (FastAPI) afin de garantir la reproductibilité des documents, la rapidité de rendu et l'indépendance vis-à-vis de l'environnement client. Le pipeline technique s'articule en quatre étapes :
 
 - **Extraction et mise en forme des données** : à réception de la requête contenant les paramètres de sélection de l'utilisateur (indicateur, zone géographique, période), le service interroge la base PostgreSQL via la couche DAO et calcule les indicateurs synthétiques (moyenne, minimum, maximum, variation sur la période) ;

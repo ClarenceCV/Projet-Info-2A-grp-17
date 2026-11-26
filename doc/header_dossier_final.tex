@@ -262,12 +262,13 @@
 
 % ── \mychapterstar : chapitre non numéroté ────────────────────
 \newcommand{\mychapterstar}[1]{%
+  \phantomsection
   \addcontentsline{toc}{chapter}{#1}%
+  \nopagebreak[4]%
   \vspace{4pt}%
   \noindent{\Large\bfseries\color{MainColor}\MakeUppercase{#1}}\par
   \vspace{4pt}\par%
 }
-
 % ── Sections (## dans Quarto → \subsection dans scrartcl) ────
 % Dans scrartcl : # → \section, ## → \subsection, ### → \subsubsection
 % Nos "chapitres" sont gérés manuellement via \mychapter.
