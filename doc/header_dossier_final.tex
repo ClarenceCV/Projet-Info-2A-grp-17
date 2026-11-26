@@ -273,6 +273,8 @@
 % Dans scrartcl : # → \section, ## → \subsection, ### → \subsubsection
 % Nos "chapitres" sont gérés manuellement via \mychapter.
 % Donc ## correspond visuellement à nos sections numérotées.
+\usepackage{needspace}
+\needspace{8\baselineskip}
 \newcommand{\sectiontitre}[1]{%
   \refstepcounter{isesecnum}%
   \setcounter{isesubsecnum}{0}%
@@ -292,6 +294,7 @@
 \titlespacing*{\subsection}{0pt}{14pt}{2pt}
 
 % ── Sous-sections (### dans Quarto → \subsubsection dans scrartcl) ────
+\needspace{5\baselineskip}
 \newcommand{\subsectiontitre}[1]{%
   \refstepcounter{isesubsecnum}%
   \setcounter{isesubsubsecnum}{0}%
@@ -374,4 +377,40 @@
 \AtBeginDocument{
   \floatplacement{table}{H}
   \floatplacement{figure}{H}
+}
+
+
+% ── Annexes : numérotation en lettres (A, A.1, A.2, ...) ──────
+\newcommand{\annexemode}{%
+  \setcounter{chapnum}{0}%
+  \renewcommand{\thechapnum}{\Alph{chapnum}}%
+  % identifiants de liens uniques, distincts de ceux des chapitres 1, 2, 3...
+  \def\theHchapnum{A\arabic{chapnum}}%
+  \def\theHisesecnum{A\arabic{chapnum}.\arabic{isesecnum}}%
+  \def\theHisesubsecnum{A\arabic{chapnum}.\arabic{isesecnum}.\arabic{isesubsecnum}}%
+  \def\theHisesubsubsecnum{A\arabic{chapnum}.\arabic{isesecnum}.\arabic{isesubsecnum}.\arabic{isesubsubsecnum}}%
+}
+
+% ── \myannexe : même badge que \mychapter, avec le mot « Annexe » ──
+\newcommand{\myannexe}[1]{%
+ \phantomsection
+  \refstepcounter{chapnum}%
+  \setcounter{isesecnum}{0}%
+  \setcounter{isesubsecnum}{0}%
+  \setcounter{isesubsubsecnum}{0}%
+  \addcontentsline{toc}{chapter}{\thechapnum\quad #1}%
+  \vspace{30pt}%
+  \noindent
+  \begin{tikzpicture}
+    \node[text=MainColor, font=\small\itshape, anchor=south west]
+      at (0,4.0em) {Annexe};
+    \node[fill=MainColor, text=white,
+          font=\fontsize{48}{48}\selectfont\bfseries,
+          minimum width=1.6em, minimum height=1.6em,
+          inner sep=6pt, anchor=south west] (nb) at (0,0) {\thechapnum};
+    \node[text=MainColor, font=\Large\bfseries,
+          anchor=south west, text width=0.72\textwidth, align=left]
+      at ([xshift=12pt] nb.south east) {\MakeUppercase{#1}};
+  \end{tikzpicture}%
+  \vspace{6pt}\par
 }

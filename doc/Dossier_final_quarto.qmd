@@ -26,6 +26,7 @@ format:
     hyperrefoptions:
       - plainpages=false
       - pdfpagelabels=true
+    latex-min-runs: 3
 lang: fr
 fontsize: 12pt
 editor: visual
@@ -846,7 +847,27 @@ Comme pour la comparaison entre pays (F4), cet indicateur est un nombre de perso
 \newpage
 
 ```{=latex}
-\mychapter{Retour sur le projet}
+\mychapterstar{CONCLUSION}
+```
+
+Le projet **LaborScope** avait pour objectif de concevoir une application d’analyse interactive du marché du travail mondial à partir des données ILOSTAT. Il aboutit à une application fonctionnelle de bout en bout : une base PostgreSQL alimentée par les données de l’Organisation internationale du Travail, une API REST développée avec FastAPI, et une interface web (réalisée avec Streamlit) permettant d’explorer les indicateurs, de les comparer entre pays, de suivre leur évolution dans le temps, les visualiser sur une carte du monde et surtout exporter les informations voulues en format pdf.
+
+Sur le plan technique, l’architecture en couches (controllers, services, DAO) et la séparation entre backend et frontend se sont révélées pertinentes. Elles ont permis de répartir le travail entre les membres du groupe, de développer en parallèle sans se bloquer mutuellement, et de tester chaque couche séparément. Les tests automatisés avec pytest, la gestion de l’environnement avec uv et l’utilisation de Git ont renforcé la fiabilité et la reproductibilité du projet.
+
+Ce travail nous a aussi appris à traiter des données réelles, qui sont rarement parfaites. Nous avons dû gérer des sources multiples pour une même observation, des périodes manquantes ou des valeurs nulles pouvant rendre un calcul de variation indéfini. Chaque choix de traitement a dû être justifié et documenté, car il influence directement les résultats affichés à l’utilisateur.
+
+Le projet présente néanmoins des limites. Les trimestres manquants ne sont pas signalés dans le calcul des variations, la qualité des résultats dépend de la couverture inégale des pays dans ILOSTAT, et cette couverture varie aussi beaucoup d'un pays à l'autre : la dernière période disponible est 2026Q3 pour certains pays, mais seulement 2024Q4 pour la France, ce qui empêche de comparer tous les pays à la même date. Enfin, les performances n'ont pas été optimisées pour de très gros volumes de données.
+
+Plusieurs pistes d'amélioration sont envisageables : ajouter des analyses statistiques plus poussées (tests, régressions, prévisions), mettre en cache les requêtes les plus fréquentes, signaler explicitement les périodes manquantes, tester automatiquement l'interface Streamlit, aujourd'hui vérifiée à la main, par exemple avec les tests intégrés de Streamlit (AppTest), enrichir l'application avec d'autres sources de données, et déployer l'ensemble sur un serveur accessible en ligne
+
+Enfin, ce projet a été une expérience formatrice de travail en équipe : organisation par fiches de tâches, coordination autour de conventions communes, relectures croisées et résolution de conflits Git. Il nous a permis de mettre en pratique, sur un cas concret, les compétences acquises en programmation, en bases de données et en statistiques durant notre deuxième année à l’ENSAI.
+
+
+```{=latex}
+\newpage
+\annexemode
+\mychapterstar{ANNEXE}
+\myannexe{Notes individuelles}
 ```
 
 ```{=latex}
@@ -943,20 +964,3 @@ Les difficultés ont surtout été techniques, liées à la programmation elle-m
 
 Ce que je retiens avant tout, c'est la répartition et l'organisation du travail, qui ont très bien fonctionné. Avec le recul, la seule chose que je changerais serait de commencer la rédaction du rapport plus tôt. Si cette façon de travailler est possible en stage ou en entreprise, je la reprendrai volontiers.
 
-\newpage
-
-```{=latex}
-\mychapterstar{CONCLUSION}
-```
-
-Le projet **LaborScope** avait pour objectif de concevoir une application d’analyse interactive du marché du travail mondial à partir des données ILOSTAT. Il aboutit à une application fonctionnelle de bout en bout : une base PostgreSQL alimentée par les données de l’Organisation internationale du Travail, une API REST développée avec FastAPI, et une interface web (réalisée avec Streamlit) permettant d’explorer les indicateurs, de les comparer entre pays, de suivre leur évolution dans le temps, les visualiser sur une carte du monde et surtout exporter les informations voulues en format pdf.
-
-Sur le plan technique, l’architecture en couches (controllers, services, DAO) et la séparation entre backend et frontend se sont révélées pertinentes. Elles ont permis de répartir le travail entre les membres du groupe, de développer en parallèle sans se bloquer mutuellement, et de tester chaque couche séparément. Les tests automatisés avec pytest, la gestion de l’environnement avec uv et l’utilisation de Git ont renforcé la fiabilité et la reproductibilité du projet.
-
-Ce travail nous a aussi appris à traiter des données réelles, qui sont rarement parfaites. Nous avons dû gérer des sources multiples pour une même observation, des périodes manquantes ou des valeurs nulles pouvant rendre un calcul de variation indéfini. Chaque choix de traitement a dû être justifié et documenté, car il influence directement les résultats affichés à l’utilisateur.
-
-Le projet présente néanmoins des limites. Les trimestres manquants ne sont pas signalés dans le calcul des variations, la qualité des résultats dépend de la couverture inégale des pays dans ILOSTAT, et cette couverture varie aussi beaucoup d'un pays à l'autre : la dernière période disponible est 2026Q3 pour certains pays, mais seulement 2024Q4 pour la France, ce qui empêche de comparer tous les pays à la même date. Enfin, les performances n'ont pas été optimisées pour de très gros volumes de données.
-
-Plusieurs pistes d'amélioration sont envisageables : ajouter des analyses statistiques plus poussées (tests, régressions, prévisions), mettre en cache les requêtes les plus fréquentes, signaler explicitement les périodes manquantes, tester automatiquement l'interface Streamlit, aujourd'hui vérifiée à la main, par exemple avec les tests intégrés de Streamlit (AppTest), enrichir l'application avec d'autres sources de données, et déployer l'ensemble sur un serveur accessible en ligne
-
-Enfin, ce projet a été une expérience formatrice de travail en équipe : organisation par fiches de tâches, coordination autour de conventions communes, relectures croisées et résolution de conflits Git. Il nous a permis de mettre en pratique, sur un cas concret, les compétences acquises en programmation, en bases de données et en statistiques durant notre deuxième année à l’ENSAI.
